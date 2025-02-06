@@ -1,10 +1,10 @@
 import { getTranslations } from '../utils/translations.js';
 
 export class CountrySelector {
-    constructor(containerId, onChange) {
+    constructor(containerId) {
         this.container = document.getElementById(containerId);
-        this.onChange = onChange;
         this.translations = getTranslations();
+        this._onChange = null;
         this.countries = [
             { value: 'combined', labelKey: 'allCountries' },
             { value: 'bénin', label: 'Bénin' },
@@ -42,9 +42,9 @@ export class CountrySelector {
         });
 
         // Add event listener
-        select.addEventListener('change', (e) => {
-            if (this.onChange) {
-                this.onChange(e.target.value);
+        select.addEventListener('change', () => {
+            if (this._onChange) {
+                this._onChange();
             }
         });
 
@@ -59,8 +59,12 @@ export class CountrySelector {
     setValue(value) {
         const select = document.getElementById('countrySelector');
         select.value = value;
-        if (this.onChange) {
-            this.onChange(value);
+        if (this._onChange) {
+            this._onChange();
         }
+    }
+
+    set onChange(handler) {
+        this._onChange = handler;
     }
 } 
