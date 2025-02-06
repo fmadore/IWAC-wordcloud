@@ -5,6 +5,23 @@ export class WordCloud {
     constructor(container, options = {}) {
         this.container = container;
         this.options = { ...config.wordcloud, ...options };
+        this.originalCreateElement = document.createElement.bind(document);
+        
+        // Patch document.createElement before setup
+        document.createElement = (tagName) => {
+            const element = this.originalCreateElement(tagName);
+            if (tagName.toLowerCase() === 'canvas') {
+                const originalGetContext = element.getContext.bind(element);
+                element.getContext = (contextType, attributes = {}) => {
+                    if (contextType === '2d') {
+                        attributes.willReadFrequently = true;
+                    }
+                    return originalGetContext(contextType, attributes);
+                };
+            }
+            return element;
+        };
+        
         this.setup();
     }
 
@@ -16,6 +33,14 @@ export class WordCloud {
                 return Math.random() < this.options.rotationProbability ? 
                     this.options.rotations[Math.floor(Math.random() * this.options.rotations.length)] : 0;
             });
+    }
+
+    cleanup() {
+        // Restore original createElement
+        if (this.originalCreateElement) {
+            document.createElement = this.originalCreateElement;
+            this.originalCreateElement = null;
+        }
     }
 
     async loadData(country, wordCount) {
@@ -92,11 +117,15 @@ export class WordCloud {
     }
 
     async update(country, wordCount) {
-        const words = await this.loadData(country, wordCount);
-        this.layout
-            .words(words)
-            .fontSize(d => d.size)
-            .on("end", words => this.draw(words));
-        this.layout.start();
+        try {
+            const words = await this.loadData(country, wordCount);
+            this.layout
+                .words(words)
+                .fontSize(d => d.size)
+                .on("end", words => this.draw(words));
+            this.layout.start();
+        } finally {
+            this.cleanup();
+        }
     }
 } 
