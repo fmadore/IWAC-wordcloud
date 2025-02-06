@@ -4,11 +4,26 @@ import { WordCloudLayoutManager } from './LayoutManager.js';
 import { WordCloudDataManager } from './DataManager.js';
 
 export class WordCloud {
-    constructor(container, options = {}) {
-        this.container = container;
+    constructor(containerId, options = {}) {
+        this.container = typeof containerId === 'string' ? 
+            document.getElementById(containerId.replace('#', '')) : 
+            containerId;
+
+        if (!this.container) {
+            throw new Error('Container element not found');
+        }
+
+        // Set container style to ensure proper sizing
+        this.container.style.width = '100%';
+        this.container.style.height = '100%';
+        this.container.style.position = 'relative';
+        this.container.style.display = 'flex';
+        this.container.style.alignItems = 'center';
+        this.container.style.justifyContent = 'center';
+
         this.options = { ...config.wordcloud, ...options };
         
-        this.renderer = new WordCloudRenderer(container, this.options);
+        this.renderer = new WordCloudRenderer(this.container, this.options);
         this.layoutManager = new WordCloudLayoutManager(this.options);
         this.dataManager = new WordCloudDataManager();
         
@@ -40,12 +55,30 @@ export class WordCloud {
 
     setupEventListeners() {
         this.handleResize = this.handleResize.bind(this);
-        window.addEventListener('resize', this.handleResize);
+        const debouncedResize = this.debounce(this.handleResize, 250);
+        window.addEventListener('resize', debouncedResize);
+        // Also handle orientation change for mobile devices
+        window.addEventListener('orientationchange', debouncedResize);
+    }
+
+    debounce(func, wait) {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
     }
 
     handleResize() {
+        // Force a reflow to ensure we get the correct dimensions
+        this.container.offsetHeight;
+        
         const dimensions = this.layoutManager.calculateDimensions(this.container);
+        this.options.width = dimensions.width;
+        this.options.height = dimensions.height;
+        
         this.layoutManager.updateDimensions(dimensions);
+        this.renderer.updateDimensions(dimensions.width, dimensions.height);
         
         if (this.dataManager.getCurrentWords()) {
             this.redraw();
@@ -53,8 +86,12 @@ export class WordCloud {
     }
 
     async redraw() {
-        const words = await this.layoutManager.layoutWords(this.dataManager.getCurrentWords());
-        this.draw(words);
+        try {
+            const words = await this.layoutManager.layoutWords(this.dataManager.getCurrentWords());
+            this.draw(words);
+        } catch (error) {
+            console.error('Error redrawing word cloud:', error);
+        }
     }
 
     cleanup() {
@@ -71,9 +108,9 @@ export class WordCloud {
     }
 
     draw(words) {
-        this.dataManager.setCurrentWords(words);
-        this.renderer.clear();
+        if (!words || words.length === 0) return;
         
+        this.dataManager.setCurrentWords(words);
         const svg = this.renderer.createSVG();
         const wordGroup = this.renderer.createWordGroup(svg);
         this.renderer.renderWords(wordGroup, words);

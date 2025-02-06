@@ -2,27 +2,65 @@ export class WordCloudRenderer {
     constructor(container, options) {
         this.container = container;
         this.options = options;
+        this.svg = null;
+        this.wordGroup = null;
     }
 
     createSVG() {
-        return d3.select(this.container)
+        this.clear();
+        
+        // Create wrapper div for better control
+        const wrapper = document.createElement('div');
+        wrapper.style.width = '100%';
+        wrapper.style.height = '100%';
+        wrapper.style.position = 'relative';
+        this.container.appendChild(wrapper);
+        
+        this.svg = d3.select(wrapper)
             .append("svg")
-            .attr("width", this.options.width)
-            .attr("height", this.options.height)
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .style("position", "absolute")
+            .style("top", "0")
+            .style("left", "0")
             .style("background", "transparent")
-            .style("width", "100%")
-            .style("height", "100%")
             .attr("preserveAspectRatio", "xMidYMid meet")
             .attr("viewBox", `0 0 ${this.options.width} ${this.options.height}`);
+
+        return this.svg;
     }
 
     createWordGroup(svg) {
-        return svg.append("g")
+        this.wordGroup = svg.append("g")
             .attr("transform", `translate(${this.options.width / 2},${this.options.height / 2})`);
+        return this.wordGroup;
+    }
+
+    updateDimensions(width, height) {
+        if (!width || !height) return;
+        
+        this.options.width = width;
+        this.options.height = height;
+
+        if (this.svg) {
+            this.svg
+                .attr("viewBox", `0 0 ${width} ${height}`)
+                .attr("width", "100%")
+                .attr("height", "100%");
+        }
+        
+        if (this.wordGroup) {
+            this.wordGroup.attr("transform", `translate(${width / 2},${height / 2})`);
+        }
     }
 
     renderWords(wordGroup, words) {
+        if (!words || words.length === 0) return;
+
         const tooltip = d3.select("#tooltip");
+        
+        // Remove existing words
+        wordGroup.selectAll("text").remove();
 
         return wordGroup.selectAll("text")
             .data(words)
@@ -93,8 +131,13 @@ export class WordCloudRenderer {
     }
 
     clear() {
+        // Remove all SVG elements
         if (this.container) {
-            d3.select(this.container).select("svg").remove();
+            while (this.container.firstChild) {
+                this.container.removeChild(this.container.firstChild);
+            }
         }
+        this.svg = null;
+        this.wordGroup = null;
     }
 } 
