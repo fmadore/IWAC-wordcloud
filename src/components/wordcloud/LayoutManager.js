@@ -26,31 +26,16 @@ export class WordCloudLayoutManager {
     }
 
     calculateDimensions(container) {
-        // Get the actual dimensions of the container
         const rect = container.getBoundingClientRect();
         const computedStyle = window.getComputedStyle(container);
         
-        // Account for padding and borders
         const paddingX = parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight);
         const paddingY = parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom);
         
-        // Calculate available space
-        const availableWidth = rect.width - paddingX;
-        const availableHeight = rect.height - paddingY;
-        
-        // Calculate dimensions while maintaining aspect ratio
-        const minWidth = 300;
-        const maxWidth = Math.max(availableWidth, minWidth);
-        const maxHeight = Math.min(window.innerHeight * 0.7, 800);
-        
-        let width = maxWidth;
-        let height = Math.min(width * 0.75, maxHeight);
-        
-        // Ensure minimum dimensions
-        width = Math.max(width, minWidth);
-        height = Math.max(height, minWidth * 0.75);
-        
-        return { width, height };
+        return {
+            width: rect.width - paddingX,
+            height: rect.height - paddingY
+        };
     }
 
     async layoutWords(words) {
@@ -58,10 +43,23 @@ export class WordCloudLayoutManager {
         
         return new Promise((resolve, reject) => {
             try {
+                const area = this.options.width * this.options.height;
+                const wordCount = words.length;
+                // Calculate base size considering both area and word count
+                const baseSize = Math.sqrt(area / (wordCount * 5));
+                
                 this.layout
                     .size([this.options.width, this.options.height])
                     .words(words)
-                    .fontSize(d => Math.min(d.size, this.options.height / 8)) // Limit maximum font size
+                    .fontSize(d => {
+                        // Scale the word's relative size by the dynamic base size
+                        const scaledSize = baseSize * (d.size / Math.max(...words.map(w => w.size)));
+                        // Ensure size stays within reasonable bounds
+                        return Math.min(
+                            Math.max(scaledSize, this.options.minFontSize || 10),
+                            this.options.maxFontSize || this.options.height / 8
+                        );
+                    })
                     .on("end", resolve)
                     .start();
             } catch (error) {

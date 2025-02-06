@@ -54,11 +54,12 @@ export class WordCloud {
     }
 
     setupEventListeners() {
-        this.handleResize = this.handleResize.bind(this);
-        const debouncedResize = this.debounce(this.handleResize, 250);
-        window.addEventListener('resize', debouncedResize);
+        const resizeObserver = new ResizeObserver(() => this.handleResize());
+        resizeObserver.observe(this.container);
+        // Keep existing resize handler as fallback
+        window.addEventListener('resize', this.debounce(this.handleResize, 250));
         // Also handle orientation change for mobile devices
-        window.addEventListener('orientationchange', debouncedResize);
+        window.addEventListener('orientationchange', this.debounce(this.handleResize, 250));
     }
 
     debounce(func, wait) {
