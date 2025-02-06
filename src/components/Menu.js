@@ -2,55 +2,116 @@ import { CountrySelector } from './CountrySelector.js';
 import { WordCountSlider } from './WordCountSlider.js';
 import { SaveButton } from './SaveButton.js';
 import { saveAsPNG } from '../utils/saveUtils.js';
+import { config } from '../config/settings.js';
 
 export class Menu {
-    constructor(containerId, onUpdate) {
+    constructor(containerId, onUpdate, options = {}) {
+        if (!containerId) {
+            throw new Error('Menu: containerId is required');
+        }
+
         this.container = document.getElementById(containerId);
+        if (!this.container) {
+            throw new Error(`Menu: container with id "${containerId}" not found`);
+        }
+
+        this.options = {
+            initialCountry: 'combined',
+            initialWordCount: config.data.defaultWordCount,
+            ...options
+        };
+
         this.onUpdate = onUpdate;
+        this.components = {};
         this.init();
     }
 
     init() {
-        // Initialize components
-        this.countrySelector = new CountrySelector(this.container.id);
-        this.wordCountSlider = new WordCountSlider(this.container.id);
-        this.saveButton = new SaveButton(this.container.id);
+        try {
+            // Create a wrapper for the controls
+            const menuWrapper = document.createElement('div');
+            menuWrapper.className = 'menu-wrapper';
+            this.container.appendChild(menuWrapper);
 
-        // Setup event handlers
-        this.countrySelector.onChange = () => this.handleUpdate();
-        this.wordCountSlider.onChange = () => this.handleUpdate();
-        this.saveButton.onClick = () => this.handleSave();
+            // Initialize components
+            this.components = {
+                countrySelector: new CountrySelector(this.container.id),
+                wordCountSlider: new WordCountSlider(this.container.id),
+                saveButton: new SaveButton(this.container.id)
+            };
+
+            // Setup event handlers
+            this.components.countrySelector.onChange = () => this.handleUpdate();
+            this.components.wordCountSlider.onChange = () => this.handleUpdate();
+            this.components.saveButton.onClick = () => this.handleSave();
+
+            // Set initial values
+            this.setInitialState();
+        } catch (error) {
+            console.error('Failed to initialize menu:', error);
+            throw error;
+        }
+    }
+
+    setInitialState() {
+        if (this.options.initialCountry) {
+            this.setCountry(this.options.initialCountry);
+        }
+        if (this.options.initialWordCount) {
+            this.setWordCount(this.options.initialWordCount);
+        }
     }
 
     handleUpdate() {
         if (this.onUpdate) {
-            this.onUpdate(
-                this.countrySelector.getValue(),
-                this.wordCountSlider.getValue()
-            );
+            try {
+                this.onUpdate(
+                    this.getCountry(),
+                    this.getWordCount()
+                );
+            } catch (error) {
+                console.error('Error in menu update handler:', error);
+            }
         }
     }
 
     handleSave() {
-        const svg = document.querySelector("#wordcloud svg");
-        saveAsPNG(svg);
+        try {
+            const svg = document.querySelector("#wordcloud svg");
+            if (!svg) {
+                throw new Error('Word cloud SVG element not found');
+            }
+            saveAsPNG(svg);
+        } catch (error) {
+            console.error('Failed to save word cloud:', error);
+        }
     }
 
     // Public methods to access component values
     getCountry() {
-        return this.countrySelector.getValue();
+        return this.components.countrySelector.getValue();
     }
 
     getWordCount() {
-        return this.wordCountSlider.getValue();
+        return this.components.wordCountSlider.getValue();
     }
 
     // Methods to set component values
     setCountry(value) {
-        this.countrySelector.setValue(value);
+        this.components.countrySelector.setValue(value);
     }
 
     setWordCount(value) {
-        this.wordCountSlider.setValue(value);
+        this.components.wordCountSlider.setValue(value);
+    }
+
+    // Method to destroy/cleanup the menu
+    destroy() {
+        // Remove event listeners and clean up components if needed
+        this.onUpdate = null;
+        this.components = {};
+        if (this.container) {
+            this.container.innerHTML = '';
+        }
     }
 } 
