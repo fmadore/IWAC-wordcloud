@@ -2,8 +2,11 @@ import { getTranslations } from '../utils/translations.js';
 import { config } from '../config/settings.js';
 
 export class WordCountSlider {
-    constructor(containerId) {
-        this.container = document.getElementById(containerId);
+    constructor(container) {
+        this.container = container instanceof HTMLElement ? container : document.getElementById(container);
+        if (!this.container) {
+            throw new Error('WordCountSlider: container is required');
+        }
         this.translations = getTranslations();
         this.config = {
             min: 10,

@@ -33,11 +33,14 @@ export class Menu {
             menuWrapper.className = 'menu-wrapper';
             this.container.appendChild(menuWrapper);
 
-            // Initialize components
+            // Store the wrapper reference
+            this.menuWrapper = menuWrapper;
+
+            // Initialize components with the wrapper element
             this.components = {
-                countrySelector: new CountrySelector(this.container.id),
-                wordCountSlider: new WordCountSlider(this.container.id),
-                saveButton: new SaveButton(this.container.id)
+                countrySelector: new CountrySelector(menuWrapper),
+                wordCountSlider: new WordCountSlider(menuWrapper),
+                saveButton: new SaveButton(menuWrapper)
             };
 
             // Setup event handlers

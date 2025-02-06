@@ -1,8 +1,11 @@
 import { getTranslations } from '../utils/translations.js';
 
 export class SaveButton {
-    constructor(containerId) {
-        this.container = document.getElementById(containerId);
+    constructor(container) {
+        this.container = container instanceof HTMLElement ? container : document.getElementById(container);
+        if (!this.container) {
+            throw new Error('SaveButton: container is required');
+        }
         this.translations = getTranslations();
         this._onClick = null;
         

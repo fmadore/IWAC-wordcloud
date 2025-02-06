@@ -1,4 +1,4 @@
-import { WordCloud } from './components/WordCloud.js';
+import { WordCloud } from './components/wordcloud/WordCloud.js';
 import { Menu } from './components/Menu.js';
 import { config } from './config/settings.js';
 
