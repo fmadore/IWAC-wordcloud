@@ -30,6 +30,11 @@ from dotenv import load_dotenv
 
 # Get the current script's directory
 script_dir = os.path.dirname(os.path.abspath(__file__))
+# Define data directory path
+data_dir = os.path.join(os.path.dirname(script_dir), 'data')
+
+# Ensure data directory exists
+os.makedirs(data_dir, exist_ok=True)
 
 # Load environment variables from .env file in the root directory
 root_dir = os.path.dirname(os.path.dirname(script_dir))
@@ -44,7 +49,8 @@ KEY_CREDENTIAL = os.getenv('OMEKA_KEY_CREDENTIAL')
 ITEM_SETS = {
     'Bénin': [2185, 2185, 5502, 2186, 2188, 2187, 2191, 2190, 2189, 4922, 5501, 5500, 60638],
     'Burkina Faso': [2199, 2200, 23273, 5503, 2215, 2214, 2207, 2209, 2210, 2213, 2201],
-    'Togo': [25304, 9458, 5498, 5499, 67399, 67407, 67460, 67430, 67456]
+    'Togo': [25304, 9458, 5498, 5499, 67399, 67407, 67460, 67430, 67456],
+    'Côte d\'Ivoire': []  # TODO: Add correct item set IDs for Côte d'Ivoire
 }
 
 # Set up NLP tools and resources
@@ -194,7 +200,7 @@ for country, word_freq in all_word_frequencies.items():
     json_data = [{"text": word, "size": freq} for word, freq in word_freq]
     
     filename = f"{country.lower().replace(' ', '_')}_word_frequencies.json"
-    file_path = os.path.join(script_dir, filename)
+    file_path = os.path.join(data_dir, filename)
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(json_data, f, ensure_ascii=False, indent=2)
     print(f"Word frequencies for {country} saved to {file_path}")
@@ -203,7 +209,7 @@ for country, word_freq in all_word_frequencies.items():
 combined_json_data = {country: [{"text": word, "size": freq} for word, freq in word_freq] 
                       for country, word_freq in all_word_frequencies.items()}
 
-combined_file_path = os.path.join(script_dir, "combined_word_frequencies.json")
+combined_file_path = os.path.join(data_dir, "combined_word_frequencies.json")
 with open(combined_file_path, 'w', encoding='utf-8') as f:
     json.dump(combined_json_data, f, ensure_ascii=False, indent=2)
 print(f"Combined word frequencies saved to {combined_file_path}")
