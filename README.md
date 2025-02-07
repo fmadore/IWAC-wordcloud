@@ -12,46 +12,56 @@ An interactive word cloud visualization tool built with D3.js that displays word
 - 📱 Responsive design
 - 🎯 Word size normalization based on frequency
 - 🧩 Modular architecture with clear separation of concerns
+- 🎭 Modern typography with Inter font system
 
 ## Project Structure
 
 ```
 project/
 ├── src/
+│   ├── assets/
+│   │   └── fonts/              # Font files (Inter)
 │   ├── components/
 │   │   ├── wordcloud/
-│   │   │   ├── WordCloud.js     # Main word cloud component
-│   │   │   ├── DataManager.js   # Data loading and management
+│   │   │   ├── WordCloud.js    # Main word cloud component
+│   │   │   ├── DataManager.js  # Data loading and management
 │   │   │   ├── LayoutManager.js # Layout calculation and sizing
-│   │   │   └── Renderer.js      # SVG rendering and animations
-│   │   ├── CountrySelector.js   # Country selection component
-│   │   ├── WordCountSlider.js   # Word count control
-│   │   ├── SaveButton.js        # Export functionality
-│   │   ├── Menu.js             # Control panel component
-│   │   └── Tooltip.js          # Interactive tooltips
+│   │   │   └── Renderer.js     # SVG rendering and animations
+│   │   ├── CountrySelector.js  # Country selection component
+│   │   ├── WordCountSlider.js  # Word count control
+│   │   ├── SaveButton.js       # Export functionality
+│   │   ├── Menu.js            # Control panel component
+│   │   └── Tooltip.js         # Interactive tooltips
 │   ├── utils/
-│   │   ├── dataProcessor.js    # Data processing utilities
-│   │   ├── translations.js     # Language translations
-│   │   └── saveUtils.js        # PNG export functionality
+│   │   ├── dataProcessor.js   # Data processing utilities
+│   │   ├── translations.js    # Language translations
+│   │   ├── saveUtils.js      # PNG export functionality
+│   │   ├── FontManager.js    # Font management and styling
+│   │   ├── StyleManager.js   # Global style management
+│   │   └── WordStyleManager.js # Word-specific styling
 │   ├── config/
-│   │   └── settings.js         # Centralized configuration
+│   │   ├── settings.js       # Centralized configuration
+│   │   └── ConfigManager.js  # Configuration management
 │   ├── styles/
-│   │   ├── modules/           # CSS modules for components
+│   │   ├── modules/          # CSS modules for components
 │   │   │   ├── button.css
 │   │   │   ├── controls.css
+│   │   │   ├── fonts.css    # Font declarations and variables
 │   │   │   ├── layout.css
 │   │   │   ├── reset.css
 │   │   │   ├── responsive.css
 │   │   │   ├── slider.css
 │   │   │   └── tooltip.css
-│   │   └── main.css           # Main stylesheet
-│   └── main.js                # Application entry point
+│   │   └── main.css         # Main stylesheet
+│   └── main.js              # Application entry point
+├── scripts/
+│   └── download-fonts.ps1   # Font download utility
 ├── data/
 │   ├── combined_word_frequencies.json
 │   ├── bénin_word_frequencies.json
 │   ├── burkina_faso_word_frequencies.json
 │   └── togo_word_frequencies.json
-└── index.html                 # Main HTML file
+└── index.html              # Main HTML file
 ```
 
 ## Architecture
@@ -73,39 +83,78 @@ The project follows a modular architecture with clear separation of concerns:
    - `SaveButton.js`: PNG export functionality
    - `Tooltip.js`: Interactive tooltips for word information
 
-3. **Utilities**
-   - `dataProcessor.js`: Data transformation and normalization
-   - `translations.js`: Internationalization support
-   - `saveUtils.js`: Export utilities
+3. **Typography System**
+   - Modern typography using Inter font
+   - Consistent font scale with CSS variables
+   - Responsive font sizing
+   - Font weights: 400 (normal), 500 (medium), 600 (semibold)
+   - Fallback system fonts for optimal loading
 
-4. **Styling**
-   - Modular CSS architecture with separate files for each component
+4. **Style Management**
+   - `FontManager.js`: Centralized font management
+   - `StyleManager.js`: Global style utilities
+   - CSS modules for component-specific styles
+   - CSS variables for consistent theming
    - Responsive design support
-   - Touch-friendly interactions
 
 ## Dependencies
 
 - [D3.js](https://d3js.org/) (v7.8.5) - Data visualization library
 - [d3-cloud](https://github.com/jasondavies/d3-cloud) (v1.2.5) - Word cloud layout
+- [Inter](https://rsms.me/inter/) (v4.0) - Modern typeface
 
 ## Development
 
-The easiest way to test changes locally is using VS Code's Live Server:
+1. Install dependencies and download fonts:
+   ```powershell
+   # Download required font files
+   pwsh scripts/download-fonts.ps1
+   ```
 
-1. Install the Live Server extension in VS Code:
-   - Open VS Code Extensions (Ctrl+Shift+X)
-   - Search for "Live Server"
-   - Install "Live Server" by Ritwick Dey
-
-2. Start the development server:
-   - Right-click on `index.html` in VS Code
+2. Start the development server using VS Code's Live Server:
+   - Install the Live Server extension
+   - Right-click on `index.html`
    - Select "Open with Live Server"
-   - Your browser will open automatically to something like `http://127.0.0.1:5500`
 
 The Live Server will automatically:
 - Reload when you make changes
 - Handle CORS for ES modules
 - Serve files correctly
+
+## Typography System
+
+The project uses a modern typography system based on the Inter font family:
+
+### Font Weights
+- Normal (400): Regular text
+- Medium (500): Emphasis and interactive elements
+- Semibold (600): Headers and important information
+
+### Font Sizes
+```css
+--font-size-xs: 0.75rem;   /* 12px */
+--font-size-sm: 0.875rem;  /* 14px */
+--font-size-base: 1rem;    /* 16px */
+--font-size-lg: 1.125rem;  /* 18px */
+--font-size-xl: 1.25rem;   /* 20px */
+```
+
+### Line Heights
+```css
+--line-height-tight: 1.25;
+--line-height-normal: 1.5;
+--line-height-relaxed: 1.75;
+```
+
+### Usage
+```css
+.element {
+    font-family: var(--font-base);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+}
+```
 
 ## Data Format
 
