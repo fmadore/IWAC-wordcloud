@@ -3,6 +3,7 @@ import { WordCountSlider } from './WordCountSlider.js';
 import { SaveButton } from './SaveButton.js';
 import { saveAsPNG } from '../utils/saveUtils.js';
 import { ConfigManager } from '../config/ConfigManager.js';
+import { ErrorManager } from '../utils/ErrorManager.js';
 
 export class Menu {
     constructor(containerId, onUpdate) {
@@ -16,13 +17,14 @@ export class Menu {
         }
 
         this.config = ConfigManager.getInstance();
+        this.errorManager = ErrorManager.getInstance();
         this.onUpdate = onUpdate;
         this.components = {};
         this.init();
     }
 
     init() {
-        try {
+        return this.errorManager.wrapSync(() => {
             // Create a wrapper for the controls
             const menuWrapper = document.createElement('div');
             menuWrapper.className = 'menu-wrapper';
@@ -45,80 +47,95 @@ export class Menu {
 
             // Set initial values
             this.setInitialState();
-        } catch (error) {
-            console.error('Failed to initialize menu:', error);
-            throw error;
-        }
+        }, { component: 'Menu', method: 'init' });
     }
 
     setInitialState() {
-        const defaultCountry = this.config.get('data.defaultCountry');
-        const defaultWordCount = this.config.get('data.defaultWordCount');
-        
-        if (defaultCountry) {
-            this.setCountry(defaultCountry);
-        }
-        if (defaultWordCount) {
-            this.setWordCount(defaultWordCount);
-        }
+        return this.errorManager.wrapSync(() => {
+            const defaultCountry = this.config.get('data.defaultCountry');
+            const defaultWordCount = this.config.get('data.defaultWordCount');
+            
+            if (defaultCountry) {
+                this.setCountry(defaultCountry);
+            }
+            if (defaultWordCount) {
+                this.setWordCount(defaultWordCount);
+            }
+        }, { component: 'Menu', method: 'setInitialState' });
     }
 
     handleUpdate() {
         if (this.onUpdate) {
-            try {
+            return this.errorManager.wrapSync(() => {
                 this.onUpdate(
                     this.getCountry(),
                     this.getWordCount()
                 );
-            } catch (error) {
-                console.error('Error in menu update handler:', error);
-            }
+            }, { 
+                component: 'Menu', 
+                method: 'handleUpdate',
+                data: {
+                    country: this.getCountry(),
+                    wordCount: this.getWordCount()
+                }
+            });
         }
     }
 
     async handleSave() {
-        try {
+        return this.errorManager.wrapAsync(async () => {
             const svg = document.querySelector("#wordcloud svg");
             if (!svg) {
                 throw new Error('Word cloud SVG element not found');
             }
             const exportConfig = this.components.saveButton.getExportConfig();
             await saveAsPNG(svg, exportConfig);
-        } catch (error) {
-            console.error('Failed to save word cloud:', error);
-        }
+        }, { component: 'Menu', method: 'handleSave' });
     }
 
     // Public methods to access component values
     getCountry() {
-        return this.components.countrySelector.getValue();
+        return this.errorManager.wrapSync(
+            () => this.components.countrySelector.getValue(),
+            { component: 'Menu', method: 'getCountry' }
+        );
     }
 
     getWordCount() {
-        return this.components.wordCountSlider.getValue();
+        return this.errorManager.wrapSync(
+            () => this.components.wordCountSlider.getValue(),
+            { component: 'Menu', method: 'getWordCount' }
+        );
     }
 
     // Methods to set component values
     setCountry(value) {
-        this.components.countrySelector.setValue(value);
+        return this.errorManager.wrapSync(
+            () => this.components.countrySelector.setValue(value),
+            { component: 'Menu', method: 'setCountry', value }
+        );
     }
 
     setWordCount(value) {
-        this.components.wordCountSlider.setValue(value);
+        return this.errorManager.wrapSync(
+            () => this.components.wordCountSlider.setValue(value),
+            { component: 'Menu', method: 'setWordCount', value }
+        );
     }
 
     // Method to destroy/cleanup the menu
     destroy() {
-        // Remove event listeners and clean up components
-        this.onUpdate = null;
-        Object.values(this.components).forEach(component => {
-            if (component.destroy) {
-                component.destroy();
+        return this.errorManager.wrapSync(() => {
+            this.onUpdate = null;
+            Object.values(this.components).forEach(component => {
+                if (component.destroy) {
+                    component.destroy();
+                }
+            });
+            this.components = {};
+            if (this.container) {
+                this.container.innerHTML = '';
             }
-        });
-        this.components = {};
-        if (this.container) {
-            this.container.innerHTML = '';
-        }
+        }, { component: 'Menu', method: 'destroy' });
     }
 } 
