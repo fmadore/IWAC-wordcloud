@@ -10,7 +10,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     color: #333;
 }
 
@@ -19,7 +19,7 @@
     color: white;
     padding: 2px 8px;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     min-width: 30px;
     text-align: center;
 }
