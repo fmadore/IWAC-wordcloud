@@ -1,5 +1,7 @@
 import { Tooltip } from '../Tooltip.js';
 import { StyleManager } from '../../utils/StyleManager.js';
+import { AnimationManager } from '../../utils/AnimationManager.js';
+import { WordStyleManager } from '../../utils/WordStyleManager.js';
 
 export class WordCloudRenderer {
     constructor(container, options) {
@@ -53,46 +55,17 @@ export class WordCloudRenderer {
         
         // Remove existing words
         wordGroup.selectAll("text").remove();
+        const wordsWithRank = WordStyleManager.addRankInformation(words);
 
-        // Add rank information to each word
-        const wordsWithRank = words.map((word, index) => ({
-            ...word,
-            rank: index + 1
-        }));
-
-        return wordGroup.selectAll("text")
+        const wordElements = wordGroup.selectAll("text")
             .data(wordsWithRank)
             .enter()
-            .append("text")
-            .style("font-size", d => `${d.size}px`)
-            .style("fill", () => d3.schemeCategory10[~~(Math.random() * 10)])
-            .attr("text-anchor", "middle")
-            .attr("transform", d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
-            .text(d => d.text)
-            .on("mouseover", (event, d) => {
-                this.tooltip.show(event, d);
-                this.animateWordEnter(event.target, d);
-            })
-            .on("mouseout", (event, d) => {
-                this.tooltip.hide();
-                this.animateWordExit(event.target, d);
-            });
-    }
+            .append("text");
 
-    animateWordEnter(element, d) {
-        d3.select(element)
-            .transition()
-            .duration(200)
-            .style("font-size", `${d.size * 1.2}px`)
-            .style("font-weight", "bold");
-    }
+        WordStyleManager.applyWordStyles(wordElements);
+        AnimationManager.setupWordInteractions(wordElements, this.tooltip);
 
-    animateWordExit(element, d) {
-        d3.select(element)
-            .transition()
-            .duration(200)
-            .style("font-size", `${d.size}px`)
-            .style("font-weight", "normal");
+        return wordElements;
     }
 
     clear() {
