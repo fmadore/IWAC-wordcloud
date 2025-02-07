@@ -17,7 +17,6 @@ export class WordCloudRenderer {
         wrapper.style.width = '100%';
         wrapper.style.height = '100%';
         wrapper.style.position = 'relative';
-        wrapper.style.minHeight = '400px';
         wrapper.style.display = 'flex';
         wrapper.style.alignItems = 'center';
         wrapper.style.justifyContent = 'center';
@@ -25,8 +24,8 @@ export class WordCloudRenderer {
         
         this.svg = d3.select(wrapper)
             .append("svg")
-            .attr("width", this.options.width)
-            .attr("height", this.options.height)
+            .attr("width", "100%")
+            .attr("height", "100%")
             .style("position", "relative")
             .style("display", "block")
             .style("background", "transparent")
@@ -49,10 +48,7 @@ export class WordCloudRenderer {
         this.options.height = height;
 
         if (this.svg) {
-            this.svg
-                .attr("viewBox", `0 0 ${width} ${height}`)
-                .attr("width", "100%")
-                .attr("height", "100%");
+            this.svg.attr("viewBox", `0 0 ${width} ${height}`);
         }
         
         if (this.wordGroup) {

@@ -2,6 +2,7 @@ import { config } from '../../config/settings.js';
 import { WordCloudRenderer } from './Renderer.js';
 import { WordCloudLayoutManager } from './LayoutManager.js';
 import { WordCloudDataManager } from './DataManager.js';
+import { DimensionManager } from '../../utils/DimensionManager.js';
 
 export class WordCloud {
     constructor(containerId, options = {}) {
@@ -29,6 +30,7 @@ export class WordCloud {
             ...options 
         };
         
+        this.dimensionManager = new DimensionManager(this.container);
         this.renderer = new WordCloudRenderer(this.container, this.options);
         this.layoutManager = new WordCloudLayoutManager(this.options);
         this.dataManager = new WordCloudDataManager();
@@ -102,7 +104,7 @@ export class WordCloud {
     }
 
     cleanup() {
-        window.removeEventListener('resize', this.handleResize);
+        this.dimensionManager.destroy();
         this.restoreCanvas();
         this.renderer.clear();
     }

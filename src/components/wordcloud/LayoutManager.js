@@ -7,6 +7,7 @@ export class WordCloudLayoutManager {
 
     setup() {
         this.layout = d3.layout.cloud()
+            .size([this.options.width, this.options.height])
             .padding(this.options.padding)
             .rotate(this.getRotation.bind(this));
     }
@@ -49,7 +50,6 @@ export class WordCloudLayoutManager {
                 const baseSize = Math.sqrt(area / (wordCount * 5));
                 
                 this.layout
-                    .size([this.options.width, this.options.height])
                     .words(words)
                     .fontSize(d => {
                         // Scale the word's relative size by the dynamic base size
