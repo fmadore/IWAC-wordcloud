@@ -20,12 +20,12 @@ body {
     justify-content: center;
     overflow: hidden;
     margin: 0;
-    padding: 10px;
+    padding: 5px;
 }
 
 #wordcloud { 
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 70px);
     min-height: 400px;
     margin: 0;
     padding: 0;
@@ -33,6 +33,8 @@ body {
     align-items: flex-start;
     justify-content: center;
     background-color: transparent;
+    max-width: min(100%, calc((100vh - 70px) * 1.5));
+    margin: 0 auto;
 }
 
 #wordcloud svg {
@@ -41,4 +43,5 @@ body {
     max-width: 1200px;
     min-height: 400px;
     display: block;
+    aspect-ratio: 1.5;
 } 
