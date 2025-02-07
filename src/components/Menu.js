@@ -2,10 +2,10 @@ import { CountrySelector } from './CountrySelector.js';
 import { WordCountSlider } from './WordCountSlider.js';
 import { SaveButton } from './SaveButton.js';
 import { saveAsPNG } from '../utils/saveUtils.js';
-import { config } from '../config/settings.js';
+import { ConfigManager } from '../config/ConfigManager.js';
 
 export class Menu {
-    constructor(containerId, onUpdate, options = {}) {
+    constructor(containerId, onUpdate) {
         if (!containerId) {
             throw new Error('Menu: containerId is required');
         }
@@ -15,12 +15,7 @@ export class Menu {
             throw new Error(`Menu: container with id "${containerId}" not found`);
         }
 
-        this.options = {
-            initialCountry: 'combined',
-            initialWordCount: config.data.defaultWordCount,
-            ...options
-        };
-
+        this.config = ConfigManager.getInstance();
         this.onUpdate = onUpdate;
         this.components = {};
         this.init();
@@ -57,11 +52,14 @@ export class Menu {
     }
 
     setInitialState() {
-        if (this.options.initialCountry) {
-            this.setCountry(this.options.initialCountry);
+        const defaultCountry = this.config.get('data.defaultCountry');
+        const defaultWordCount = this.config.get('data.defaultWordCount');
+        
+        if (defaultCountry) {
+            this.setCountry(defaultCountry);
         }
-        if (this.options.initialWordCount) {
-            this.setWordCount(this.options.initialWordCount);
+        if (defaultWordCount) {
+            this.setWordCount(defaultWordCount);
         }
     }
 
@@ -78,13 +76,14 @@ export class Menu {
         }
     }
 
-    handleSave() {
+    async handleSave() {
         try {
             const svg = document.querySelector("#wordcloud svg");
             if (!svg) {
                 throw new Error('Word cloud SVG element not found');
             }
-            saveAsPNG(svg);
+            const exportConfig = this.components.saveButton.getExportConfig();
+            await saveAsPNG(svg, exportConfig);
         } catch (error) {
             console.error('Failed to save word cloud:', error);
         }
@@ -110,8 +109,13 @@ export class Menu {
 
     // Method to destroy/cleanup the menu
     destroy() {
-        // Remove event listeners and clean up components if needed
+        // Remove event listeners and clean up components
         this.onUpdate = null;
+        Object.values(this.components).forEach(component => {
+            if (component.destroy) {
+                component.destroy();
+            }
+        });
         this.components = {};
         if (this.container) {
             this.container.innerHTML = '';

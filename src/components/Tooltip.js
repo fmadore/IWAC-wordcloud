@@ -1,8 +1,10 @@
 import { getTranslations } from '../utils/translations.js';
+import { ConfigManager } from '../config/ConfigManager.js';
 
 export class Tooltip {
     constructor() {
         this.tooltip = null;
+        this.config = ConfigManager.getInstance();
         this.translations = getTranslations();
         this.init();
     }
@@ -67,6 +69,9 @@ export class Tooltip {
         let content = `<div class="tooltip-content">`;
         content += `<div class="tooltip-row"><span>#${rank}</span> <strong>${text}</strong></div>`;
         content += `<div class="tooltip-row"><span>${this.translations.frequency}:</span> <strong>${originalSize}</strong></div>`;
+        if (data.countries) {
+            content += `<div class="tooltip-row"><span>${this.translations.countries}:</span> <strong>${data.countries.join(', ')}</strong></div>`;
+        }
         content += `</div>`;
         return content;
     }

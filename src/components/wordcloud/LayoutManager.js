@@ -1,25 +1,31 @@
+import { ConfigManager } from '../../config/ConfigManager.js';
+import { WordStyleManager } from '../../utils/WordStyleManager.js';
+
 export class WordCloudLayoutManager {
-    constructor(options) {
-        this.options = options;
+    constructor() {
+        this.config = ConfigManager.getInstance();
         this.layout = null;
         this.setup();
     }
 
     setup() {
+        const dimensions = this.config.get('wordcloud.dimensions');
+        const layoutOptions = this.config.getLayoutOptions();
+        
         this.layout = d3.layout.cloud()
-            .size([this.options.width, this.options.height])
-            .padding(this.options.padding)
+            .size([dimensions.width, dimensions.height])
+            .padding(layoutOptions.padding)
             .rotate(this.getRotation.bind(this));
     }
 
     getRotation() {
-        return Math.random() < this.options.rotationProbability ? 
-            this.options.rotations[Math.floor(Math.random() * this.options.rotations.length)] : 0;
+        const { rotations, rotationProbability } = this.config.getLayoutOptions();
+        return Math.random() < rotationProbability ? 
+            rotations[Math.floor(Math.random() * rotations.length)] : 0;
     }
 
     updateDimensions({ width, height }) {
-        this.options.width = width;
-        this.options.height = height;
+        this.config.updateDimensions(width, height);
         
         if (this.layout) {
             this.layout.size([width, height]);
@@ -44,22 +50,12 @@ export class WordCloudLayoutManager {
         
         return new Promise((resolve, reject) => {
             try {
-                const area = this.options.width * this.options.height;
-                const wordCount = words.length;
-                // Calculate base size considering both area and word count
-                const baseSize = Math.sqrt(area / (wordCount * 5));
+                const dimensions = this.config.get('wordcloud.dimensions');
+                const area = dimensions.width * dimensions.height;
                 
                 this.layout
                     .words(words)
-                    .fontSize(d => {
-                        // Scale the word's relative size by the dynamic base size
-                        const scaledSize = baseSize * (d.size / Math.max(...words.map(w => w.size)));
-                        // Ensure size stays within reasonable bounds
-                        return Math.min(
-                            Math.max(scaledSize, this.options.minFontSize || 10),
-                            this.options.maxFontSize || this.options.height / 8
-                        );
-                    })
+                    .fontSize(d => WordStyleManager.calculateWordSize(d.size, words, area))
                     .on("end", resolve)
                     .start();
             } catch (error) {

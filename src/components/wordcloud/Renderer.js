@@ -2,11 +2,12 @@ import { Tooltip } from '../Tooltip.js';
 import { StyleManager } from '../../utils/StyleManager.js';
 import { AnimationManager } from '../../utils/AnimationManager.js';
 import { WordStyleManager } from '../../utils/WordStyleManager.js';
+import { ConfigManager } from '../../config/ConfigManager.js';
 
 export class WordCloudRenderer {
-    constructor(container, options) {
+    constructor(container) {
         this.container = container;
-        this.options = options;
+        this.config = ConfigManager.getInstance();
         this.svg = null;
         this.wordGroup = null;
         this.tooltip = new Tooltip();
@@ -15,7 +16,6 @@ export class WordCloudRenderer {
     createSVG() {
         this.clear();
         
-        // Create wrapper div for better control
         const wrapper = document.createElement('div');
         StyleManager.setupWrapper(wrapper);
         this.container.appendChild(wrapper);
@@ -24,22 +24,24 @@ export class WordCloudRenderer {
             .append("svg");
             
         StyleManager.setupSVG(this.svg);
-        this.svg.attr("viewBox", `0 0 ${this.options.width} ${this.options.height}`);
+        
+        const dimensions = this.config.get('wordcloud.dimensions');
+        this.svg.attr("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`);
 
         return this.svg;
     }
 
     createWordGroup(svg) {
+        const dimensions = this.config.get('wordcloud.dimensions');
         this.wordGroup = svg.append("g")
-            .attr("transform", `translate(${this.options.width / 2},${this.options.height / 2})`);
+            .attr("transform", `translate(${dimensions.width / 2},${dimensions.height / 2})`);
         return this.wordGroup;
     }
 
     updateDimensions(width, height) {
         if (!width || !height) return;
         
-        this.options.width = width;
-        this.options.height = height;
+        this.config.updateDimensions(width, height);
 
         if (this.svg) {
             this.svg.attr("viewBox", `0 0 ${width} ${height}`);
@@ -53,7 +55,6 @@ export class WordCloudRenderer {
     renderWords(wordGroup, words) {
         if (!words || words.length === 0) return;
         
-        // Remove existing words
         wordGroup.selectAll("text").remove();
         const wordsWithRank = WordStyleManager.addRankInformation(words);
 

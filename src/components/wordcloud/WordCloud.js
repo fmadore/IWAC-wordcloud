@@ -1,10 +1,10 @@
-import { config } from '../../config/settings.js';
 import { WordCloudRenderer } from './Renderer.js';
 import { WordCloudLayoutManager } from './LayoutManager.js';
 import { WordCloudDataManager } from './DataManager.js';
 import { DimensionManager } from '../../utils/DimensionManager.js';
 import { CanvasManager } from '../../utils/CanvasManager.js';
 import { StyleManager } from '../../utils/StyleManager.js';
+import { ConfigManager } from '../../config/ConfigManager.js';
 
 export class WordCloud {
     constructor(containerId, options = {}) {
@@ -16,29 +16,30 @@ export class WordCloud {
             throw new Error('Container element not found');
         }
 
+        this.config = ConfigManager.getInstance();
+        this.initializeConfig(options);
         StyleManager.setupContainer(this.container);
-
-        this.options = { 
-            ...config.wordcloud,
-            ...options 
-        };
-        
         this.setupManagers();
         this.setupEventHandlers();
+    }
+
+    initializeConfig(options) {
+        // Apply any custom options to the config
+        Object.entries(options).forEach(([key, value]) => {
+            this.config.set(`wordcloud.${key}`, value);
+        });
     }
 
     setupManagers() {
         this.dimensionManager = new DimensionManager(this.container);
         this.canvasManager = new CanvasManager();
-        this.renderer = new WordCloudRenderer(this.container, this.options);
-        this.layoutManager = new WordCloudLayoutManager(this.options);
+        this.renderer = new WordCloudRenderer(this.container);
+        this.layoutManager = new WordCloudLayoutManager();
         this.dataManager = new WordCloudDataManager();
     }
 
     setupEventHandlers() {
         this.dimensionManager.subscribe(dimensions => {
-            this.options.width = dimensions.width;
-            this.options.height = dimensions.height;
             this.layoutManager.updateDimensions(dimensions);
             this.renderer.updateDimensions(dimensions.width, dimensions.height);
             

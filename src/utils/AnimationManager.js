@@ -1,18 +1,24 @@
+import { ConfigManager } from '../config/ConfigManager.js';
+
 export class AnimationManager {
-    static ANIMATION_DURATION = 200;
+    static get config() {
+        return ConfigManager.getInstance().getAnimationConfig();
+    }
 
     static wordEnter(element, size) {
+        const { duration, scaleOnHover } = this.config;
         d3.select(element)
             .transition()
-            .duration(this.ANIMATION_DURATION)
-            .style("font-size", `${size * 1.2}px`)
+            .duration(duration)
+            .style("font-size", `${size * scaleOnHover}px`)
             .style("font-weight", "bold");
     }
 
     static wordExit(element, size) {
+        const { duration } = this.config;
         d3.select(element)
             .transition()
-            .duration(this.ANIMATION_DURATION)
+            .duration(duration)
             .style("font-size", `${size}px`)
             .style("font-weight", "normal");
     }

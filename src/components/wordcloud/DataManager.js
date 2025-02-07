@@ -1,13 +1,15 @@
 import { processWords, processCombinedData } from '../../utils/dataProcessor.js';
-import { config } from '../../config/settings.js';
+import { ConfigManager } from '../../config/ConfigManager.js';
 
 export class WordCloudDataManager {
     constructor() {
+        this.config = ConfigManager.getInstance();
         this.currentWords = null;
     }
 
     async loadData(country, wordCount) {
-        const response = await d3.json(config.paths.getDataPath(country));
+        const dataPath = this.config.get('paths.getDataPath')(country);
+        const response = await d3.json(dataPath);
         return this.processDataResponse(response, country, wordCount);
     }
 
@@ -24,5 +26,24 @@ export class WordCloudDataManager {
 
     getCurrentWords() {
         return this.currentWords;
+    }
+
+    getDefaultWordCount() {
+        return this.config.get('data.defaultWordCount');
+    }
+
+    getWordCountLimits() {
+        return {
+            min: this.config.get('data.minWords'),
+            max: this.config.get('data.maxWords')
+        };
+    }
+
+    getDefaultCountry() {
+        return this.config.get('data.defaultCountry');
+    }
+
+    getAvailableCountries() {
+        return this.config.getCountries();
     }
 } 

@@ -1,5 +1,5 @@
 import { getTranslations } from '../utils/translations.js';
-import { config } from '../config/settings.js';
+import { ConfigManager } from '../config/ConfigManager.js';
 
 export class WordCountSlider {
     constructor(container) {
@@ -7,12 +7,8 @@ export class WordCountSlider {
         if (!this.container) {
             throw new Error('WordCountSlider: container is required');
         }
+        this.config = ConfigManager.getInstance();
         this.translations = getTranslations();
-        this.config = {
-            min: 10,
-            max: 150,
-            default: config.data.defaultWordCount
-        };
         this._onChange = null;
         
         this.init();
@@ -31,7 +27,7 @@ export class WordCountSlider {
         
         const valueDisplay = document.createElement('span');
         valueDisplay.className = 'slider-value';
-        valueDisplay.textContent = this.config.default;
+        valueDisplay.textContent = this.config.get('data.defaultWordCount');
         
         labelContainer.appendChild(label);
         labelContainer.appendChild(document.createTextNode(': '));
@@ -41,9 +37,9 @@ export class WordCountSlider {
         const slider = document.createElement('input');
         slider.type = 'range';
         slider.id = 'wordCountSlider';
-        slider.min = this.config.min;
-        slider.max = this.config.max;
-        slider.value = this.config.default;
+        slider.min = this.config.get('data.minWords');
+        slider.max = this.config.get('data.maxWords');
+        slider.value = this.config.get('data.defaultWordCount');
 
         // Add event listener
         slider.addEventListener('input', (e) => {

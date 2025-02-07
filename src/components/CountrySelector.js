@@ -1,4 +1,5 @@
 import { getTranslations } from '../utils/translations.js';
+import { ConfigManager } from '../config/ConfigManager.js';
 
 export class CountrySelector {
     constructor(container) {
@@ -6,15 +7,9 @@ export class CountrySelector {
         if (!this.container) {
             throw new Error('CountrySelector: container is required');
         }
+        this.config = ConfigManager.getInstance();
         this.translations = getTranslations();
         this._onChange = null;
-        this.countries = [
-            { value: 'combined', labelKey: 'allCountries' },
-            { value: 'bénin', label: 'Bénin' },
-            { value: 'burkina_faso', label: 'Burkina Faso' },
-            { value: 'togo', label: 'Togo' }
-        ];
-        
         this.init();
     }
 
@@ -35,7 +30,7 @@ export class CountrySelector {
         select.setAttribute('aria-label', 'Select a country');
 
         // Add options
-        this.countries.forEach(country => {
+        this.config.getCountries().forEach(country => {
             const option = document.createElement('option');
             option.value = country.value;
             option.textContent = country.labelKey ? 
@@ -43,6 +38,9 @@ export class CountrySelector {
                 country.label;
             select.appendChild(option);
         });
+
+        // Set default value
+        select.value = this.config.get('data.defaultCountry');
 
         // Add event listener
         select.addEventListener('change', () => {

@@ -1,4 +1,5 @@
 import { getTranslations } from '../utils/translations.js';
+import { ConfigManager } from '../config/ConfigManager.js';
 
 export class SaveButton {
     constructor(container) {
@@ -6,6 +7,7 @@ export class SaveButton {
         if (!this.container) {
             throw new Error('SaveButton: container is required');
         }
+        this.config = ConfigManager.getInstance();
         this.translations = getTranslations();
         this._onClick = null;
         
@@ -19,7 +21,7 @@ export class SaveButton {
         const button = document.createElement('button');
         button.id = 'saveButton';
         button.className = 'save-button';
-        button.setAttribute('aria-label', 'Save as PNG');
+        button.setAttribute('aria-label', this.translations.saveAsPNG);
 
         // Create icon element
         const icon = document.createElement('span');
@@ -48,6 +50,10 @@ export class SaveButton {
 
         buttonContainer.appendChild(button);
         this.container.appendChild(buttonContainer);
+    }
+
+    getExportConfig() {
+        return this.config.getExportConfig();
     }
 
     set onClick(handler) {
