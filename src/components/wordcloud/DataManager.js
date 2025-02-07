@@ -1,4 +1,4 @@
-import { processWords, processCombinedData } from '../../utils/dataProcessor.js';
+import { DataProcessor } from '../../utils/dataProcessor.js';
 import { ConfigManager } from '../../config/ConfigManager.js';
 
 export class WordCloudDataManager {
@@ -15,9 +15,9 @@ export class WordCloudDataManager {
 
     processDataResponse(response, country, wordCount) {
         const words = country === 'combined' ? 
-            processCombinedData(response) : 
+            DataProcessor.processCombinedData(response) : 
             response;
-        return processWords(words, wordCount);
+        return DataProcessor.processWords(words, wordCount);
     }
 
     setCurrentWords(words) {

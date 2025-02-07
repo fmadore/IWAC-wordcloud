@@ -1,7 +1,7 @@
 import { CountrySelector } from './CountrySelector.js';
 import { WordCountSlider } from './WordCountSlider.js';
 import { SaveButton } from './SaveButton.js';
-import { saveAsPNG } from '../utils/saveUtils.js';
+import { SaveManager } from '../utils/saveUtils.js';
 import { ConfigManager } from '../config/ConfigManager.js';
 import { ErrorManager } from '../utils/ErrorManager.js';
 
@@ -89,7 +89,7 @@ export class Menu {
                 throw new Error('Word cloud SVG element not found');
             }
             const exportConfig = this.components.saveButton.getExportConfig();
-            await saveAsPNG(svg, exportConfig);
+            await SaveManager.saveAsPNG(svg);
         }, { component: 'Menu', method: 'handleSave' });
     }
 
