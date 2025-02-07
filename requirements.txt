@@ -3,3 +3,4 @@ tqdm>=4.66.0
 nltk>=3.8.1
 spacy>=3.7.2
 python-dotenv>=1.0.0
+pytz>=2024.1
