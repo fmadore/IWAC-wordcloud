@@ -1,10 +1,10 @@
-@import '/IWAC-wordcloud/src/styles/modules/_reset.css';
-@import '/IWAC-wordcloud/src/styles/modules/_layout.css';
-@import '/IWAC-wordcloud/src/styles/modules/_controls.css';
-@import '/IWAC-wordcloud/src/styles/modules/_slider.css';
-@import '/IWAC-wordcloud/src/styles/modules/_button.css';
-@import '/IWAC-wordcloud/src/styles/modules/_responsive.css';
-@import '/IWAC-wordcloud/src/styles/modules/_tooltip.css';
+@import './modules/_reset.css';
+@import './modules/_layout.css';
+@import './modules/_controls.css';
+@import './modules/_slider.css';
+@import './modules/_button.css';
+@import './modules/_responsive.css';
+@import './modules/_tooltip.css';
 
 /* WordCloud Module */
 .wordcloud-container {
