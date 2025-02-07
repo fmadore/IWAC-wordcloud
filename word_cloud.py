@@ -27,14 +27,23 @@ import json
 import re
 import os
 from dotenv import load_dotenv
+from datetime import datetime
+import pytz
 
 # Get the current script's directory
 script_dir = os.path.dirname(os.path.abspath(__file__))
 # Define data directory path
 data_dir = os.path.join(os.path.dirname(script_dir), 'data')
+# Define cache directory path
+cache_dir = os.path.join(data_dir, 'cache')
 
-# Ensure data directory exists
+# Ensure directories exist
 os.makedirs(data_dir, exist_ok=True)
+os.makedirs(cache_dir, exist_ok=True)
+
+# Cache file paths
+ITEMS_CACHE_FILE = os.path.join(cache_dir, 'items_cache.json')
+PROCESSED_CACHE_FILE = os.path.join(cache_dir, 'processed_cache.json')
 
 # Load environment variables from .env file in the root directory
 root_dir = os.path.dirname(os.path.dirname(script_dir))
@@ -80,33 +89,89 @@ apostrophe_re = re.compile(r"['']")  # Matches both curly and straight apostroph
 whitespace_re = re.compile(r'\s+')
 oe_re = re.compile(r'œ')
 
-def get_items_by_set(api_url, item_set_id, key_identity, key_credential):
+def load_cache():
+    """
+    Load the cached items and their modification dates.
+    
+    Returns:
+        tuple: (items_cache, processed_cache) containing cached data
+    """
+    items_cache = {}
+    processed_cache = {}
+    
+    if os.path.exists(ITEMS_CACHE_FILE):
+        with open(ITEMS_CACHE_FILE, 'r', encoding='utf-8') as f:
+            items_cache = json.load(f)
+    
+    if os.path.exists(PROCESSED_CACHE_FILE):
+        with open(PROCESSED_CACHE_FILE, 'r', encoding='utf-8') as f:
+            processed_cache = json.load(f)
+            
+    return items_cache, processed_cache
+
+def save_cache(items_cache, processed_cache):
+    """
+    Save the current cache to disk.
+    
+    Args:
+        items_cache (dict): Cache of raw items and their modification dates
+        processed_cache (dict): Cache of processed word frequencies
+    """
+    with open(ITEMS_CACHE_FILE, 'w', encoding='utf-8') as f:
+        json.dump(items_cache, f, ensure_ascii=False, indent=2)
+    
+    with open(PROCESSED_CACHE_FILE, 'w', encoding='utf-8') as f:
+        json.dump(processed_cache, f, ensure_ascii=False, indent=2)
+
+def get_items_by_set(api_url, item_set_id, key_identity, key_credential, items_cache):
     """
     Retrieve all items from a specific Omeka S item set using pagination.
+    Only fetch items that have been modified since their last cache.
     
     Args:
         api_url (str): Base URL of the Omeka S API
         item_set_id (int): ID of the item set to retrieve
         key_identity (str): API key identity
         key_credential (str): API key credential
+        items_cache (dict): Cache of previously fetched items
     
     Returns:
-        list: List of items from the specified item set
+        tuple: (List of items from the specified item set, Updated items cache)
     """
     items = []
     page = 1
+    cache_key = str(item_set_id)
+    
     while True:
         url = f"{api_url}/items?key_identity={key_identity}&key_credential={key_credential}&item_set_id={item_set_id}&page={page}"
         response = requests.get(url)
         if response.status_code != 200:
             print(f"Failed to retrieve items for set {item_set_id}: {response.status_code} - {response.text}")
             break
+            
         data = response.json()
         if not data:
             break
-        items.extend(data)
+            
+        for item in data:
+            item_id = item.get('o:id')
+            modified_date = item.get('o:modified', {}).get('@value')
+            
+            # Check if item needs processing
+            cache_entry = items_cache.get(cache_key, {}).get(str(item_id))
+            if not cache_entry or cache_entry['modified_date'] != modified_date:
+                items.append(item)
+                # Update cache
+                if cache_key not in items_cache:
+                    items_cache[cache_key] = {}
+                items_cache[cache_key][str(item_id)] = {
+                    'modified_date': modified_date,
+                    'processed_date': datetime.now(pytz.UTC).isoformat()
+                }
+        
         page += 1
-    return items
+    
+    return items, items_cache
 
 def preprocess_texts(texts):
     """
@@ -164,7 +229,7 @@ def preprocess_texts(texts):
         processed_texts.extend(tokens)
     return processed_texts
 
-def get_word_frequencies(texts, top_n=150):
+def get_word_frequencies(texts, top_n=200):
     """
     Calculate word frequencies from processed texts.
     
@@ -179,21 +244,48 @@ def get_word_frequencies(texts, top_n=150):
     return word_freq.most_common(top_n)
 
 # Main execution block
+# Load existing cache
+items_cache, processed_cache = load_cache()
+
 # Process each country's data and generate word frequencies
 all_word_frequencies = {}
 for country, sets in ITEM_SETS.items():
     country_texts = []
+    cache_updated = False
+    
     # Collect texts from all item sets for the current country
     for set_id in tqdm(sets, desc=f"Processing {country}"):
-        items = get_items_by_set(API_URL, set_id, KEY_IDENTITY, KEY_CREDENTIAL)
-        for item in items:
-            for value in item.get('bibo:content', []):
-                if value['type'] == 'literal':
-                    country_texts.append(value['@value'])
+        items, items_cache = get_items_by_set(API_URL, set_id, KEY_IDENTITY, KEY_CREDENTIAL, items_cache)
+        
+        if items:  # Only process if there are new or modified items
+            cache_updated = True
+            for item in items:
+                for value in item.get('bibo:content', []):
+                    if value['type'] == 'literal':
+                        country_texts.append(value['@value'])
     
-    # Process texts and get word frequencies
-    preprocessed_texts = preprocess_texts(country_texts)
-    all_word_frequencies[country] = get_word_frequencies(preprocessed_texts, top_n=150)
+    if cache_updated:
+        # Process texts and get word frequencies for new/modified content
+        preprocessed_texts = preprocess_texts(country_texts)
+        current_frequencies = get_word_frequencies(preprocessed_texts, top_n=200)
+        
+        # Update processed cache
+        processed_cache[country] = {
+            'frequencies': current_frequencies,
+            'last_updated': datetime.now(pytz.UTC).isoformat()
+        }
+        
+        all_word_frequencies[country] = current_frequencies
+    else:
+        # Use cached frequencies if available
+        if country in processed_cache:
+            all_word_frequencies[country] = processed_cache[country]['frequencies']
+            print(f"Using cached data for {country} from {processed_cache[country]['last_updated']}")
+        else:
+            print(f"No data available for {country}")
+
+# Save updated cache
+save_cache(items_cache, processed_cache)
 
 # Generate individual JSON files for each country
 for country, word_freq in all_word_frequencies.items():
