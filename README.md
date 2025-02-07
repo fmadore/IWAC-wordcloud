@@ -88,6 +88,25 @@ The project follows a modular architecture with clear separation of concerns:
 - [D3.js](https://d3js.org/) (v7.8.5) - Data visualization library
 - [d3-cloud](https://github.com/jasondavies/d3-cloud) (v1.2.5) - Word cloud layout
 
+## Development
+
+The easiest way to test changes locally is using VS Code's Live Server:
+
+1. Install the Live Server extension in VS Code:
+   - Open VS Code Extensions (Ctrl+Shift+X)
+   - Search for "Live Server"
+   - Install "Live Server" by Ritwick Dey
+
+2. Start the development server:
+   - Right-click on `index.html` in VS Code
+   - Select "Open with Live Server"
+   - Your browser will open automatically to something like `http://127.0.0.1:5500`
+
+The Live Server will automatically:
+- Reload when you make changes
+- Handle CORS for ES modules
+- Serve files correctly
+
 ## Data Format
 
 The word frequency data should be stored in JSON files with the following structure:
