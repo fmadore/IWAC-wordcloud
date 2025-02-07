@@ -4,6 +4,7 @@
 @import './modules/_slider.css';
 @import './modules/_button.css';
 @import './modules/_responsive.css';
+@import './modules/_tooltip.css';
 
 /* Reset Module */
 * {

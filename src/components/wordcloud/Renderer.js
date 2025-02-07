@@ -1,9 +1,12 @@
+import { Tooltip } from '../Tooltip.js';
+
 export class WordCloudRenderer {
     constructor(container, options) {
         this.container = container;
         this.options = options;
         this.svg = null;
         this.wordGroup = null;
+        this.tooltip = new Tooltip();
     }
 
     createSVG() {
@@ -59,14 +62,18 @@ export class WordCloudRenderer {
 
     renderWords(wordGroup, words) {
         if (!words || words.length === 0) return;
-
-        const tooltip = d3.select("#tooltip");
         
         // Remove existing words
         wordGroup.selectAll("text").remove();
 
+        // Add rank information to each word
+        const wordsWithRank = words.map((word, index) => ({
+            ...word,
+            rank: index + 1
+        }));
+
         return wordGroup.selectAll("text")
-            .data(words)
+            .data(wordsWithRank)
             .enter()
             .append("text")
             .style("font-size", d => `${d.size}px`)
@@ -74,18 +81,14 @@ export class WordCloudRenderer {
             .attr("text-anchor", "middle")
             .attr("transform", d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
             .text(d => d.text)
-            .on("mouseover", (event, d) => this.handleMouseOver(event, d, tooltip))
-            .on("mouseout", (event, d) => this.handleMouseOut(event, d, tooltip));
-    }
-
-    handleMouseOver(event, d, tooltip) {
-        this.animateWordEnter(event.target, d);
-        this.showTooltip(event, d, tooltip);
-    }
-
-    handleMouseOut(event, d, tooltip) {
-        this.animateWordExit(event.target, d);
-        this.hideTooltip(tooltip);
+            .on("mouseover", (event, d) => {
+                this.tooltip.show(event, d);
+                this.animateWordEnter(event.target, d);
+            })
+            .on("mouseout", (event, d) => {
+                this.tooltip.hide();
+                this.animateWordExit(event.target, d);
+            });
     }
 
     animateWordEnter(element, d) {
@@ -104,37 +107,10 @@ export class WordCloudRenderer {
             .style("font-weight", "normal");
     }
 
-    showTooltip(event, d, tooltip) {
-        tooltip.transition()
-            .duration(200)
-            .style("opacity", .9);
-            
-        const tooltipText = this.getTooltipText(d);
-        this.positionTooltip(tooltip, tooltipText, event);
-    }
-
-    hideTooltip(tooltip) {
-        tooltip.transition()
-            .duration(500)
-            .style("opacity", 0);
-    }
-
-    getTooltipText(d) {
-        let text = `${d.text}: ${d.originalSize}`;
-        if (d.countries) {
-            text += `\nCountries: ${d.countries.join(', ')}`;
-        }
-        return text;
-    }
-
-    positionTooltip(tooltip, text, event) {
-        tooltip.html(text)
-            .style("left", (event.pageX) + "px")
-            .style("top", (event.pageY - 28) + "px");
-    }
-
     clear() {
-        // Remove all SVG elements
+        if (this.tooltip) {
+            this.tooltip.destroy();
+        }
         if (this.container) {
             while (this.container.firstChild) {
                 this.container.removeChild(this.container.firstChild);
