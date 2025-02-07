@@ -120,17 +120,6 @@ body {
     cursor: pointer;
 }
 
-/* Tooltip Module */
-#tooltip {
-    position: absolute;
-    padding: 5px;
-    font: 12px sans-serif;
-    background: lightsteelblue;
-    border-radius: 8px;
-    pointer-events: none;
-    opacity: 0;
-}
-
 /* Responsive Module */
 @media (max-width: 900px) {
     .menu-wrapper {

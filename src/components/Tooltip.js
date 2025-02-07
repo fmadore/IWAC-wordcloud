@@ -2,22 +2,34 @@ import { getTranslations } from '../utils/translations.js';
 
 export class Tooltip {
     constructor() {
-        this.tooltip = this.createTooltipElement();
+        this.tooltip = null;
         this.translations = getTranslations();
+        this.init();
+    }
+
+    init() {
+        // Remove any existing tooltip
+        const existingTooltip = document.getElementById('tooltip');
+        if (existingTooltip) {
+            existingTooltip.remove();
+        }
+        this.tooltip = this.createTooltipElement();
     }
 
     createTooltipElement() {
         const tooltip = document.createElement('div');
         tooltip.id = 'tooltip';
-        tooltip.className = 'tooltip';
         document.body.appendChild(tooltip);
         return tooltip;
     }
 
     show(event, data) {
+        if (!this.tooltip) {
+            this.init();
+        }
+
         const content = this.formatContent(data);
         this.tooltip.innerHTML = content;
-        this.tooltip.style.opacity = 0.9;
         
         // Position the tooltip
         const tooltipWidth = this.tooltip.offsetWidth;
@@ -34,12 +46,20 @@ export class Tooltip {
             top = event.pageY + 10;
         }
 
+        // Set position before making visible
         this.tooltip.style.left = `${left}px`;
         this.tooltip.style.top = `${top}px`;
+        
+        // Make tooltip visible
+        requestAnimationFrame(() => {
+            this.tooltip.classList.add('visible');
+        });
     }
 
     hide() {
-        this.tooltip.style.opacity = 0;
+        if (this.tooltip) {
+            this.tooltip.classList.remove('visible');
+        }
     }
 
     formatContent(data) {
@@ -54,6 +74,7 @@ export class Tooltip {
     destroy() {
         if (this.tooltip && this.tooltip.parentNode) {
             this.tooltip.parentNode.removeChild(this.tooltip);
+            this.tooltip = null;
         }
     }
 } 
