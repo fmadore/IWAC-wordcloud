@@ -3,6 +3,8 @@ import { WordCloudRenderer } from './Renderer.js';
 import { WordCloudLayoutManager } from './LayoutManager.js';
 import { WordCloudDataManager } from './DataManager.js';
 import { DimensionManager } from '../../utils/DimensionManager.js';
+import { CanvasManager } from '../../utils/CanvasManager.js';
+import { StyleManager } from '../../utils/StyleManager.js';
 
 export class WordCloud {
     constructor(containerId, options = {}) {
@@ -14,84 +16,36 @@ export class WordCloud {
             throw new Error('Container element not found');
         }
 
-        // Set container style to ensure proper sizing
-        this.container.style.width = '100%';
-        this.container.style.height = '100%';
-        this.container.style.position = 'relative';
-        this.container.style.display = 'flex';
-        this.container.style.alignItems = 'center';
-        this.container.style.justifyContent = 'center';
-        this.container.style.minHeight = '400px'; // Add minimum height
+        StyleManager.setupContainer(this.container);
 
         this.options = { 
             ...config.wordcloud,
-            width: this.container.clientWidth || 800,
-            height: this.container.clientHeight || 600,
             ...options 
         };
         
+        this.setupManagers();
+        this.setupEventHandlers();
+    }
+
+    setupManagers() {
         this.dimensionManager = new DimensionManager(this.container);
+        this.canvasManager = new CanvasManager();
         this.renderer = new WordCloudRenderer(this.container, this.options);
         this.layoutManager = new WordCloudLayoutManager(this.options);
         this.dataManager = new WordCloudDataManager();
-        
-        this.setupCanvas();
-        this.setupEventListeners();
-        this.handleResize();
     }
 
-    setupCanvas() {
-        this.originalCreateElement = document.createElement.bind(document);
-        document.createElement = (tagName) => {
-            const element = this.originalCreateElement(tagName);
-            if (tagName.toLowerCase() === 'canvas') {
-                this.optimizeCanvasContext(element);
+    setupEventHandlers() {
+        this.dimensionManager.subscribe(dimensions => {
+            this.options.width = dimensions.width;
+            this.options.height = dimensions.height;
+            this.layoutManager.updateDimensions(dimensions);
+            this.renderer.updateDimensions(dimensions.width, dimensions.height);
+            
+            if (this.dataManager.getCurrentWords()) {
+                this.redraw();
             }
-            return element;
-        };
-    }
-
-    optimizeCanvasContext(canvasElement) {
-        const originalGetContext = canvasElement.getContext.bind(canvasElement);
-        canvasElement.getContext = (contextType, attributes = {}) => {
-            if (contextType === '2d') {
-                attributes.willReadFrequently = true;
-            }
-            return originalGetContext(contextType, attributes);
-        };
-    }
-
-    setupEventListeners() {
-        const resizeObserver = new ResizeObserver(() => this.handleResize());
-        resizeObserver.observe(this.container);
-        // Keep existing resize handler as fallback
-        window.addEventListener('resize', this.debounce(this.handleResize, 250));
-        // Also handle orientation change for mobile devices
-        window.addEventListener('orientationchange', this.debounce(this.handleResize, 250));
-    }
-
-    debounce(func, wait) {
-        let timeout;
-        return (...args) => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-    }
-
-    handleResize() {
-        // Force a reflow to ensure we get the correct dimensions
-        this.container.offsetHeight;
-        
-        const dimensions = this.layoutManager.calculateDimensions(this.container);
-        this.options.width = dimensions.width;
-        this.options.height = dimensions.height;
-        
-        this.layoutManager.updateDimensions(dimensions);
-        this.renderer.updateDimensions(dimensions.width, dimensions.height);
-        
-        if (this.dataManager.getCurrentWords()) {
-            this.redraw();
-        }
+        });
     }
 
     async redraw() {
@@ -105,15 +59,8 @@ export class WordCloud {
 
     cleanup() {
         this.dimensionManager.destroy();
-        this.restoreCanvas();
+        this.canvasManager.destroy();
         this.renderer.clear();
-    }
-
-    restoreCanvas() {
-        if (this.originalCreateElement) {
-            document.createElement = this.originalCreateElement;
-            this.originalCreateElement = null;
-        }
     }
 
     draw(words) {

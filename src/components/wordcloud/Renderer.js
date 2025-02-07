@@ -1,4 +1,5 @@
 import { Tooltip } from '../Tooltip.js';
+import { StyleManager } from '../../utils/StyleManager.js';
 
 export class WordCloudRenderer {
     constructor(container, options) {
@@ -14,23 +15,14 @@ export class WordCloudRenderer {
         
         // Create wrapper div for better control
         const wrapper = document.createElement('div');
-        wrapper.style.width = '100%';
-        wrapper.style.height = '100%';
-        wrapper.style.position = 'relative';
-        wrapper.style.display = 'flex';
-        wrapper.style.alignItems = 'center';
-        wrapper.style.justifyContent = 'center';
+        StyleManager.setupWrapper(wrapper);
         this.container.appendChild(wrapper);
         
         this.svg = d3.select(wrapper)
-            .append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%")
-            .style("position", "relative")
-            .style("display", "block")
-            .style("background", "transparent")
-            .attr("preserveAspectRatio", "xMidYMid meet")
-            .attr("viewBox", `0 0 ${this.options.width} ${this.options.height}`);
+            .append("svg");
+            
+        StyleManager.setupSVG(this.svg);
+        this.svg.attr("viewBox", `0 0 ${this.options.width} ${this.options.height}`);
 
         return this.svg;
     }
