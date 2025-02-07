@@ -1,117 +1,167 @@
+@import './modules/_reset.css';
+@import './modules/_layout.css';
+@import './modules/_controls.css';
+@import './modules/_slider.css';
+@import './modules/_button.css';
+@import './modules/_responsive.css';
+
+/* Reset Module */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Layout Module */
 body { 
     font-family: Arial, sans-serif; 
     text-align: center;
-    margin: 0;
-    padding: 0;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* WordCloud Module */
+.wordcloud-container {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    align-items: flex-start; /* Changed from center to remove extra space */
+    justify-content: center;
+    overflow: hidden; /* Prevent any overflow */
 }
 
 #wordcloud { 
     width: 100%;
-    flex: 1;
-    min-height: 400px;
-    height: calc(100vh - 200px);
+    height: calc(100vh - 60px); /* Reduced from 80px */
+    min-height: 300px;
     max-height: 800px;
-    background: transparent;
     margin: 0;
-    padding: 20px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 0;
 }
 
 #wordcloud svg {
     max-width: 100%;
-    height: auto;
+    height: 100%; /* Changed from auto to 100% */
+    display: block; /* Remove any inline spacing */
 }
 
-#tooltip {
-    position: absolute;
-    text-align: center;
-    padding: 5px;
-    font: 12px sans-serif;
-    background: lightsteelblue;
-    border: 0px;
-    border-radius: 8px;
-    pointer-events: none;
-    opacity: 0;
-}
-
-#countrySelector, 
-#wordCountSlider, 
-#saveButton { 
-    margin: 0; /* Remove default margins */
-}
-
-/* Remove the old #controls styles as they conflict with .menu-wrapper */
-#controls { 
-    display: none;
-}
-
-/* Ensure the menu stays at the top */
-.menu-wrapper {
+/* Controls Module */
+.controls-container {
+    width: 100%;
     position: relative;
-    z-index: 10;
+    z-index: 100;
+    background-color: #fff;
+}
+
+.menu-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    padding: 16px;
+    gap: 15px;
+    padding: 8px;
     background-color: #f8f9fa;
     border-radius: 12px;
-    margin: 20px auto;
+    margin: 5px auto;
     width: 95%;
     max-width: 900px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Container styles */
-.select-container,
-.slider-container,
-.button-container {
+/* Input Components Module */
+.input-container {
     flex: 1;
     min-width: 180px;
-    width: 100%;
 }
 
-/* Ensure proper spacing between elements */
-.slider-container {
-    margin: 0 20px;
-}
-
-/* Base styles for all interactive elements */
-#countrySelector,
-input[type="range"],
-.save-button {
-    width: 100%;
-    box-sizing: border-box;
-}
-
+/* Select Module */
 .select-container {
     position: relative;
     min-width: 200px;
 }
 
-.select-container label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #333;
-}
-
 #countrySelector {
     width: 100%;
-    padding: 10px 35px 10px 15px;
+    padding: 8px 35px 8px 12px;
     font-size: 16px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
     background-color: white;
     appearance: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+}
+
+/* Slider Module */
+.slider-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0 15px;
+}
+
+/* Button Module */
+.button-container {
+    display: flex;
+    align-items: center;
+}
+
+.save-button {
+    width: 100%;
+    padding: 8px 16px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Tooltip Module */
+#tooltip {
+    position: absolute;
+    padding: 5px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0;
+}
+
+/* Responsive Module */
+@media (max-width: 900px) {
+    .menu-wrapper {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 6px;
+    }
+    
+    .input-container {
+        flex: 1 1 calc(50% - 12px);
+    }
+}
+
+@media (max-width: 600px) {
+    #wordcloud {
+        height: calc(100vh - 80px);
+    }
+
+    .menu-wrapper {
+        flex-direction: column;
+        gap: 6px;
+        padding: 6px;
+        margin: 2px auto;
+    }
+    
+    .input-container {
+        width: 100%;
+    }
+    
+    .slider-container {
+        margin: 0;
+    }
 }
 
 #countrySelector:hover {
@@ -135,13 +185,6 @@ input[type="range"],
     border-right: 6px solid transparent;
     border-top: 6px solid #666;
     pointer-events: none;
-}
-
-.slider-container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    min-width: 200px;
 }
 
 .slider-label {
@@ -212,27 +255,6 @@ input[type="range"]::-moz-range-thumb:active {
     transform: scale(0.95);
 }
 
-.button-container {
-    display: flex;
-    align-items: center;
-}
-
-.save-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    background-color: #4a90e2;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(74, 144, 226, 0.2);
-}
-
 .save-button:hover {
     background-color: #357abd;
     transform: translateY(-1px);
@@ -257,111 +279,6 @@ input[type="range"]::-moz-range-thumb:active {
 
 .save-button .button-text {
     font-weight: 500;
-}
-
-/* Responsive breakpoints */
-@media (max-width: 900px) {
-    .menu-wrapper {
-        flex-wrap: wrap;
-        gap: 16px;
-    }
-
-    .select-container,
-    .slider-container,
-    .button-container {
-        flex: 1 1 calc(50% - 16px);
-        min-width: 160px;
-    }
-
-    .slider-container {
-        margin: 0;
-    }
-}
-
-@media (max-width: 600px) {
-    body {
-        height: auto;
-        min-height: 100vh;
-    }
-
-    #wordcloud {
-        min-height: 300px;
-        height: calc(100vh - 180px);
-        padding: 10px;
-    }
-
-    .menu-wrapper {
-        position: sticky;
-        top: 0;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 16px;
-        width: 90%;
-        padding: 12px;
-        margin: 10px auto;
-    }
-
-    /* Force specific order using flexbox order */
-    .select-container {
-        order: 1;
-    }
-
-    .slider-container {
-        order: 2;
-        margin: 0;
-    }
-
-    .button-container {
-        order: 3;
-    }
-
-    .select-container,
-    .slider-container,
-    .button-container {
-        flex: none;
-        width: 100%;
-        max-width: none;
-    }
-
-    #countrySelector,
-    input[type="range"],
-    .save-button {
-        min-height: 44px;
-    }
-
-    /* Improve spacing between stacked elements */
-    .select-container + .slider-container,
-    .slider-container + .button-container {
-        margin-top: 8px;
-    }
-}
-
-@media (max-width: 480px) {
-    .menu-wrapper {
-        padding: 12px;
-        gap: 12px;
-        width: 85%;
-    }
-
-    .slider-label,
-    .select-container label {
-        font-size: 14px;
-    }
-
-    #countrySelector {
-        font-size: 14px;
-        padding: 8px 30px 8px 12px;
-    }
-
-    .save-button {
-        padding: 8px 16px;
-        font-size: 13px;
-    }
-
-    .slider-value {
-        font-size: 12px;
-        padding: 2px 6px;
-    }
 }
 
 /* Touch-friendly improvements */

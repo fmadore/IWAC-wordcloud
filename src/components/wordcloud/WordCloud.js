@@ -20,8 +20,14 @@ export class WordCloud {
         this.container.style.display = 'flex';
         this.container.style.alignItems = 'center';
         this.container.style.justifyContent = 'center';
+        this.container.style.minHeight = '400px'; // Add minimum height
 
-        this.options = { ...config.wordcloud, ...options };
+        this.options = { 
+            ...config.wordcloud,
+            width: this.container.clientWidth || 800,
+            height: this.container.clientHeight || 600,
+            ...options 
+        };
         
         this.renderer = new WordCloudRenderer(this.container, this.options);
         this.layoutManager = new WordCloudLayoutManager(this.options);

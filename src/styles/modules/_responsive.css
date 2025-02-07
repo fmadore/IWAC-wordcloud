@@ -1,0 +1,61 @@
+/* Responsive Module */
+@media (max-width: 900px) {
+    .menu-wrapper {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 6px;
+    }
+    
+    .input-container {
+        flex: 1 1 calc(50% - 12px);
+    }
+}
+
+@media (max-width: 600px) {
+    #wordcloud {
+        height: calc(100vh - 80px);
+    }
+
+    .menu-wrapper {
+        flex-direction: column;
+        gap: 6px;
+        padding: 6px;
+        margin: 2px auto;
+    }
+    
+    .input-container {
+        width: 100%;
+    }
+    
+    .slider-container {
+        margin: 0;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) {
+    #countrySelector,
+    input[type="range"],
+    .save-button {
+        cursor: default;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+    }
+
+    .save-button:hover {
+        transform: none;
+        box-shadow: 0 2px 4px rgba(74, 144, 226, 0.2);
+    }
+
+    .save-button:active {
+        background-color: #357abd;
+    }
+} 

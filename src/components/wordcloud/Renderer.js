@@ -14,15 +14,18 @@ export class WordCloudRenderer {
         wrapper.style.width = '100%';
         wrapper.style.height = '100%';
         wrapper.style.position = 'relative';
+        wrapper.style.minHeight = '400px';
+        wrapper.style.display = 'flex';
+        wrapper.style.alignItems = 'center';
+        wrapper.style.justifyContent = 'center';
         this.container.appendChild(wrapper);
         
         this.svg = d3.select(wrapper)
             .append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%")
-            .style("position", "absolute")
-            .style("top", "0")
-            .style("left", "0")
+            .attr("width", this.options.width)
+            .attr("height", this.options.height)
+            .style("position", "relative")
+            .style("display", "block")
             .style("background", "transparent")
             .attr("preserveAspectRatio", "xMidYMid meet")
             .attr("viewBox", `0 0 ${this.options.width} ${this.options.height}`);

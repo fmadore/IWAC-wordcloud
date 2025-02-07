@@ -1,0 +1,45 @@
+/* Layout Module */
+body { 
+    font-family: Arial, sans-serif; 
+    text-align: center;
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.wordcloud-container {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    min-height: 400px;
+}
+
+#wordcloud { 
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+}
+
+#wordcloud svg {
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    min-height: 400px;
+    display: block;
+} 
