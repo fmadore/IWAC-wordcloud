@@ -11,6 +11,7 @@ An interactive word cloud visualization tool built with D3.js that displays word
 - 🌐 Multilingual support (English/French)
 - 📱 Responsive design
 - 🎯 Word size normalization based on frequency
+- 🧩 Modular architecture with clear separation of concerns
 
 ## Project Structure
 
@@ -18,65 +19,90 @@ An interactive word cloud visualization tool built with D3.js that displays word
 project/
 ├── src/
 │   ├── components/
-│   │   └── WordCloud.js      # Main word cloud visualization component
+│   │   ├── wordcloud/
+│   │   │   ├── WordCloud.js     # Main word cloud component
+│   │   │   ├── DataManager.js   # Data loading and management
+│   │   │   ├── LayoutManager.js # Layout calculation and sizing
+│   │   │   └── Renderer.js      # SVG rendering and animations
+│   │   ├── CountrySelector.js   # Country selection component
+│   │   ├── WordCountSlider.js   # Word count control
+│   │   ├── SaveButton.js        # Export functionality
+│   │   ├── Menu.js             # Control panel component
+│   │   └── Tooltip.js          # Interactive tooltips
 │   ├── utils/
-│   │   ├── dataProcessor.js  # Data processing utilities
-│   │   ├── translations.js   # Language translations
-│   │   └── saveUtils.js      # PNG export functionality
+│   │   ├── dataProcessor.js    # Data processing utilities
+│   │   ├── translations.js     # Language translations
+│   │   └── saveUtils.js        # PNG export functionality
 │   ├── config/
-│   │   └── settings.js       # Configuration settings
+│   │   └── settings.js         # Centralized configuration
 │   ├── styles/
-│   │   └── main.css         # Stylesheet
-│   └── main.js              # Application entry point
+│   │   ├── modules/           # CSS modules for components
+│   │   │   ├── button.css
+│   │   │   ├── controls.css
+│   │   │   ├── layout.css
+│   │   │   ├── reset.css
+│   │   │   ├── responsive.css
+│   │   │   ├── slider.css
+│   │   │   └── tooltip.css
+│   │   └── main.css           # Main stylesheet
+│   └── main.js                # Application entry point
 ├── data/
 │   ├── combined_word_frequencies.json
 │   ├── bénin_word_frequencies.json
 │   ├── burkina_faso_word_frequencies.json
 │   └── togo_word_frequencies.json
-└── index.html               # Main HTML file
+└── index.html                 # Main HTML file
 ```
+
+## Architecture
+
+The project follows a modular architecture with clear separation of concerns:
+
+### Core Components
+
+1. **WordCloud Module**
+   - `WordCloud.js`: Main component orchestrating the visualization
+   - `DataManager.js`: Handles data loading and processing
+   - `LayoutManager.js`: Manages layout calculations and word positioning
+   - `Renderer.js`: Handles SVG rendering and animations
+
+2. **UI Components**
+   - `Menu.js`: Control panel with all user interface elements
+   - `CountrySelector.js`: Country selection dropdown
+   - `WordCountSlider.js`: Word count adjustment slider
+   - `SaveButton.js`: PNG export functionality
+   - `Tooltip.js`: Interactive tooltips for word information
+
+3. **Utilities**
+   - `dataProcessor.js`: Data transformation and normalization
+   - `translations.js`: Internationalization support
+   - `saveUtils.js`: Export utilities
+
+4. **Styling**
+   - Modular CSS architecture with separate files for each component
+   - Responsive design support
+   - Touch-friendly interactions
 
 ## Dependencies
 
 - [D3.js](https://d3js.org/) (v7.8.5) - Data visualization library
 - [d3-cloud](https://github.com/jasondavies/d3-cloud) (v1.2.5) - Word cloud layout
-- [html2canvas](https://html2canvas.hertzen.com/) - PNG export functionality
-
-## Setup and Usage
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/IWAC-wordcloud.git
-   cd IWAC-wordcloud
-   ```
-
-2. Serve the project using a local web server. For example, using Python:
-   ```bash
-   # Python 3
-   python -m http.server 8000
-   
-   # Python 2
-   python -m SimpleHTTPServer 8000
-   ```
-
-3. Open your browser and navigate to `http://localhost:8000`
 
 ## Data Format
 
 The word frequency data should be stored in JSON files with the following structure:
 
+For individual country data:
 ```json
 [
   {
     "text": "word",
     "size": 42
-  },
-  // ... more words
+  }
 ]
 ```
 
-For the combined view, the data structure should be:
-
+For the combined view:
 ```json
 {
   "country1": [
@@ -84,75 +110,102 @@ For the combined view, the data structure should be:
       "text": "word",
       "size": 42
     }
-  ],
-  // ... more countries
+  ]
 }
 ```
 
 ## Configuration
 
-The project can be configured through `src/config/settings.js`:
+The project configuration is centralized in `src/config/settings.js`:
 
 - Word cloud settings (dimensions, font sizes, rotations)
 - Data settings (min/max word counts)
 - Country configurations
 - File paths
 
-## Features in Detail
+## Component APIs
 
-### Word Cloud Component
+### WordCloud Component
 
-The `WordCloud` class (`src/components/WordCloud.js`) provides the following functionality:
+```javascript
+const wordCloud = new WordCloud('#container', options);
+await wordCloud.update(country, wordCount);
+```
 
-- Dynamic word sizing based on frequency
-- Word rotation
-- Interactive tooltips
-- Smooth transitions
-- Automatic layout optimization
+### Menu Component
 
-### Data Processing
+```javascript
+const menu = new Menu('controls', updateCallback, options);
+menu.getCountry();  // Get selected country
+menu.getWordCount(); // Get selected word count
+```
 
-The data processor (`src/utils/dataProcessor.js`) handles:
+### DataManager Component
 
-- Word cleaning and normalization
-- Size calculations
-- Data aggregation for combined view
-- Word frequency sorting
+```javascript
+const dataManager = new WordCloudDataManager();
+const words = await dataManager.loadData(country, wordCount);
+```
 
-### Internationalization
+## Data Preparation
 
-The translation system (`src/utils/translations.js`) supports:
+The project includes a Python script (`word_cloud.py`) that processes text content from an Omeka S database to generate the word frequency data used by the visualization.
 
-- Automatic language detection
-- English and French translations
-- Extensible translation dictionary
+### Script Features
 
-### Export Functionality
+- 🔄 Fetches content from Omeka S API with caching support
+- 🧹 Advanced text preprocessing using spaCy and NLTK
+- 🔤 Handles French language text processing
+- 📊 Generates word frequencies for individual countries and combined view
+- 💾 Caches processed data for improved performance
 
-The PNG export utility (`src/utils/saveUtils.js`) provides:
+### Requirements
 
-- High-resolution exports
-- Proper SVG to PNG conversion
-- Automatic download triggering
+```bash
+pip install spacy nltk requests python-dotenv tqdm
+python -m spacy download fr_dep_news_trf
+```
 
-## Browser Support
+### Environment Setup
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+Create a `.env` file in the root directory with your Omeka S credentials:
 
-## Contributing
+```env
+OMEKA_BASE_URL=your_omeka_url
+OMEKA_KEY_IDENTITY=your_key_identity
+OMEKA_KEY_CREDENTIAL=your_key_credential
+```
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### Processing Pipeline
 
-## License
+1. **Data Fetching**
+   - Connects to Omeka S API
+   - Retrieves items from specified item sets
+   - Implements caching to avoid redundant processing
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+2. **Text Processing**
+   - Cleans and normalizes text
+   - Removes stopwords and unwanted tokens
+   - Performs lemmatization
+   - Handles French-specific text features
+
+3. **Output Generation**
+   - Calculates word frequencies
+   - Generates individual country JSON files
+   - Creates combined frequency data
+   - Stores results in the `data/` directory
+
+### Running the Script
+
+```bash
+python word_cloud.py
+```
+
+The script will generate the following files in the `data/` directory:
+- `bénin_word_frequencies.json`
+- `burkina_faso_word_frequencies.json`
+- `togo_word_frequencies.json`
+- `combined_word_frequencies.json`
 
 ## Acknowledgments
 
