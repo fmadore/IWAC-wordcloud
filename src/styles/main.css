@@ -1,10 +1,10 @@
-@import './modules/_reset.css';
-@import './modules/_layout.css';
-@import './modules/_controls.css';
-@import './modules/_slider.css';
-@import './modules/_button.css';
-@import './modules/_responsive.css';
-@import './modules/_tooltip.css';
+@import './modules/reset.css';
+@import './modules/layout.css';
+@import './modules/controls.css';
+@import './modules/slider.css';
+@import './modules/button.css';
+@import './modules/responsive.css';
+@import './modules/tooltip.css';
 
 /* WordCloud Module */
 .wordcloud-container {
