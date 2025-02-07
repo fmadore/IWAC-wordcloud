@@ -15,10 +15,32 @@ export class ConfigManager {
                     maxWidth: 1200
                 },
                 font: {
-                    minSize: 10,
-                    maxSize: null, // Will be calculated based on height
-                    scaleFactor: 5, // Used in base size calculation
-                    family: 'Arial, sans-serif'
+                    // Primary and fallback fonts
+                    family: {
+                        primary: 'Inter',
+                        fallback: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif'
+                    },
+                    // Font size configuration
+                    size: {
+                        min: 10,
+                        max: null, // Will be calculated based on height
+                        scale: {
+                            factor: 5, // Base scaling factor
+                            min: 0.8,  // Minimum scale multiplier
+                            max: 1.2   // Maximum scale multiplier
+                        }
+                    },
+                    // Font weight options
+                    weight: {
+                        normal: 400,
+                        bold: 600,
+                        range: [300, 400, 500, 600]
+                    },
+                    // Font style options
+                    style: {
+                        normal: 'normal',
+                        emphasis: 'italic'
+                    }
                 },
                 layout: {
                     padding: 5,
@@ -93,7 +115,7 @@ export class ConfigManager {
     updateDimensions(width, height) {
         this.set('wordcloud.dimensions.width', width);
         this.set('wordcloud.dimensions.height', height);
-        this.set('wordcloud.font.maxSize', this.calculateMaxFontSize(height));
+        this.set('wordcloud.font.size.max', this.calculateMaxFontSize(height));
     }
 
     getLayoutOptions() {
@@ -102,7 +124,15 @@ export class ConfigManager {
     }
 
     getFontConfig() {
-        return { ...this.config.wordcloud.font };
+        const fontConfig = this.config.wordcloud.font;
+        return {
+            family: `${fontConfig.family.primary}, ${fontConfig.family.fallback}`,
+            minSize: fontConfig.size.min,
+            maxSize: fontConfig.size.max,
+            scaleFactor: fontConfig.size.scale.factor,
+            weights: fontConfig.weight,
+            styles: fontConfig.style
+        };
     }
 
     getAnimationConfig() {

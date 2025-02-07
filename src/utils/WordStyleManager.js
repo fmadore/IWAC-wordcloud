@@ -1,4 +1,5 @@
 import { ConfigManager } from '../config/ConfigManager.js';
+import { FontManager } from './FontManager.js';
 
 export class WordStyleManager {
     static get config() {
@@ -6,14 +7,16 @@ export class WordStyleManager {
     }
 
     static applyWordStyles(wordElements) {
-        const { family } = this.config;
         wordElements
-            .style("font-size", d => `${d.size}px`)
-            .style("font-family", family)
             .style("fill", () => this.getRandomColor())
             .attr("text-anchor", "middle")
             .attr("transform", d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
             .text(d => d.text);
+
+        // Apply font styles using FontManager
+        wordElements.each(function(d) {
+            FontManager.applyFontStyles(d3.select(this), d.size);
+        });
     }
 
     static addRankInformation(words) {
@@ -33,9 +36,6 @@ export class WordStyleManager {
     }
 
     static calculateWordSize(size, words, area) {
-        const { minSize, maxSize, scaleFactor } = this.config;
-        const baseSize = Math.sqrt(area / (words.length * scaleFactor));
-        const scaledSize = baseSize * (size / Math.max(...words.map(w => w.size)));
-        return Math.min(Math.max(scaledSize, minSize), maxSize);
+        return FontManager.calculateFontSize({ size }, words, area);
     }
 } 

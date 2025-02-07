@@ -1,4 +1,5 @@
 import { ConfigManager } from '../config/ConfigManager.js';
+import { FontManager } from './FontManager.js';
 
 export class AnimationManager {
     static get config() {
@@ -7,11 +8,12 @@ export class AnimationManager {
 
     static wordEnter(element, size) {
         const { duration, scaleOnHover } = this.config;
+        const scaledSize = FontManager.scaleFont(size, scaleOnHover);
+        
         d3.select(element)
             .transition()
             .duration(duration)
-            .style("font-size", `${size * scaleOnHover}px`)
-            .style("font-weight", "bold");
+            .call(el => FontManager.applyFontStyles(el, scaledSize, 'bold'));
     }
 
     static wordExit(element, size) {
@@ -19,8 +21,7 @@ export class AnimationManager {
         d3.select(element)
             .transition()
             .duration(duration)
-            .style("font-size", `${size}px`)
-            .style("font-weight", "normal");
+            .call(el => FontManager.applyFontStyles(el, size, 'normal'));
     }
 
     static setupWordInteractions(wordElements, tooltip) {
