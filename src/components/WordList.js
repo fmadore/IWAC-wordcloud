@@ -65,6 +65,7 @@ export class WordList {
         pageWords.forEach((word, index) => {
             const wordElement = document.createElement('div');
             wordElement.className = 'word-list-item';
+            wordElement.setAttribute('data-word', word.text);
             
             const rank = word.rank || startIndex + index + 1;
             const frequency = word.originalSize || word.size;
@@ -140,6 +141,41 @@ export class WordList {
         if (page >= 1 && page <= totalPages) {
             this.currentPage = page;
             this.renderCurrentPage();
+        }
+    }
+
+    highlightWord(word) {
+        // Remove any existing highlights
+        const highlighted = this.listElement.querySelector('.highlighted');
+        if (highlighted) {
+            highlighted.classList.remove('highlighted');
+        }
+
+        // Find the word in our list
+        const wordIndex = this.words.findIndex(w => w.text === word);
+        if (wordIndex === -1) return;
+
+        // Calculate which page the word is on
+        const targetPage = Math.floor(wordIndex / this.wordsPerPage) + 1;
+        
+        // If we're not on the correct page, go there
+        if (this.currentPage !== targetPage) {
+            this.goToPage(targetPage);
+        }
+
+        // Find and highlight the word element
+        const wordElement = this.listElement.querySelector(`[data-word="${word}"]`);
+        if (wordElement) {
+            wordElement.classList.add('highlighted');
+            // Scroll the word into view
+            wordElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    clearHighlight() {
+        const highlighted = this.listElement.querySelector('.highlighted');
+        if (highlighted) {
+            highlighted.classList.remove('highlighted');
         }
     }
 

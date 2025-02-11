@@ -39,6 +39,10 @@ export class WordCloud {
         this.dataManager = new WordCloudDataManager();
     }
 
+    setWordList(wordList) {
+        this.renderer.setWordList(wordList);
+    }
+
     setupEventHandlers() {
         this.dimensionManager.subscribe(dimensions => {
             this.layoutManager.updateDimensions(dimensions);

@@ -11,6 +11,11 @@ export class WordCloudRenderer {
         this.svg = null;
         this.wordGroup = null;
         this.tooltip = new Tooltip();
+        this.wordList = null;
+    }
+
+    setWordList(wordList) {
+        this.wordList = wordList;
     }
 
     createSVG() {
@@ -65,9 +70,27 @@ export class WordCloudRenderer {
             .attr("data-word", d => d.text);
 
         WordStyleManager.applyWordStyles(wordElements);
-        AnimationManager.setupWordInteractions(wordElements, this.tooltip);
+        this.setupWordInteractions(wordElements);
 
         return wordElements;
+    }
+
+    setupWordInteractions(wordElements) {
+        wordElements
+            .on("mouseover", (event, d) => {
+                this.tooltip.show(event, d);
+                AnimationManager.wordEnter(event.target, d.size);
+                if (this.wordList) {
+                    this.wordList.highlightWord(d.text);
+                }
+            })
+            .on("mouseout", (event, d) => {
+                this.tooltip.hide();
+                AnimationManager.wordExit(event.target, d.size);
+                if (this.wordList) {
+                    this.wordList.clearHighlight();
+                }
+            });
     }
 
     clear() {

@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initialize word list
         const wordList = new WordList('wordlist');
 
+        // Connect word cloud and word list
+        wordCloud.setWordList(wordList);
+
         // Initialize menu with update callback and configuration
         const menu = new Menu('controls', 
             async (country, wordCount) => {
