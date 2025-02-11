@@ -48,15 +48,17 @@
         border-left: none;
         border-top: 1px solid #e0e0e0;
         position: relative;
-        flex: none;
-        overflow: hidden; /* Contain the scrolling */
+        flex: 0 0 200px; /* Fixed height, prevent flex growing/shrinking */
+        overflow: hidden;
     }
 
     .word-list {
-        height: calc(100% - 90px);
-        overflow-y: auto;
+        flex: 1 1 auto;
+        overflow-y: scroll; /* Always show scrollbar to prevent layout shifts */
         overflow-x: hidden;
-        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        -webkit-overflow-scrolling: touch;
+        height: 0; /* Let flex control the height */
+        min-height: 0; /* Allow container to shrink */
     }
 
     .word-list-header {
@@ -137,6 +139,7 @@
         height: 180px;
         min-height: 180px;
         max-height: 180px;
+        flex: 0 0 180px; /* Fixed height for mobile */
     }
 
     .word-list {
