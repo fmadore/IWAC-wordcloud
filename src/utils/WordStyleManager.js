@@ -10,6 +10,7 @@ export class WordStyleManager {
         wordElements
             .style("fill", () => this.getRandomColor())
             .attr("text-anchor", "middle")
+            .style("cursor", "pointer")
             .attr("transform", d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
             .text(d => d.text);
 
