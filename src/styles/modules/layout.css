@@ -6,11 +6,21 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
+    overflow: hidden;
     margin: 0;
     padding: 0;
     font-size: var(--font-size-base);
     line-height: var(--line-height-normal);
+    position: fixed;
+    width: 100%;
+}
+
+.content-container {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
 }
 
 .wordcloud-container {
@@ -37,6 +47,7 @@ body {
     background-color: transparent;
     max-width: min(100%, calc((100vh - 70px) * 1.5));
     margin: 0 auto;
+    overflow: hidden;
 }
 
 #wordcloud svg {
@@ -46,4 +57,5 @@ body {
     min-height: 400px;
     display: block;
     aspect-ratio: 1.5;
+    overflow: visible; /* Allow words to overflow their container */
 } 
