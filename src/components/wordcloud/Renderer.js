@@ -61,7 +61,8 @@ export class WordCloudRenderer {
         const wordElements = wordGroup.selectAll("text")
             .data(wordsWithRank)
             .enter()
-            .append("text");
+            .append("text")
+            .attr("data-word", d => d.text);
 
         WordStyleManager.applyWordStyles(wordElements);
         AnimationManager.setupWordInteractions(wordElements, this.tooltip);

@@ -5,6 +5,7 @@ import { DimensionManager } from '../../utils/DimensionManager.js';
 import { CanvasManager } from '../../utils/CanvasManager.js';
 import { StyleManager } from '../../utils/StyleManager.js';
 import { ConfigManager } from '../../config/ConfigManager.js';
+import { WordStyleManager } from '../../utils/WordStyleManager.js';
 
 export class WordCloud {
     constructor(containerId, options = {}) {
@@ -52,9 +53,12 @@ export class WordCloud {
     async redraw() {
         try {
             const words = await this.layoutManager.layoutWords(this.dataManager.getCurrentWords());
-            this.draw(words);
+            const rankedWords = WordStyleManager.addRankInformation(words);
+            this.draw(rankedWords);
+            return rankedWords;
         } catch (error) {
             console.error('Error redrawing word cloud:', error);
+            throw error;
         }
     }
 
@@ -65,19 +69,21 @@ export class WordCloud {
     }
 
     draw(words) {
-        if (!words || words.length === 0) return;
+        if (!words || words.length === 0) return words;
         
         this.dataManager.setCurrentWords(words);
         const svg = this.renderer.createSVG();
         const wordGroup = this.renderer.createWordGroup(svg);
         this.renderer.renderWords(wordGroup, words);
+        return words;
     }
 
     async update(country, wordCount) {
         try {
             const words = await this.dataManager.loadData(country, wordCount);
             const layoutedWords = await this.layoutManager.layoutWords(words);
-            this.draw(layoutedWords);
+            const rankedWords = WordStyleManager.addRankInformation(layoutedWords);
+            return this.draw(rankedWords);
         } catch (error) {
             console.error('Error updating word cloud:', error);
             throw error;

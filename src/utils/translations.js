@@ -6,7 +6,8 @@ export const translations = {
         word: "Word",
         frequency: "Frequency",
         countries: "Countries",
-        selectCountry: "Select a country"
+        selectCountry: "Select a country",
+        wordList: "Word List"
     },
     fr: {
         allCountries: "Tous les pays",
@@ -15,7 +16,8 @@ export const translations = {
         word: "Mot",
         frequency: "Fréquence",
         countries: "Pays",
-        selectCountry: "Sélectionner un pays"
+        selectCountry: "Sélectionner un pays",
+        wordList: "Liste des mots"
     }
 };
 
