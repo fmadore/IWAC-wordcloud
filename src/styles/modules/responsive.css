@@ -20,7 +20,7 @@
         flex-direction: column;
         position: relative;
         height: calc(100vh - 70px);
-        overflow: hidden; /* Prevent overall scrolling */
+        overflow: hidden;
     }
 
     /* Word Cloud */
@@ -28,9 +28,9 @@
         flex: 1;
         min-height: 0;
         width: 100%;
-        height: calc(100% - 200px);
+        height: 100%;
         position: relative;
-        overflow: hidden; /* Prevent cloud scrolling */
+        overflow: hidden;
     }
 
     #wordcloud {
@@ -42,7 +42,12 @@
         left: 0;
         right: 0;
         bottom: 0;
-        overflow: hidden; /* Prevent cloud scrolling */
+        overflow: hidden;
+    }
+
+    /* Hide word list on mobile */
+    .word-list-container {
+        display: none !important;
     }
 
     /* Word List */
@@ -139,8 +144,7 @@
 
     /* Word Cloud */
     .wordcloud-container {
-        flex: 1 0 calc(100% - 180px); /* Adjusted for smaller word list */
-        height: calc(100% - 180px);
+        height: 100%; /* Take full height */
     }
 
     /* Word List */
