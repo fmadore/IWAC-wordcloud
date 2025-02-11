@@ -1,5 +1,8 @@
 import { getTranslations } from '../utils/translations.js';
 import { ConfigManager } from '../config/ConfigManager.js';
+import { StyleManager } from '../utils/StyleManager.js';
+import { FontManager } from '../utils/FontManager.js';
+import { AnimationManager } from '../utils/AnimationManager.js';
 
 export class WordList {
     constructor(container) {
@@ -19,11 +22,15 @@ export class WordList {
         // Create container div
         const listContainer = document.createElement('div');
         listContainer.className = 'word-list-container';
+        StyleManager.setupContainer(listContainer);
 
         // Create header
         const header = document.createElement('div');
         header.className = 'word-list-header';
-        header.innerHTML = `<h2>${this.translations.wordList}</h2>`;
+        const title = document.createElement('h2');
+        title.textContent = this.translations.wordList;
+        FontManager.applyFontStyles(d3.select(title), null, 'semibold');
+        header.appendChild(title);
         listContainer.appendChild(header);
 
         // Create list
@@ -75,9 +82,14 @@ export class WordList {
                 <span class="word-text">${word.text}</span>
                 <span class="word-frequency">${frequency}</span>
             `;
+
+            // Apply font styles
+            const wordText = wordElement.querySelector('.word-text');
+            FontManager.applyFontStyles(d3.select(wordText), null, 'medium');
             
             // Add hover effect synchronization
             wordElement.addEventListener('mouseover', () => {
+                wordElement.classList.add('hover');
                 // Trigger hover effect on corresponding word in cloud
                 const cloudWord = document.querySelector(`text[data-word="${word.text}"]`);
                 if (cloudWord) {
@@ -91,6 +103,7 @@ export class WordList {
             });
             
             wordElement.addEventListener('mouseout', () => {
+                wordElement.classList.remove('hover');
                 // Remove hover effect
                 const cloudWord = document.querySelector(`text[data-word="${word.text}"]`);
                 if (cloudWord) {
@@ -120,12 +133,14 @@ export class WordList {
         prevButton.innerHTML = '←';
         prevButton.disabled = this.currentPage === 1;
         prevButton.addEventListener('click', () => this.goToPage(this.currentPage - 1));
+        FontManager.applyFontStyles(d3.select(prevButton), null, 'medium');
         this.paginationElement.appendChild(prevButton);
 
         // Page numbers
         const pageInfo = document.createElement('span');
         pageInfo.className = 'page-info';
         pageInfo.textContent = `${this.currentPage} / ${totalPages}`;
+        FontManager.applyFontStyles(d3.select(pageInfo), null, 'medium');
         this.paginationElement.appendChild(pageInfo);
 
         // Next button
@@ -133,6 +148,7 @@ export class WordList {
         nextButton.innerHTML = '→';
         nextButton.disabled = this.currentPage === totalPages;
         nextButton.addEventListener('click', () => this.goToPage(this.currentPage + 1));
+        FontManager.applyFontStyles(d3.select(nextButton), null, 'medium');
         this.paginationElement.appendChild(nextButton);
     }
 
