@@ -1,5 +1,9 @@
 /* Responsive Module */
 @media (max-width: 900px) {
+    :root {
+        --word-list-width: 100%;
+    }
+
     /* Menu Layout */
     .menu-wrapper {
         flex-wrap: wrap;
@@ -23,6 +27,7 @@
     .wordcloud-container {
         flex: 1;
         min-height: 0;
+        width: 100%;
         height: calc(100% - 200px);
         position: relative;
         overflow: hidden; /* Prevent cloud scrolling */
@@ -30,6 +35,7 @@
 
     #wordcloud {
         height: 100%;
+        width: 100%;
         min-height: unset;
         position: absolute;
         top: 0;
@@ -42,6 +48,8 @@
     /* Word List */
     .word-list-container {
         width: 100%;
+        min-width: 100%;
+        max-width: 100%;
         height: 200px;
         min-height: 200px;
         max-height: 200px;

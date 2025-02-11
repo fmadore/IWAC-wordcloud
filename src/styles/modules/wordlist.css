@@ -1,5 +1,11 @@
+:root {
+    --word-list-width: 300px;
+}
+
 .word-list-container {
-    width: 300px;
+    width: var(--word-list-width);
+    min-width: var(--word-list-width);
+    max-width: var(--word-list-width);
     height: 100%;
     background: #fff;
     border-left: 1px solid #e0e0e0;
@@ -7,7 +13,7 @@
     flex-direction: column;
     overflow: hidden;
     position: relative;
-    flex: 0 0 300px;
+    flex: 0 0 var(--word-list-width);
 }
 
 .word-list-header {

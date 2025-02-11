@@ -25,7 +25,9 @@ body {
 
 .wordcloud-container {
     position: relative;
-    flex: 1 0 calc(100% - 300px); /* Fixed width calculation */
+    flex: 1 0 calc(100% - var(--word-list-width));
+    width: calc(100% - var(--word-list-width));
+    min-width: calc(100% - var(--word-list-width));
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -45,7 +47,6 @@ body {
     justify-content: center;
     background-color: transparent;
     max-width: min(100%, calc((100vh - 70px) * 1.5));
-    margin: 0 auto;
     overflow: hidden;
     position: relative;
 }
