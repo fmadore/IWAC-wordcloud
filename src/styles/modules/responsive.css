@@ -131,6 +131,7 @@
 
     /* Word Cloud */
     .wordcloud-container {
+        flex: 1 0 calc(100% - 180px); /* Adjusted for smaller word list */
         height: calc(100% - 180px);
     }
 
@@ -139,7 +140,7 @@
         height: 180px;
         min-height: 180px;
         max-height: 180px;
-        flex: 0 0 180px; /* Fixed height for mobile */
+        flex: 0 0 180px;
     }
 
     .word-list {
