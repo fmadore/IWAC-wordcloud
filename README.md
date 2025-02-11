@@ -7,6 +7,8 @@ An interactive word cloud visualization tool built with D3.js that displays word
 - 🌍 Multi-country word frequency visualization
 - 🔄 Dynamic word count adjustment (10-150 words)
 - 🎨 Interactive visualization with hover effects
+- 📋 Paginated word list with synchronized interactions
+- 🔍 Bi-directional highlighting between cloud and list
 - 💾 Export to PNG functionality
 - 🌐 Multilingual support (English/French)
 - 📱 Responsive design
@@ -31,6 +33,7 @@ project/
 │   │   ├── WordCountSlider.js  # Word count control
 │   │   ├── SaveButton.js       # Export functionality
 │   │   ├── Menu.js            # Control panel component
+│   │   ├── WordList.js        # Paginated word list component
 │   │   └── Tooltip.js         # Interactive tooltips
 │   ├── utils/
 │   │   ├── dataProcessor.js   # Data processing utilities
@@ -51,6 +54,7 @@ project/
 │   │   │   ├── reset.css
 │   │   │   ├── responsive.css
 │   │   │   ├── slider.css
+│   │   │   ├── wordlist.css # Word list styles
 │   │   │   └── tooltip.css
 │   │   └── main.css         # Main stylesheet
 │   └── main.js              # Application entry point
@@ -81,115 +85,29 @@ The project follows a modular architecture with clear separation of concerns:
    - `CountrySelector.js`: Country selection dropdown
    - `WordCountSlider.js`: Word count adjustment slider
    - `SaveButton.js`: PNG export functionality
+   - `WordList.js`: Paginated list of words with frequencies
    - `Tooltip.js`: Interactive tooltips for word information
 
-3. **Typography System**
+3. **Interactive Features**
+   - Synchronized hover effects between word cloud and list
+   - Automatic page navigation in word list when hovering cloud words
+   - Visual highlighting of selected words in both views
+   - Smooth scrolling to highlighted words
+   - Interactive cursor feedback (pointer on hover)
+
+4. **Typography System**
    - Modern typography using Inter font
    - Consistent font scale with CSS variables
    - Responsive font sizing
    - Font weights: 400 (normal), 500 (medium), 600 (semibold)
    - Fallback system fonts for optimal loading
 
-4. **Style Management**
+5. **Style Management**
    - `FontManager.js`: Centralized font management
    - `StyleManager.js`: Global style utilities
    - CSS modules for component-specific styles
    - CSS variables for consistent theming
    - Responsive design support
-
-## Dependencies
-
-- [D3.js](https://d3js.org/) (v7.8.5) - Data visualization library
-- [d3-cloud](https://github.com/jasondavies/d3-cloud) (v1.2.5) - Word cloud layout
-- [Inter](https://rsms.me/inter/) (v4.0) - Modern typeface
-
-## Development
-
-1. Install dependencies and download fonts:
-   ```powershell
-   # Download required font files
-   pwsh scripts/download-fonts.ps1
-   ```
-
-2. Start the development server using VS Code's Live Server:
-   - Install the Live Server extension
-   - Right-click on `index.html`
-   - Select "Open with Live Server"
-
-The Live Server will automatically:
-- Reload when you make changes
-- Handle CORS for ES modules
-- Serve files correctly
-
-## Typography System
-
-The project uses a modern typography system based on the Inter font family:
-
-### Font Weights
-- Normal (400): Regular text
-- Medium (500): Emphasis and interactive elements
-- Semibold (600): Headers and important information
-
-### Font Sizes
-```css
---font-size-xs: 0.75rem;   /* 12px */
---font-size-sm: 0.875rem;  /* 14px */
---font-size-base: 1rem;    /* 16px */
---font-size-lg: 1.125rem;  /* 18px */
---font-size-xl: 1.25rem;   /* 20px */
-```
-
-### Line Heights
-```css
---line-height-tight: 1.25;
---line-height-normal: 1.5;
---line-height-relaxed: 1.75;
-```
-
-### Usage
-```css
-.element {
-    font-family: var(--font-base);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-    line-height: var(--line-height-normal);
-}
-```
-
-## Data Format
-
-The word frequency data should be stored in JSON files with the following structure:
-
-For individual country data:
-```json
-[
-  {
-    "text": "word",
-    "size": 42
-  }
-]
-```
-
-For the combined view:
-```json
-{
-  "country1": [
-    {
-      "text": "word",
-      "size": 42
-    }
-  ]
-}
-```
-
-## Configuration
-
-The project configuration is centralized in `src/config/settings.js`:
-
-- Word cloud settings (dimensions, font sizes, rotations)
-- Data settings (min/max word counts)
-- Country configurations
-- File paths
 
 ## Component APIs
 
@@ -197,7 +115,17 @@ The project configuration is centralized in `src/config/settings.js`:
 
 ```javascript
 const wordCloud = new WordCloud('#container', options);
+wordCloud.setWordList(wordList); // Connect word list for interactions
 await wordCloud.update(country, wordCount);
+```
+
+### WordList Component
+
+```javascript
+const wordList = new WordList('#container');
+wordList.updateWords(words); // Update list with new words
+wordList.highlightWord(word); // Highlight specific word
+wordList.goToPage(pageNumber); // Navigate to specific page
 ```
 
 ### Menu Component
