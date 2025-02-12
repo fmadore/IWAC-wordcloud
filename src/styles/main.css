@@ -1,5 +1,6 @@
 @import './modules/reset.css';
 @import './modules/fonts.css';
+@import './modules/colors.css';
 @import './modules/layout.css';
 @import './modules/controls.css';
 @import './modules/slider.css';

@@ -54,6 +54,16 @@ export class ConfigManager {
                 export: {
                     scale: 2,
                     format: 'png'
+                },
+                colors: {
+                    colorAssignment: 'frequency', // 'frequency', 'random', or 'fixed'
+                    opacity: {
+                        normal: 1,
+                        hover: 0.8
+                    },
+                    transition: {
+                        duration: 200
+                    }
                 }
             },
             data: {
@@ -141,5 +151,9 @@ export class ConfigManager {
 
     getExportConfig() {
         return { ...this.config.wordcloud.export };
+    }
+
+    getColorConfig() {
+        return this.config.wordcloud.colors;
     }
 } 
