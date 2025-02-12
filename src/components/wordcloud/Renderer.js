@@ -100,12 +100,14 @@ export class WordCloudRenderer {
                     word: { ...d, element: event.target },
                     event
                 });
+                AnimationManager.wordEnter(event.target, d.size);
             })
             .on("mouseout", (event, d) => {
                 this.tooltip.hide();
                 if (this.wordList) {
                     this.wordList.clearHighlight();
                 }
+                AnimationManager.wordExit(event.target, d.size);
             })
             .on("click", (event, d) => {
                 this.eventBus.emit(WORDCLOUD_EVENTS.WORD_CLICK, { 
