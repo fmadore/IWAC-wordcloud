@@ -89,9 +89,13 @@ export class ConfigManager {
                 defaultCountry: 'combined'
             },
             paths: {
-                dataDir: 'data',
-                getDataPath: (country) => 
-                    `${this.config.paths.dataDir}/${country === 'combined' ? 'combined' : country}_word_frequencies.json`
+                dataDir: '/data',
+                getDataPath: (country) => {
+                    // Get base URL by removing language segment
+                    const path = window.location.pathname;
+                    const baseUrl = path.replace(/\/(en|fr)\/.*$/, '');
+                    return `${baseUrl}/data/${country === 'combined' ? 'combined' : country}_word_frequencies.json`;
+                }
             },
             countries: [
                 { value: 'combined', labelKey: 'allCountries' },

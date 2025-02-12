@@ -22,7 +22,8 @@ export const translations = {
 };
 
 export function getTranslations() {
-    const userLang = navigator.language || navigator.userLanguage;
-    const isFrench = userLang.startsWith('fr');
+    // Get language from URL path
+    const path = window.location.pathname;
+    const isFrench = path.includes('/fr/');
     return isFrench ? translations.fr : translations.en;
 } 
