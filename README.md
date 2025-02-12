@@ -279,3 +279,233 @@ The script will generate the following files in the `data/` directory:
 - [D3.js](https://d3js.org/) for the visualization framework
 - [Jason Davies](https://github.com/jasondavies/d3-cloud) for the word cloud layout algorithm
 - IWAC project for the word frequency data
+
+## Configuration & Customization
+
+The application uses a sophisticated configuration system powered by `ConfigManager` that allows extensive customization of the word cloud visualization and behavior.
+
+### Core Configuration Options
+
+```javascript
+{
+    wordcloud: {
+        dimensions: {
+            width: 800,
+            height: 600,
+            minHeight: 400,
+            maxWidth: 1200
+        },
+        font: {
+            family: {
+                primary: 'Inter',
+                fallback: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif'
+            },
+            size: {
+                min: 10,
+                max: null, // Calculated based on height
+                scale: {
+                    factor: 5,
+                    min: 0.8,
+                    max: 1.2
+                }
+            },
+            weight: {
+                normal: 400,
+                bold: 600,
+                range: [300, 400, 500, 600]
+            }
+        },
+        layout: {
+            padding: 5,
+            rotations: [0, 90],
+            rotationProbability: 0.5
+        },
+        colors: {
+            colorAssignment: 'frequency', // 'frequency', 'random', or 'fixed'
+            opacity: {
+                normal: 1,
+                hover: 0.8
+            }
+        },
+        export: {
+            scale: 2,
+            format: 'png'
+        }
+    },
+    data: {
+        minWords: 10,
+        maxWords: 150,
+        defaultWordCount: 150,
+        defaultCountry: 'combined'
+    }
+}
+```
+
+### Animation Configuration
+
+```javascript
+{
+    animation: {
+        duration: 200,
+        scaleOnHover: 1.2,
+        transition: {
+            duration: 800,
+            morphing: true,
+            particles: true,
+            physics: true
+        },
+        particles: {
+            count: 10,
+            duration: 600,
+            colors: ['#ffb703', '#fb8500', '#e76f51', '#2a9d8f']
+        },
+        physics: {
+            gravity: 0.8,
+            bounce: 0.4,
+            initialVelocity: -15
+        }
+    }
+}
+```
+
+## Event System
+
+The application uses a robust event-driven architecture powered by `EventBus` with middleware support for validation and logging.
+
+### Core Events
+
+```javascript
+// Word Cloud Events
+{
+    UPDATE: 'wordcloud:update',
+    LOADING: 'wordcloud:loading',
+    ERROR: 'wordcloud:error',
+    RESIZE: 'wordcloud:resize',
+    WORD_HOVER: 'wordcloud:word:hover',
+    WORD_CLICK: 'wordcloud:word:click'
+}
+
+// UI Events
+{
+    COUNTRY_CHANGE: 'ui:country:change',
+    WORD_COUNT_CHANGE: 'ui:wordcount:change',
+    SAVE_REQUEST: 'ui:save:request',
+    SAVE_COMPLETE: 'ui:save:complete'
+}
+
+// Data Events
+{
+    LOAD_START: 'data:load:start',
+    LOAD_COMPLETE: 'data:load:complete',
+    PROCESS_START: 'data:process:start',
+    PROCESS_COMPLETE: 'data:process:complete'
+}
+```
+
+### Validation Middleware
+
+The validation middleware ensures data integrity by validating event payloads:
+
+```javascript
+const eventSchemas = {
+    'wordcloud:update': {
+        required: ['words'],
+        validate: data => Array.isArray(data.words)
+    },
+    'ui:country:change': {
+        required: ['country'],
+        validate: data => typeof data.country === 'string'
+    },
+    'ui:wordcount:change': {
+        required: ['count'],
+        validate: data => typeof data.count === 'number'
+    }
+}
+```
+
+## Utility Modules
+
+The application includes several utility modules that handle specific aspects of the visualization:
+
+### AnimationManager
+
+Manages all animations and transitions in the word cloud:
+- Word enter/exit animations with scaling and rotation
+- Particle effects for word removal/addition
+- Physics-based animations with gravity and bounce
+- Smooth morphing transitions between states
+
+### FontManager
+
+Handles font-related operations:
+- Font size calculations based on container size
+- Font style application (family, size, weight)
+- Dynamic font scaling for hover effects
+- Font size limits enforcement
+
+### ColorManager
+
+Manages color schemes and assignments:
+- Multiple color assignment strategies (frequency, random, fixed)
+- CSS variable-based color scheme management
+- Hover opacity effects
+- Color transitions
+
+### StyleManager
+
+Handles layout and styling:
+- Container setup and positioning
+- SVG element styling
+- Responsive layout management
+- Style consistency enforcement
+
+### CanvasManager
+
+Optimizes canvas operations for PNG export:
+- Canvas context optimization
+- High-resolution export support
+- Memory management for large canvases
+
+### WordStyleManager
+
+Combines font and color management for words:
+- Unified word styling application
+- Hover effect management
+- Style transitions
+- Rank-based style adjustments
+
+## Data & Caching
+
+The application implements a sophisticated caching system for both API data and processed results:
+
+### Cache Structure
+```
+cache/
+├── api/              # Raw API response cache
+│   ├── benin/
+│   ├── burkina/
+│   └── togo/
+└── processed/        # Processed data cache
+    ├── combined/
+    └── countries/
+```
+
+### Cache Management
+
+- **API Cache**: Stores raw API responses with configurable TTL
+- **Processed Cache**: Stores preprocessed word frequencies
+- **Cache Invalidation**: Automatic invalidation on data updates
+- **Cache Clearing**: Manual cache clearing through API
+
+### Cache Configuration
+
+```javascript
+{
+    cache: {
+        ttl: 3600, // Cache TTL in seconds
+        maxSize: 100 * 1024 * 1024, // Max cache size (100MB)
+        autoInvalidate: true, // Auto invalidate on updates
+        compression: true // Enable cache compression
+    }
+}
+```
