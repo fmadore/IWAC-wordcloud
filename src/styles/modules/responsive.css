@@ -69,7 +69,6 @@
         flex: 1 1 auto;
         overflow-y: scroll; /* Always show scrollbar to prevent layout shifts */
         overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
         height: 0; /* Let flex control the height */
         min-height: 0; /* Allow container to shrink */
     }
