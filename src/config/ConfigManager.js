@@ -91,8 +91,10 @@ export class ConfigManager {
             paths: {
                 dataDir: '/data',
                 getDataPath: (country) => {
-                    // Use relative path for local development
-                    return `../data/${country === 'combined' ? 'combined' : country}_word_frequencies.json`;
+                    // Check if we're on GitHub Pages
+                    const isGitHubPages = window.location.hostname.includes('github.io');
+                    const basePath = isGitHubPages ? '/IWAC-wordcloud' : '';
+                    return `${basePath}/data/${country === 'combined' ? 'combined' : country}_word_frequencies.json`;
                 }
             },
             countries: [
