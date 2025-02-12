@@ -1,9 +1,8 @@
-import { ConfigManager } from '../../config/ConfigManager.js';
 import { WordStyleManager } from '../../utils/WordStyleManager.js';
 
 export class WordCloudLayoutManager {
-    constructor() {
-        this.config = ConfigManager.getInstance();
+    constructor({ config }) {
+        this.config = config;
         this.layout = null;
         this.setup();
     }

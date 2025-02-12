@@ -3,14 +3,11 @@ import { WordCloudLayoutManager } from './LayoutManager.js';
 import { DimensionManager } from '../../utils/DimensionManager.js';
 import { CanvasManager } from '../../utils/CanvasManager.js';
 import { StyleManager } from '../../utils/StyleManager.js';
-import { ConfigManager } from '../../config/ConfigManager.js';
 import { WordStyleManager } from '../../utils/WordStyleManager.js';
-import { AppStore } from '../../store/AppStore.js';
-import { EventBus } from '../../events/EventBus.js';
 import { WORDCLOUD_EVENTS, LAYOUT_EVENTS, ANIMATION_EVENTS } from '../../events/EventTypes.js';
 
 export class WordCloud {
-    constructor(containerId, options = {}) {
+    constructor(containerId, { config, store, eventBus, options = {} } = {}) {
         this.container = typeof containerId === 'string' ? 
             document.getElementById(containerId.replace('#', '')) : 
             containerId;
@@ -19,9 +16,10 @@ export class WordCloud {
             throw new Error('Container element not found');
         }
 
-        this.config = ConfigManager.getInstance();
-        this.store = AppStore.getInstance();
-        this.eventBus = EventBus.getInstance();
+        // Inject dependencies
+        this.config = config;
+        this.store = store;
+        this.eventBus = eventBus;
         
         this.initializeConfig(options);
         StyleManager.setupContainer(this.container);
@@ -41,8 +39,13 @@ export class WordCloud {
     setupManagers() {
         this.dimensionManager = new DimensionManager(this.container);
         this.canvasManager = new CanvasManager();
-        this.renderer = new WordCloudRenderer(this.container);
-        this.layoutManager = new WordCloudLayoutManager();
+        this.renderer = new WordCloudRenderer(this.container, {
+            config: this.config,
+            eventBus: this.eventBus
+        });
+        this.layoutManager = new WordCloudLayoutManager({
+            config: this.config
+        });
     }
 
     setupEventHandlers() {

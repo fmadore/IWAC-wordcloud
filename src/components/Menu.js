@@ -2,14 +2,10 @@ import { CountrySelector } from './CountrySelector.js';
 import { WordCountSlider } from './WordCountSlider.js';
 import { SaveButton } from './SaveButton.js';
 import { SaveManager } from '../utils/saveUtils.js';
-import { ConfigManager } from '../config/ConfigManager.js';
-import { ErrorManager } from '../utils/ErrorManager.js';
-import { AppStore } from '../store/AppStore.js';
-import { EventBus } from '../events/EventBus.js';
 import { UI_EVENTS, ERROR_EVENTS } from '../events/EventTypes.js';
 
 export class Menu {
-    constructor(containerId) {
+    constructor(containerId, { config, store, eventBus, errorManager }) {
         if (!containerId) {
             throw new Error('Menu: containerId is required');
         }
@@ -19,10 +15,11 @@ export class Menu {
             throw new Error(`Menu: container with id "${containerId}" not found`);
         }
 
-        this.config = ConfigManager.getInstance();
-        this.store = AppStore.getInstance();
-        this.eventBus = EventBus.getInstance();
-        this.errorManager = ErrorManager.getInstance();
+        // Inject dependencies
+        this.config = config;
+        this.store = store;
+        this.eventBus = eventBus;
+        this.errorManager = errorManager;
         this.init();
     }
 
@@ -36,11 +33,18 @@ export class Menu {
             // Store the wrapper reference
             this.menuWrapper = menuWrapper;
 
-            // Initialize components with the wrapper element
+            // Initialize components with dependencies
             this.components = {
-                countrySelector: new CountrySelector(menuWrapper),
-                wordCountSlider: new WordCountSlider(menuWrapper),
-                saveButton: new SaveButton(menuWrapper)
+                countrySelector: new CountrySelector(menuWrapper, {
+                    config: this.config
+                }),
+                wordCountSlider: new WordCountSlider(menuWrapper, {
+                    config: this.config
+                }),
+                saveButton: new SaveButton(menuWrapper, {
+                    config: this.config,
+                    store: this.store
+                })
             };
 
             // Setup event handlers

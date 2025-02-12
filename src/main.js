@@ -3,18 +3,38 @@ import { Menu } from './components/Menu.js';
 import { WordList } from './components/WordList.js';
 import { AppStore } from './store/AppStore.js';
 import { ErrorManager } from './utils/ErrorManager.js';
+import { ConfigManager } from './config/ConfigManager.js';
+import { EventBus } from './events/EventBus.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const errorManager = ErrorManager.getInstance();
+    // Create core dependencies
+    const config = new ConfigManager();
+    const eventBus = new EventBus();
+    const errorManager = new ErrorManager();
     
     errorManager.wrapSync(() => {
-        // Initialize store
-        const store = AppStore.getInstance();
+        // Initialize store with dependencies
+        const store = new AppStore({ config, eventBus, errorManager });
         
-        // Initialize components
-        const wordCloud = new WordCloud('#wordcloud');
-        const wordList = new WordList('wordlist');
-        const menu = new Menu('controls');
+        // Initialize components with dependencies
+        const wordCloud = new WordCloud('#wordcloud', {
+            config,
+            store,
+            eventBus
+        });
+
+        const wordList = new WordList('wordlist', {
+            config,
+            store,
+            eventBus
+        });
+
+        const menu = new Menu('controls', {
+            config,
+            store,
+            eventBus,
+            errorManager
+        });
 
         // Connect word cloud and word list
         wordCloud.setWordList(wordList);

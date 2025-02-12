@@ -1,10 +1,9 @@
 import { getTranslations } from '../utils/translations.js';
-import { ConfigManager } from '../config/ConfigManager.js';
 
 export class Tooltip {
-    constructor() {
+    constructor({ config } = {}) {
         this.tooltip = null;
-        this.config = ConfigManager.getInstance();
+        this.config = config;
         this.translations = getTranslations();
         this.init();
     }

@@ -2,18 +2,16 @@ import { Tooltip } from '../Tooltip.js';
 import { StyleManager } from '../../utils/StyleManager.js';
 import { AnimationManager } from '../../utils/AnimationManager.js';
 import { WordStyleManager } from '../../utils/WordStyleManager.js';
-import { ConfigManager } from '../../config/ConfigManager.js';
-import { EventBus } from '../../events/EventBus.js';
 import { WORDCLOUD_EVENTS, ANIMATION_EVENTS } from '../../events/EventTypes.js';
 
 export class WordCloudRenderer {
-    constructor(container) {
+    constructor(container, { config, eventBus }) {
         this.container = container;
-        this.config = ConfigManager.getInstance();
-        this.eventBus = EventBus.getInstance();
+        this.config = config;
+        this.eventBus = eventBus;
         this.svg = null;
         this.wordGroup = null;
-        this.tooltip = new Tooltip();
+        this.tooltip = new Tooltip({ config });
         this.wordList = null;
         this.setupEventHandlers();
     }
