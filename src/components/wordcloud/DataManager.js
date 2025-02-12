@@ -1,23 +1,15 @@
-import { DataProcessor } from '../../utils/dataProcessor.js';
-import { ConfigManager } from '../../config/ConfigManager.js';
+import { WordCloudService } from '../../services/WordCloudService.js';
 
 export class WordCloudDataManager {
     constructor() {
-        this.config = ConfigManager.getInstance();
+        this.service = WordCloudService.getInstance();
         this.currentWords = null;
     }
 
     async loadData(country, wordCount) {
-        const dataPath = this.config.get('paths.getDataPath')(country);
-        const response = await d3.json(dataPath);
-        return this.processDataResponse(response, country, wordCount);
-    }
-
-    processDataResponse(response, country, wordCount) {
-        const words = country === 'combined' ? 
-            DataProcessor.processCombinedData(response) : 
-            response;
-        return DataProcessor.processWords(words, wordCount);
+        const words = await this.service.loadData(country, wordCount);
+        this.setCurrentWords(words);
+        return words;
     }
 
     setCurrentWords(words) {
@@ -29,21 +21,18 @@ export class WordCloudDataManager {
     }
 
     getDefaultWordCount() {
-        return this.config.get('data.defaultWordCount');
+        return this.service.getDefaultWordCount();
     }
 
     getWordCountLimits() {
-        return {
-            min: this.config.get('data.minWords'),
-            max: this.config.get('data.maxWords')
-        };
+        return this.service.getWordCountLimits();
     }
 
     getDefaultCountry() {
-        return this.config.get('data.defaultCountry');
+        return this.service.getDefaultCountry();
     }
 
     getAvailableCountries() {
-        return this.config.getCountries();
+        return this.service.getAvailableCountries();
     }
 } 
