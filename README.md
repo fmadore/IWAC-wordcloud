@@ -15,6 +15,7 @@ An interactive word cloud visualization tool built with D3.js that displays word
 - 🎯 Word size normalization based on frequency
 - 🧩 Modular architecture with clear separation of concerns
 - 🎭 Modern typography with Inter font system
+- 🎨 Sophisticated color scheme system with multiple assignment strategies
 
 ## Project Structure
 
@@ -41,6 +42,7 @@ project/
 │   │   ├── saveUtils.js      # PNG export functionality
 │   │   ├── FontManager.js    # Font management and styling
 │   │   ├── StyleManager.js   # Global style management
+│   │   ├── ColorManager.js   # Color scheme management
 │   │   └── WordStyleManager.js # Word-specific styling
 │   ├── config/
 │   │   ├── settings.js       # Centralized configuration
@@ -50,6 +52,7 @@ project/
 │   │   │   ├── button.css
 │   │   │   ├── controls.css
 │   │   │   ├── fonts.css    # Font declarations and variables
+│   │   │   ├── colors.css   # Color scheme definitions
 │   │   │   ├── layout.css
 │   │   │   ├── reset.css
 │   │   │   ├── responsive.css
@@ -95,19 +98,33 @@ The project follows a modular architecture with clear separation of concerns:
    - Smooth scrolling to highlighted words
    - Interactive cursor feedback (pointer on hover)
 
-4. **Typography System**
-   - Modern typography using Inter font
-   - Consistent font scale with CSS variables
-   - Responsive font sizing
-   - Font weights: 400 (normal), 500 (medium), 600 (semibold)
-   - Fallback system fonts for optimal loading
-
-5. **Style Management**
+4. **Style Management**
+   - `ColorManager.js`: Sophisticated color scheme management
    - `FontManager.js`: Centralized font management
    - `StyleManager.js`: Global style utilities
    - CSS modules for component-specific styles
    - CSS variables for consistent theming
    - Responsive design support
+
+5. **Color System**
+   - Centralized color scheme definitions in CSS variables
+   - Multiple color assignment strategies:
+     - Frequency-based: Colors assigned based on word frequency
+     - Random: Random color selection from scheme
+     - Fixed: Consistent color assignment by position
+   - Interactive color effects:
+     - Smooth transitions between states
+     - Hover opacity changes
+     - Consistent color palette across components
+   - Semantic color variables for maintainability
+   - Accessible color combinations with good contrast
+
+6. **Typography System**
+   - Modern typography using Inter font
+   - Consistent font scale with CSS variables
+   - Responsive font sizing
+   - Font weights: 400 (normal), 500 (medium), 600 (semibold)
+   - Fallback system fonts for optimal loading
 
 ## Component APIs
 
