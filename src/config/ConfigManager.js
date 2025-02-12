@@ -91,10 +91,8 @@ export class ConfigManager {
             paths: {
                 dataDir: '/data',
                 getDataPath: (country) => {
-                    // Get base URL by removing language segment
-                    const path = window.location.pathname;
-                    const baseUrl = path.replace(/\/(en|fr)\/.*$/, '');
-                    return `${baseUrl}/data/${country === 'combined' ? 'combined' : country}_word_frequencies.json`;
+                    // Use relative path for local development
+                    return `../data/${country === 'combined' ? 'combined' : country}_word_frequencies.json`;
                 }
             },
             countries: [

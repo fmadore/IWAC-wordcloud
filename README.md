@@ -10,7 +10,7 @@ An interactive word cloud visualization tool built with D3.js that displays word
 - 📋 Paginated word list with synchronized interactions
 - 🔍 Bi-directional highlighting between cloud and list
 - 💾 Export to PNG functionality
-- 🌐 Multilingual support (English/French)
+- 🌐 URL-based language selection (English/French)
 - 📱 Responsive design
 - 🎯 Word size normalization based on frequency
 - 🧩 Modular architecture with clear separation of concerns
@@ -18,13 +18,26 @@ An interactive word cloud visualization tool built with D3.js that displays word
 - 🎨 Sophisticated color scheme system with multiple assignment strategies
 - ✨ Advanced animations and transitions system
 
+## Language Selection
+
+The application supports both English and French through URL-based language selection:
+
+- English version: `https://fmadore.github.io/IWAC-wordcloud/en/index.html`
+- French version: `https://fmadore.github.io/IWAC-wordcloud/fr/index.html`
+
+The root URL (`https://fmadore.github.io/IWAC-wordcloud/`) automatically redirects to the English version.
+
 ## Project Structure
 
 ```
 project/
+├── en/                      # English version
+│   └── index.html          # English interface
+├── fr/                      # French version
+│   └── index.html          # French interface
 ├── src/
 │   ├── assets/
-│   │   └── fonts/              # Font files (Inter)
+│   │   └── fonts/          # Font files (Inter)
 │   ├── components/
 │   │   ├── wordcloud/
 │   │   │   ├── WordCloud.js    # Main word cloud component
@@ -70,7 +83,7 @@ project/
 │   ├── bénin_word_frequencies.json
 │   ├── burkina_faso_word_frequencies.json
 │   └── togo_word_frequencies.json
-└── index.html              # Main HTML file
+└── index.html              # Root file with language redirection
 ```
 
 ## Architecture
