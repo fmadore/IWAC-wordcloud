@@ -49,7 +49,23 @@ export class ConfigManager {
                 },
                 animation: {
                     duration: 200,
-                    scaleOnHover: 1.2
+                    scaleOnHover: 1.2,
+                    transition: {
+                        duration: 800,
+                        morphing: true,
+                        particles: true,
+                        physics: true
+                    },
+                    particles: {
+                        count: 10,
+                        duration: 600,
+                        colors: ['#ffb703', '#fb8500', '#e76f51', '#2a9d8f']
+                    },
+                    physics: {
+                        gravity: 0.8,
+                        bounce: 0.4,
+                        initialVelocity: -15
+                    }
                 },
                 export: {
                     scale: 2,
