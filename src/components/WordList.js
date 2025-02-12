@@ -14,7 +14,7 @@ export class WordList {
         this.translations = getTranslations();
         this.words = [];
         this.currentPage = 1;
-        this.wordsPerPage = 20;
+        this.wordsPerPage = 15;
         this.init();
     }
 
