@@ -27,15 +27,30 @@ export class SaveManager {
                 try {
                     const canvas = document.createElement('canvas');
                     const scale = 2; // Increase this value for higher resolution
-                    canvas.width = svg.width.baseVal.value * scale;
-                    canvas.height = svg.height.baseVal.value * scale;
-                    const ctx = canvas.getContext('2d');
-                    ctx.scale(scale, scale);
-                    ctx.drawImage(img, 0, 0);
                     
+                    // Get the SVG dimensions
+                    const svgWidth = svg.width.baseVal.value;
+                    const svgHeight = svg.height.baseVal.value;
+                    
+                    // Set canvas dimensions with scale
+                    canvas.width = svgWidth * scale;
+                    canvas.height = svgHeight * scale;
+                    
+                    // Get the context and configure it
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#000000'; // Set background color
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Apply scaling
+                    ctx.scale(scale, scale);
+                    
+                    // Draw the image centered
+                    ctx.drawImage(img, 0, 0, svgWidth, svgHeight);
+                    
+                    // Create download link
                     const link = document.createElement('a');
                     link.download = 'word_cloud.png';
-                    link.href = canvas.toDataURL('image/png');
+                    link.href = canvas.toDataURL('image/png', 1.0);
                     link.click();
                     resolve();
                 } catch (error) {

@@ -1,5 +1,7 @@
 import { getTranslations } from '../utils/translations.js';
 import { ConfigManager } from '../config/ConfigManager.js';
+import { SaveManager } from '../utils/saveUtils.js';
+import { AppStore } from '../store/AppStore.js';
 
 export class SaveButton {
     constructor(container) {
@@ -8,8 +10,8 @@ export class SaveButton {
             throw new Error('SaveButton: container is required');
         }
         this.config = ConfigManager.getInstance();
+        this.store = AppStore.getInstance();
         this.translations = getTranslations();
-        this._onClick = null;
         
         this.init();
     }
@@ -42,21 +44,60 @@ export class SaveButton {
         button.appendChild(text);
 
         // Add event listener
-        button.addEventListener('click', () => {
-            if (this._onClick) {
-                this._onClick();
-            }
-        });
+        button.addEventListener('click', () => this.handleSave());
 
         buttonContainer.appendChild(button);
         this.container.appendChild(buttonContainer);
     }
 
-    getExportConfig() {
-        return this.config.getExportConfig();
+    async handleSave() {
+        try {
+            const svg = document.querySelector("#wordcloud svg");
+            if (!svg) {
+                throw new Error('Word cloud SVG element not found');
+            }
+            
+            // Disable button while saving
+            const button = document.getElementById('saveButton');
+            button.disabled = true;
+            
+            // Store original dimensions
+            const originalWidth = svg.getAttribute('width');
+            const originalHeight = svg.getAttribute('height');
+            const originalViewBox = svg.getAttribute('viewBox');
+            
+            // Get dimensions from config
+            const dimensions = this.config.get('wordcloud.dimensions');
+            
+            // Set explicit dimensions for export
+            svg.setAttribute('width', dimensions.width);
+            svg.setAttribute('height', dimensions.height);
+            
+            // Ensure viewBox is set correctly
+            if (!originalViewBox) {
+                svg.setAttribute('viewBox', `0 0 ${dimensions.width} ${dimensions.height}`);
+            }
+            
+            // Save the image
+            await SaveManager.saveAsPNG(svg);
+            
+            // Restore original dimensions
+            if (originalWidth) svg.setAttribute('width', originalWidth);
+            if (originalHeight) svg.setAttribute('height', originalHeight);
+            if (originalViewBox) svg.setAttribute('viewBox', originalViewBox);
+            
+            // Re-enable button after save
+            button.disabled = false;
+        } catch (error) {
+            console.error('Error saving word cloud:', error);
+            // Re-enable button if there's an error
+            const button = document.getElementById('saveButton');
+            button.disabled = false;
+            throw error;
+        }
     }
 
-    set onClick(handler) {
-        this._onClick = handler;
+    getExportConfig() {
+        return this.config.getExportConfig();
     }
 } 
