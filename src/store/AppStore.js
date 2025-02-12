@@ -1,5 +1,8 @@
-import { EventBus } from '../utils/EventBus.js';
+import { EventBus } from '../events/EventBus.js';
 import { ConfigManager } from '../config/ConfigManager.js';
+import { WORDCLOUD_EVENTS, DATA_EVENTS, ERROR_EVENTS } from '../events/EventTypes.js';
+import { LoggerMiddleware } from '../events/middleware/LoggerMiddleware.js';
+import { ValidationMiddleware } from '../events/middleware/ValidationMiddleware.js';
 
 export class AppStore {
     static instance = null;
@@ -11,6 +14,11 @@ export class AppStore {
         
         this.config = ConfigManager.getInstance();
         this.eventBus = EventBus.getInstance();
+        
+        // Setup event bus middlewares
+        this.eventBus
+            .use(LoggerMiddleware)
+            .use(ValidationMiddleware);
         
         this.state = {
             selectedCountry: this.config.get('data.defaultCountry'),
@@ -69,12 +77,22 @@ export class AppStore {
             });
 
             // Emit loading event
-            this.eventBus.emit('wordcloud:loading', true);
+            await this.eventBus.emit(WORDCLOUD_EVENTS.LOADING, { isLoading: true });
+            
+            // Emit data load start event
+            await this.eventBus.emit(DATA_EVENTS.LOAD_START, { country, wordCount });
             
             // Load and process data
             const dataPath = this.config.get('paths.getDataPath')(country);
             const response = await d3.json(dataPath);
+            
+            // Emit process start event
+            await this.eventBus.emit(DATA_EVENTS.PROCESS_START, { data: response });
+            
             const words = this.processWordData(response, country, wordCount);
+            
+            // Emit process complete event
+            await this.eventBus.emit(DATA_EVENTS.PROCESS_COMPLETE, { words });
             
             // Update state with new data
             this.setState({
@@ -82,8 +100,9 @@ export class AppStore {
                 isLoading: false
             });
 
-            // Emit success event
-            this.eventBus.emit('wordcloud:update', words);
+            // Emit success events
+            await this.eventBus.emit(DATA_EVENTS.LOAD_COMPLETE, { words });
+            await this.eventBus.emit(WORDCLOUD_EVENTS.UPDATE, { words });
             
             return words;
         } catch (error) {
@@ -92,11 +111,13 @@ export class AppStore {
                 isLoading: false
             });
             
-            // Emit error event
-            this.eventBus.emit('wordcloud:error', error);
+            // Emit error events
+            await this.eventBus.emit(ERROR_EVENTS.GENERAL, { error });
+            await this.eventBus.emit(WORDCLOUD_EVENTS.ERROR, { error });
+            
             throw error;
         } finally {
-            this.eventBus.emit('wordcloud:loading', false);
+            await this.eventBus.emit(WORDCLOUD_EVENTS.LOADING, { isLoading: false });
         }
     }
 
