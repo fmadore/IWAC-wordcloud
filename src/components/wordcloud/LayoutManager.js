@@ -14,7 +14,8 @@ export class WordCloudLayoutManager {
         this.layout = d3.layout.cloud()
             .size([dimensions.width, dimensions.height])
             .padding(layoutOptions.padding)
-            .rotate(this.getRotation.bind(this));
+            .rotate(this.getRotation.bind(this))
+            .fontSize(d => d.size);
     }
 
     getRotation() {
@@ -24,6 +25,8 @@ export class WordCloudLayoutManager {
     }
 
     updateDimensions({ width, height }) {
+        if (!width || !height) return;
+        
         this.config.updateDimensions(width, height);
         
         if (this.layout) {

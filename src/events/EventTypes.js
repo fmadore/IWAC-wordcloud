@@ -30,7 +30,8 @@ export const DATA_EVENTS = {
 export const LAYOUT_EVENTS = {
     CALCULATE_START: 'layout:calculate:start',
     CALCULATE_COMPLETE: 'layout:calculate:complete',
-    DIMENSION_CHANGE: 'layout:dimension:change'
+    DIMENSION_CHANGE: 'layout:dimension:change',
+    UPDATE_REQUIRED: 'layout:update:required'
 };
 
 // Animation Events

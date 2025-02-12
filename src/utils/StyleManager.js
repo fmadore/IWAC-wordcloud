@@ -8,7 +8,8 @@ export class StyleManager {
             alignItems: 'center',
             justifyContent: 'center',
             minHeight: '400px',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            backgroundColor: '#ffffff'
         };
         
         Object.assign(container.style, styles);
@@ -21,7 +22,8 @@ export class StyleManager {
             position: 'relative',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            overflow: 'hidden'
         };
         
         Object.assign(wrapper.style, styles);
@@ -29,11 +31,12 @@ export class StyleManager {
 
     static setupSVG(svg) {
         svg
-            .attr("width", "100%")
-            .attr("height", "100%")
+            .style("width", "100%")
+            .style("height", "100%")
             .style("position", "relative")
             .style("display", "block")
             .style("background", "transparent")
+            .style("overflow", "visible")
             .attr("preserveAspectRatio", "xMidYMid meet");
     }
 } 

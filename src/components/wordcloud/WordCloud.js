@@ -3,8 +3,8 @@ import { WordCloudLayoutManager } from './LayoutManager.js';
 import { DimensionManager } from '../../utils/DimensionManager.js';
 import { CanvasManager } from '../../utils/CanvasManager.js';
 import { StyleManager } from '../../utils/StyleManager.js';
-import { WordStyleManager } from '../../utils/WordStyleManager.js';
-import { WORDCLOUD_EVENTS, LAYOUT_EVENTS, ANIMATION_EVENTS } from '../../events/EventTypes.js';
+import { WordCloudController } from './WordCloudController.js';
+import { LAYOUT_EVENTS } from '../../events/EventTypes.js';
 
 export class WordCloud {
     constructor(containerId, { config, store, eventBus, options = {} } = {}) {
@@ -16,27 +16,24 @@ export class WordCloud {
             throw new Error('Container element not found');
         }
 
-        // Inject dependencies
+        // Initialize dependencies
         this.config = config;
-        this.store = store;
         this.eventBus = eventBus;
+        this.store = store;
         
-        this.initializeConfig(options);
+        // Initialize managers and controllers
+        this.initializeManagers();
+        this.controller = new WordCloudController({ config, store, eventBus });
+        
+        // Apply initial configuration
+        this.applyConfiguration(options);
+        
+        // Setup the view
         StyleManager.setupContainer(this.container);
-        this.setupManagers();
-        this.setupEventHandlers();
-        
-        // Subscribe to store updates
-        this.unsubscribe = this.store.subscribe(this.handleStateChange.bind(this));
+        this.setupView();
     }
 
-    initializeConfig(options) {
-        Object.entries(options).forEach(([key, value]) => {
-            this.config.set(`wordcloud.${key}`, value);
-        });
-    }
-
-    setupManagers() {
+    initializeManagers() {
         this.dimensionManager = new DimensionManager(this.container);
         this.canvasManager = new CanvasManager();
         this.renderer = new WordCloudRenderer(this.container, {
@@ -48,48 +45,45 @@ export class WordCloud {
         });
     }
 
-    setupEventHandlers() {
-        // Handle dimension changes
-        this.dimensionManager.subscribe(dimensions => {
-            this.eventBus.emit(LAYOUT_EVENTS.DIMENSION_CHANGE, { dimensions });
-            this.store.updateDimensions(dimensions);
-            this.layoutManager.updateDimensions(dimensions);
-            this.renderer.updateDimensions(dimensions.width, dimensions.height);
-            
-            const state = this.store.getState();
-            if (state.currentWords.length > 0) {
-                this.redraw();
-            }
-        });
-
-        // Handle word interactions
-        this.eventBus.on(WORDCLOUD_EVENTS.WORD_HOVER, async ({ word, event }) => {
-            await this.eventBus.emit(ANIMATION_EVENTS.TRANSITION_START, { type: 'hover', word });
-            this.wordList?.highlightWord(word.text);
-        });
-
-        this.eventBus.on(WORDCLOUD_EVENTS.WORD_CLICK, ({ word, event }) => {
-            // Handle word click interactions
-            console.log('Word clicked:', word);
-        });
-
-        // Handle layout events
-        this.eventBus.on(LAYOUT_EVENTS.CALCULATE_START, () => {
-            // Could show loading indicator or prepare for layout
-        });
-
-        this.eventBus.on(LAYOUT_EVENTS.CALCULATE_COMPLETE, ({ words }) => {
-            this.draw(words);
+    applyConfiguration(options) {
+        Object.entries(options).forEach(([key, value]) => {
+            this.config.set(`wordcloud.${key}`, value);
         });
     }
 
-    handleStateChange(newState, oldState) {
-        if (
-            newState.currentWords !== oldState.currentWords ||
-            newState.dimensions !== oldState.dimensions
-        ) {
-            this.redraw();
+    setupView() {
+        // Handle dimension changes
+        this.dimensionManager.subscribe(async dimensions => {
+            await this.eventBus.emit(LAYOUT_EVENTS.DIMENSION_CHANGE, { dimensions });
+            this.layoutManager.updateDimensions(dimensions);
+            this.renderer.updateDimensions(dimensions.width, dimensions.height);
+        });
+
+        // Handle layout updates
+        this.eventBus.on(LAYOUT_EVENTS.UPDATE_REQUIRED, async () => {
+            await this.redraw();
+        });
+    }
+
+    async redraw() {
+        try {
+            const words = await this.layoutManager.layoutWords(this.getCurrentWords());
+            await this.draw(words);
+        } catch (error) {
+            console.error('Error redrawing word cloud:', error);
+            throw error;
         }
+    }
+
+    getCurrentWords() {
+        return this.store.getState().currentWords || [];
+    }
+
+    async draw(words) {
+        const svg = this.renderer.createSVG();
+        const wordGroup = this.renderer.createWordGroup(svg);
+        this.renderer.renderWords(wordGroup, words);
+        return words;
     }
 
     setWordList(wordList) {
@@ -97,63 +91,12 @@ export class WordCloud {
         this.renderer.setWordList(wordList);
     }
 
-    async redraw() {
-        try {
-            await this.eventBus.emit(LAYOUT_EVENTS.CALCULATE_START);
-            const state = this.store.getState();
-            const words = await this.layoutManager.layoutWords(state.currentWords);
-            
-            // Emit transition start event before drawing
-            await this.eventBus.emit(ANIMATION_EVENTS.TRANSITION_START, { 
-                type: 'update',
-                oldWords: state.currentWords,
-                newWords: words
-            });
-            
-            const rankedWords = WordStyleManager.addRankInformation(words);
-            this.draw(rankedWords);
-            
-            // Emit transition complete event after drawing
-            await this.eventBus.emit(ANIMATION_EVENTS.TRANSITION_COMPLETE, { words: rankedWords });
-            
-            return rankedWords;
-        } catch (error) {
-            console.error('Error redrawing word cloud:', error);
-            throw error;
-        }
-    }
-
-    draw(words) {
-        if (!words || words.length === 0) return words;
-        
-        const svg = this.renderer.createSVG();
-        const wordGroup = this.renderer.createWordGroup(svg);
-        this.renderer.renderWords(wordGroup, words);
-        return words;
-    }
-
-    async update(country, wordCount) {
-        try {
-            const words = await this.store.updateWordCloud(country, wordCount);
-            return words;
-        } catch (error) {
-            console.error('Error updating word cloud:', error);
-            throw error;
-        }
-    }
-
     cleanup() {
-        if (this.unsubscribe) {
-            this.unsubscribe();
-        }
         this.dimensionManager.destroy();
         this.canvasManager.destroy();
         this.renderer.clear();
+        this.controller.destroy();
         
-        // Clean up event listeners
-        this.eventBus.off(WORDCLOUD_EVENTS.WORD_HOVER);
-        this.eventBus.off(WORDCLOUD_EVENTS.WORD_CLICK);
-        this.eventBus.off(LAYOUT_EVENTS.CALCULATE_START);
-        this.eventBus.off(LAYOUT_EVENTS.CALCULATE_COMPLETE);
+        this.eventBus.off(LAYOUT_EVENTS.UPDATE_REQUIRED);
     }
 } 

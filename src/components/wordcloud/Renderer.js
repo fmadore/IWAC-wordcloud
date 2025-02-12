@@ -37,11 +37,15 @@ export class WordCloudRenderer {
         this.clear();
         
         const wrapper = document.createElement('div');
+        wrapper.style.width = '100%';
+        wrapper.style.height = '100%';
         StyleManager.setupWrapper(wrapper);
         this.container.appendChild(wrapper);
         
         this.svg = d3.select(wrapper)
-            .append("svg");
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%");
             
         StyleManager.setupSVG(this.svg);
         
@@ -82,7 +86,9 @@ export class WordCloudRenderer {
             .data(wordsWithRank)
             .enter()
             .append("text")
-            .attr("data-word", d => d.text);
+            .attr("data-word", d => d.text)
+            .attr("text-anchor", "middle")
+            .attr("transform", d => `translate(${[d.x, d.y]})rotate(${d.rotate || 0})`);
 
         WordStyleManager.applyWordStyles(wordElements);
         this.setupWordInteractions(wordElements);
