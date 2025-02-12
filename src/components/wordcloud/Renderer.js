@@ -3,15 +3,32 @@ import { StyleManager } from '../../utils/StyleManager.js';
 import { AnimationManager } from '../../utils/AnimationManager.js';
 import { WordStyleManager } from '../../utils/WordStyleManager.js';
 import { ConfigManager } from '../../config/ConfigManager.js';
+import { EventBus } from '../../events/EventBus.js';
+import { WORDCLOUD_EVENTS, ANIMATION_EVENTS } from '../../events/EventTypes.js';
 
 export class WordCloudRenderer {
     constructor(container) {
         this.container = container;
         this.config = ConfigManager.getInstance();
+        this.eventBus = EventBus.getInstance();
         this.svg = null;
         this.wordGroup = null;
         this.tooltip = new Tooltip();
         this.wordList = null;
+        this.setupEventHandlers();
+    }
+
+    setupEventHandlers() {
+        // Listen for animation events
+        this.eventBus.on(ANIMATION_EVENTS.TRANSITION_START, async ({ type, word }) => {
+            if (type === 'hover') {
+                await AnimationManager.wordEnter(word.element, word.size);
+            }
+        });
+
+        this.eventBus.on(ANIMATION_EVENTS.TRANSITION_COMPLETE, ({ words }) => {
+            // Handle any post-transition cleanup or additional animations
+        });
     }
 
     setWordList(wordList) {
@@ -79,17 +96,22 @@ export class WordCloudRenderer {
         wordElements
             .on("mouseover", (event, d) => {
                 this.tooltip.show(event, d);
-                AnimationManager.wordEnter(event.target, d.size);
-                if (this.wordList) {
-                    this.wordList.highlightWord(d.text);
-                }
+                this.eventBus.emit(WORDCLOUD_EVENTS.WORD_HOVER, { 
+                    word: { ...d, element: event.target },
+                    event
+                });
             })
             .on("mouseout", (event, d) => {
                 this.tooltip.hide();
-                AnimationManager.wordExit(event.target, d.size);
                 if (this.wordList) {
                     this.wordList.clearHighlight();
                 }
+            })
+            .on("click", (event, d) => {
+                this.eventBus.emit(WORDCLOUD_EVENTS.WORD_CLICK, { 
+                    word: { ...d, element: event.target },
+                    event
+                });
             });
     }
 

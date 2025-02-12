@@ -5,6 +5,8 @@ import { SaveManager } from '../utils/saveUtils.js';
 import { ConfigManager } from '../config/ConfigManager.js';
 import { ErrorManager } from '../utils/ErrorManager.js';
 import { AppStore } from '../store/AppStore.js';
+import { EventBus } from '../events/EventBus.js';
+import { UI_EVENTS, ERROR_EVENTS } from '../events/EventTypes.js';
 
 export class Menu {
     constructor(containerId) {
@@ -19,6 +21,7 @@ export class Menu {
 
         this.config = ConfigManager.getInstance();
         this.store = AppStore.getInstance();
+        this.eventBus = EventBus.getInstance();
         this.errorManager = ErrorManager.getInstance();
         this.init();
     }
@@ -41,9 +44,7 @@ export class Menu {
             };
 
             // Setup event handlers
-            this.components.countrySelector.onChange = () => this.handleUpdate();
-            this.components.wordCountSlider.onChange = () => this.handleUpdate();
-            this.components.saveButton.onClick = () => this.handleSave();
+            this.setupEventHandlers();
 
             // Subscribe to store updates
             this.unsubscribe = this.store.subscribe(this.handleStateChange.bind(this));
@@ -51,6 +52,38 @@ export class Menu {
             // Set initial values from store
             this.setInitialState();
         }, { component: 'Menu', method: 'init' });
+    }
+
+    setupEventHandlers() {
+        // Country selector events
+        this.components.countrySelector.onChange = () => {
+            const country = this.getCountry();
+            this.eventBus.emit(UI_EVENTS.COUNTRY_CHANGE, { country });
+            this.handleUpdate();
+        };
+
+        // Word count slider events
+        this.components.wordCountSlider.onChange = () => {
+            const count = this.getWordCount();
+            this.eventBus.emit(UI_EVENTS.WORD_COUNT_CHANGE, { count });
+            this.handleUpdate();
+        };
+
+        // Save button events
+        this.components.saveButton.onClick = async () => {
+            try {
+                await this.eventBus.emit(UI_EVENTS.SAVE_REQUEST);
+                const svg = document.querySelector("#wordcloud svg");
+                if (!svg) {
+                    throw new Error('Word cloud SVG element not found');
+                }
+                await SaveManager.saveAsPNG(svg);
+                await this.eventBus.emit(UI_EVENTS.SAVE_COMPLETE);
+            } catch (error) {
+                await this.eventBus.emit(UI_EVENTS.SAVE_ERROR, { error });
+                await this.eventBus.emit(ERROR_EVENTS.GENERAL, { error });
+            }
+        };
     }
 
     setInitialState() {
@@ -89,16 +122,6 @@ export class Menu {
                 wordCount: this.getWordCount()
             }
         });
-    }
-
-    async handleSave() {
-        return this.errorManager.wrapAsync(async () => {
-            const svg = document.querySelector("#wordcloud svg");
-            if (!svg) {
-                throw new Error('Word cloud SVG element not found');
-            }
-            await SaveManager.saveAsPNG(svg);
-        }, { component: 'Menu', method: 'handleSave' });
     }
 
     getCountry() {

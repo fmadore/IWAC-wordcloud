@@ -6,6 +6,8 @@ import { StyleManager } from '../../utils/StyleManager.js';
 import { ConfigManager } from '../../config/ConfigManager.js';
 import { WordStyleManager } from '../../utils/WordStyleManager.js';
 import { AppStore } from '../../store/AppStore.js';
+import { EventBus } from '../../events/EventBus.js';
+import { WORDCLOUD_EVENTS, LAYOUT_EVENTS, ANIMATION_EVENTS } from '../../events/EventTypes.js';
 
 export class WordCloud {
     constructor(containerId, options = {}) {
@@ -19,6 +21,7 @@ export class WordCloud {
 
         this.config = ConfigManager.getInstance();
         this.store = AppStore.getInstance();
+        this.eventBus = EventBus.getInstance();
         
         this.initializeConfig(options);
         StyleManager.setupContainer(this.container);
@@ -43,7 +46,9 @@ export class WordCloud {
     }
 
     setupEventHandlers() {
+        // Handle dimension changes
         this.dimensionManager.subscribe(dimensions => {
+            this.eventBus.emit(LAYOUT_EVENTS.DIMENSION_CHANGE, { dimensions });
             this.store.updateDimensions(dimensions);
             this.layoutManager.updateDimensions(dimensions);
             this.renderer.updateDimensions(dimensions.width, dimensions.height);
@@ -53,10 +58,29 @@ export class WordCloud {
                 this.redraw();
             }
         });
+
+        // Handle word interactions
+        this.eventBus.on(WORDCLOUD_EVENTS.WORD_HOVER, async ({ word, event }) => {
+            await this.eventBus.emit(ANIMATION_EVENTS.TRANSITION_START, { type: 'hover', word });
+            this.wordList?.highlightWord(word.text);
+        });
+
+        this.eventBus.on(WORDCLOUD_EVENTS.WORD_CLICK, ({ word, event }) => {
+            // Handle word click interactions
+            console.log('Word clicked:', word);
+        });
+
+        // Handle layout events
+        this.eventBus.on(LAYOUT_EVENTS.CALCULATE_START, () => {
+            // Could show loading indicator or prepare for layout
+        });
+
+        this.eventBus.on(LAYOUT_EVENTS.CALCULATE_COMPLETE, ({ words }) => {
+            this.draw(words);
+        });
     }
 
     handleStateChange(newState, oldState) {
-        // Only redraw if relevant state has changed
         if (
             newState.currentWords !== oldState.currentWords ||
             newState.dimensions !== oldState.dimensions
@@ -66,29 +90,34 @@ export class WordCloud {
     }
 
     setWordList(wordList) {
+        this.wordList = wordList;
         this.renderer.setWordList(wordList);
     }
 
     async redraw() {
         try {
+            await this.eventBus.emit(LAYOUT_EVENTS.CALCULATE_START);
             const state = this.store.getState();
             const words = await this.layoutManager.layoutWords(state.currentWords);
+            
+            // Emit transition start event before drawing
+            await this.eventBus.emit(ANIMATION_EVENTS.TRANSITION_START, { 
+                type: 'update',
+                oldWords: state.currentWords,
+                newWords: words
+            });
+            
             const rankedWords = WordStyleManager.addRankInformation(words);
             this.draw(rankedWords);
+            
+            // Emit transition complete event after drawing
+            await this.eventBus.emit(ANIMATION_EVENTS.TRANSITION_COMPLETE, { words: rankedWords });
+            
             return rankedWords;
         } catch (error) {
             console.error('Error redrawing word cloud:', error);
             throw error;
         }
-    }
-
-    cleanup() {
-        if (this.unsubscribe) {
-            this.unsubscribe();
-        }
-        this.dimensionManager.destroy();
-        this.canvasManager.destroy();
-        this.renderer.clear();
     }
 
     draw(words) {
@@ -108,5 +137,20 @@ export class WordCloud {
             console.error('Error updating word cloud:', error);
             throw error;
         }
+    }
+
+    cleanup() {
+        if (this.unsubscribe) {
+            this.unsubscribe();
+        }
+        this.dimensionManager.destroy();
+        this.canvasManager.destroy();
+        this.renderer.clear();
+        
+        // Clean up event listeners
+        this.eventBus.off(WORDCLOUD_EVENTS.WORD_HOVER);
+        this.eventBus.off(WORDCLOUD_EVENTS.WORD_CLICK);
+        this.eventBus.off(LAYOUT_EVENTS.CALCULATE_START);
+        this.eventBus.off(LAYOUT_EVENTS.CALCULATE_COMPLETE);
     }
 } 
