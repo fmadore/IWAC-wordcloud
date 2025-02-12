@@ -16,6 +16,7 @@ An interactive word cloud visualization tool built with D3.js that displays word
 - 🧩 Modular architecture with clear separation of concerns
 - 🎭 Modern typography with Inter font system
 - 🎨 Sophisticated color scheme system with multiple assignment strategies
+- ✨ Advanced animations and transitions system
 
 ## Project Structure
 
@@ -43,6 +44,7 @@ project/
 │   │   ├── FontManager.js    # Font management and styling
 │   │   ├── StyleManager.js   # Global style management
 │   │   ├── ColorManager.js   # Color scheme management
+│   │   ├── AnimationManager.js # Animation system
 │   │   └── WordStyleManager.js # Word-specific styling
 │   ├── config/
 │   │   ├── settings.js       # Centralized configuration
@@ -125,6 +127,58 @@ The project follows a modular architecture with clear separation of concerns:
    - Responsive font sizing
    - Font weights: 400 (normal), 500 (medium), 600 (semibold)
    - Fallback system fonts for optimal loading
+
+### Animation System
+
+The visualization features a sophisticated animation system that brings the word cloud to life:
+
+1. **Morphing Transitions**
+   - Smooth morphing between different datasets
+   - Graceful exit animations for removed words
+   - Elegant entry animations for new words
+   - Configurable transition timing and easing
+
+2. **Particle Effects**
+   - Particle explosion effects on word removal
+   - Particle implosion effects on word entry
+   - Customizable particle count and colors
+   - Physics-based particle movement
+
+3. **Physics-Based Animations**
+   - Gravity-based word entry animations
+   - Bounce effects with configurable parameters
+   - Natural-feeling motion for word positioning
+   - Smooth interpolation between states
+
+4. **Configuration Options**
+   ```javascript
+   {
+     animation: {
+       transition: {
+         duration: 800,
+         morphing: true,
+         particles: true,
+         physics: true
+       },
+       particles: {
+         count: 10,
+         duration: 600,
+         colors: ['#ffb703', '#fb8500', '#e76f51', '#2a9d8f']
+       },
+       physics: {
+         gravity: 0.8,
+         bounce: 0.4,
+         initialVelocity: -15
+       }
+     }
+   }
+   ```
+
+5. **Performance Optimization**
+   - Hardware-accelerated animations using CSS transforms
+   - Efficient particle system with automatic cleanup
+   - Smooth transitions even with large datasets
+   - Fallbacks for lower-end devices
 
 ## Component APIs
 
