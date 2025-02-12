@@ -1,52 +1,45 @@
 import { WordCloud } from './components/wordcloud/WordCloud.js';
 import { Menu } from './components/Menu.js';
 import { WordList } from './components/WordList.js';
-import { config } from './config/settings.js';
+import { AppStore } from './store/AppStore.js';
+import { ErrorManager } from './utils/ErrorManager.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    try {
-        // Initialize word cloud
-        const wordCloud = new WordCloud('#wordcloud');
+    const errorManager = ErrorManager.getInstance();
+    
+    errorManager.wrapSync(() => {
+        // Initialize store
+        const store = AppStore.getInstance();
         
-        // Initialize word list
+        // Initialize components
+        const wordCloud = new WordCloud('#wordcloud');
         const wordList = new WordList('wordlist');
+        const menu = new Menu('controls');
 
         // Connect word cloud and word list
         wordCloud.setWordList(wordList);
 
-        // Initialize menu with update callback and configuration
-        const menu = new Menu('controls', 
-            async (country, wordCount) => {
-                try {
-                    const words = await wordCloud.update(country, wordCount);
-                    wordList.updateWords(words);
-                } catch (error) {
-                    console.error('Failed to update word cloud:', error);
-                    // Here you could add user-friendly error handling
-                }
-            },
-            {
-                initialCountry: config.data.defaultCountry || 'combined',
-                initialWordCount: config.data.defaultWordCount
+        // Subscribe word list to store updates
+        store.subscribe((newState, oldState) => {
+            if (newState.currentWords !== oldState.currentWords) {
+                wordList.updateWords(newState.currentWords);
             }
-        );
+        });
 
         // Initial update
-        wordCloud.update(menu.getCountry(), menu.getWordCount())
-            .then(words => {
-                wordList.updateWords(words);
-            })
-            .catch(error => {
-                console.error('Failed to perform initial word cloud update:', error);
-            });
+        const initialState = store.getState();
+        store.updateWordCloud(
+            initialState.selectedCountry,
+            initialState.wordCount
+        ).catch(error => {
+            console.error('Failed to perform initial word cloud update:', error);
+        });
 
         // Cleanup on page unload
         window.addEventListener('unload', () => {
             menu.destroy();
             wordList.destroy();
+            wordCloud.cleanup();
         });
-    } catch (error) {
-        console.error('Failed to initialize application:', error);
-        // Here you could add user-friendly error message display
-    }
+    }, { component: 'main', method: 'init' });
 }); 

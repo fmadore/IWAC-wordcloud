@@ -4,9 +4,10 @@ import { SaveButton } from './SaveButton.js';
 import { SaveManager } from '../utils/saveUtils.js';
 import { ConfigManager } from '../config/ConfigManager.js';
 import { ErrorManager } from '../utils/ErrorManager.js';
+import { AppStore } from '../store/AppStore.js';
 
 export class Menu {
-    constructor(containerId, onUpdate) {
+    constructor(containerId) {
         if (!containerId) {
             throw new Error('Menu: containerId is required');
         }
@@ -17,9 +18,8 @@ export class Menu {
         }
 
         this.config = ConfigManager.getInstance();
+        this.store = AppStore.getInstance();
         this.errorManager = ErrorManager.getInstance();
-        this.onUpdate = onUpdate;
-        this.components = {};
         this.init();
     }
 
@@ -45,41 +45,50 @@ export class Menu {
             this.components.wordCountSlider.onChange = () => this.handleUpdate();
             this.components.saveButton.onClick = () => this.handleSave();
 
-            // Set initial values
+            // Subscribe to store updates
+            this.unsubscribe = this.store.subscribe(this.handleStateChange.bind(this));
+
+            // Set initial values from store
             this.setInitialState();
         }, { component: 'Menu', method: 'init' });
     }
 
     setInitialState() {
         return this.errorManager.wrapSync(() => {
-            const defaultCountry = this.config.get('data.defaultCountry');
-            const defaultWordCount = this.config.get('data.defaultWordCount');
+            const state = this.store.getState();
             
-            if (defaultCountry) {
-                this.setCountry(defaultCountry);
+            if (state.selectedCountry) {
+                this.setCountry(state.selectedCountry);
             }
-            if (defaultWordCount) {
-                this.setWordCount(defaultWordCount);
+            if (state.wordCount) {
+                this.setWordCount(state.wordCount);
             }
         }, { component: 'Menu', method: 'setInitialState' });
     }
 
-    handleUpdate() {
-        if (this.onUpdate) {
-            return this.errorManager.wrapSync(() => {
-                this.onUpdate(
-                    this.getCountry(),
-                    this.getWordCount()
-                );
-            }, { 
-                component: 'Menu', 
-                method: 'handleUpdate',
-                data: {
-                    country: this.getCountry(),
-                    wordCount: this.getWordCount()
-                }
-            });
+    handleStateChange(newState, oldState) {
+        if (newState.selectedCountry !== oldState.selectedCountry) {
+            this.setCountry(newState.selectedCountry);
         }
+        if (newState.wordCount !== oldState.wordCount) {
+            this.setWordCount(newState.wordCount);
+        }
+    }
+
+    handleUpdate() {
+        return this.errorManager.wrapSync(() => {
+            this.store.updateWordCloud(
+                this.getCountry(),
+                this.getWordCount()
+            );
+        }, { 
+            component: 'Menu', 
+            method: 'handleUpdate',
+            data: {
+                country: this.getCountry(),
+                wordCount: this.getWordCount()
+            }
+        });
     }
 
     async handleSave() {
@@ -88,12 +97,10 @@ export class Menu {
             if (!svg) {
                 throw new Error('Word cloud SVG element not found');
             }
-            const exportConfig = this.components.saveButton.getExportConfig();
             await SaveManager.saveAsPNG(svg);
         }, { component: 'Menu', method: 'handleSave' });
     }
 
-    // Public methods to access component values
     getCountry() {
         return this.errorManager.wrapSync(
             () => this.components.countrySelector.getValue(),
@@ -108,7 +115,6 @@ export class Menu {
         );
     }
 
-    // Methods to set component values
     setCountry(value) {
         return this.errorManager.wrapSync(
             () => this.components.countrySelector.setValue(value),
@@ -123,10 +129,11 @@ export class Menu {
         );
     }
 
-    // Method to destroy/cleanup the menu
     destroy() {
         return this.errorManager.wrapSync(() => {
-            this.onUpdate = null;
+            if (this.unsubscribe) {
+                this.unsubscribe();
+            }
             Object.values(this.components).forEach(component => {
                 if (component.destroy) {
                     component.destroy();

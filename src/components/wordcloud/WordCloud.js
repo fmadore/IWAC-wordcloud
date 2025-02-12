@@ -1,11 +1,11 @@
 import { WordCloudRenderer } from './Renderer.js';
 import { WordCloudLayoutManager } from './LayoutManager.js';
-import { WordCloudDataManager } from './DataManager.js';
 import { DimensionManager } from '../../utils/DimensionManager.js';
 import { CanvasManager } from '../../utils/CanvasManager.js';
 import { StyleManager } from '../../utils/StyleManager.js';
 import { ConfigManager } from '../../config/ConfigManager.js';
 import { WordStyleManager } from '../../utils/WordStyleManager.js';
+import { AppStore } from '../../store/AppStore.js';
 
 export class WordCloud {
     constructor(containerId, options = {}) {
@@ -18,14 +18,18 @@ export class WordCloud {
         }
 
         this.config = ConfigManager.getInstance();
+        this.store = AppStore.getInstance();
+        
         this.initializeConfig(options);
         StyleManager.setupContainer(this.container);
         this.setupManagers();
         this.setupEventHandlers();
+        
+        // Subscribe to store updates
+        this.unsubscribe = this.store.subscribe(this.handleStateChange.bind(this));
     }
 
     initializeConfig(options) {
-        // Apply any custom options to the config
         Object.entries(options).forEach(([key, value]) => {
             this.config.set(`wordcloud.${key}`, value);
         });
@@ -36,27 +40,39 @@ export class WordCloud {
         this.canvasManager = new CanvasManager();
         this.renderer = new WordCloudRenderer(this.container);
         this.layoutManager = new WordCloudLayoutManager();
-        this.dataManager = new WordCloudDataManager();
+    }
+
+    setupEventHandlers() {
+        this.dimensionManager.subscribe(dimensions => {
+            this.store.updateDimensions(dimensions);
+            this.layoutManager.updateDimensions(dimensions);
+            this.renderer.updateDimensions(dimensions.width, dimensions.height);
+            
+            const state = this.store.getState();
+            if (state.currentWords.length > 0) {
+                this.redraw();
+            }
+        });
+    }
+
+    handleStateChange(newState, oldState) {
+        // Only redraw if relevant state has changed
+        if (
+            newState.currentWords !== oldState.currentWords ||
+            newState.dimensions !== oldState.dimensions
+        ) {
+            this.redraw();
+        }
     }
 
     setWordList(wordList) {
         this.renderer.setWordList(wordList);
     }
 
-    setupEventHandlers() {
-        this.dimensionManager.subscribe(dimensions => {
-            this.layoutManager.updateDimensions(dimensions);
-            this.renderer.updateDimensions(dimensions.width, dimensions.height);
-            
-            if (this.dataManager.getCurrentWords()) {
-                this.redraw();
-            }
-        });
-    }
-
     async redraw() {
         try {
-            const words = await this.layoutManager.layoutWords(this.dataManager.getCurrentWords());
+            const state = this.store.getState();
+            const words = await this.layoutManager.layoutWords(state.currentWords);
             const rankedWords = WordStyleManager.addRankInformation(words);
             this.draw(rankedWords);
             return rankedWords;
@@ -67,6 +83,9 @@ export class WordCloud {
     }
 
     cleanup() {
+        if (this.unsubscribe) {
+            this.unsubscribe();
+        }
         this.dimensionManager.destroy();
         this.canvasManager.destroy();
         this.renderer.clear();
@@ -75,7 +94,6 @@ export class WordCloud {
     draw(words) {
         if (!words || words.length === 0) return words;
         
-        this.dataManager.setCurrentWords(words);
         const svg = this.renderer.createSVG();
         const wordGroup = this.renderer.createWordGroup(svg);
         this.renderer.renderWords(wordGroup, words);
@@ -84,10 +102,8 @@ export class WordCloud {
 
     async update(country, wordCount) {
         try {
-            const words = await this.dataManager.loadData(country, wordCount);
-            const layoutedWords = await this.layoutManager.layoutWords(words);
-            const rankedWords = WordStyleManager.addRankInformation(layoutedWords);
-            return this.draw(rankedWords);
+            const words = await this.store.updateWordCloud(country, wordCount);
+            return words;
         } catch (error) {
             console.error('Error updating word cloud:', error);
             throw error;
