@@ -183,8 +183,12 @@ export class WordList {
         const wordElement = this.listElement.querySelector(`[data-word="${word}"]`);
         if (wordElement) {
             wordElement.classList.add('highlighted');
-            // Scroll the word into view
-            wordElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Scroll the word into view with smooth behavior
+            wordElement.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'nearest',
+                inline: 'nearest'
+            });
         }
     }
 

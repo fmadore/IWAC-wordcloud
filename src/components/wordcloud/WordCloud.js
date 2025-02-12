@@ -4,7 +4,7 @@ import { DimensionManager } from '../../utils/DimensionManager.js';
 import { CanvasManager } from '../../utils/CanvasManager.js';
 import { StyleManager } from '../../utils/StyleManager.js';
 import { WordCloudController } from './WordCloudController.js';
-import { LAYOUT_EVENTS } from '../../events/EventTypes.js';
+import { LAYOUT_EVENTS, WORDCLOUD_EVENTS } from '../../events/EventTypes.js';
 
 export class WordCloud {
     constructor(containerId, { config, store, eventBus, options = {} } = {}) {
@@ -63,6 +63,13 @@ export class WordCloud {
         this.eventBus.on(LAYOUT_EVENTS.UPDATE_REQUIRED, async () => {
             await this.redraw();
         });
+
+        // Handle word hover events
+        this.eventBus.on(WORDCLOUD_EVENTS.WORD_HOVER, ({ word }) => {
+            if (this.wordList) {
+                this.wordList.highlightWord(word.text);
+            }
+        });
     }
 
     async redraw() {
@@ -97,6 +104,8 @@ export class WordCloud {
         this.renderer.clear();
         this.controller.destroy();
         
+        // Clean up event handlers
         this.eventBus.off(LAYOUT_EVENTS.UPDATE_REQUIRED);
+        this.eventBus.off(WORDCLOUD_EVENTS.WORD_HOVER);
     }
 } 
