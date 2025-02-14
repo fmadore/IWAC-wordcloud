@@ -101,6 +101,7 @@ export class ConfigManager {
                 { value: 'combined', labelKey: 'allCountries' },
                 { value: 'bénin', label: 'Bénin' },
                 { value: 'burkina_faso', label: 'Burkina Faso' },
+                { value: 'côte_d\'ivoire', label: 'Côte d\'Ivoire' },
                 { value: 'togo', label: 'Togo' }
             ]
         };
