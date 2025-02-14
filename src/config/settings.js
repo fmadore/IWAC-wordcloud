@@ -12,7 +12,7 @@ export const config = {
     
     data: {
         minWords: 10,
-        maxWords: 150,
+        maxWords: 200,
         defaultWordCount: 150
     },
     
