@@ -33,7 +33,7 @@ import pytz
 # Get the current script's directory
 script_dir = os.path.dirname(os.path.abspath(__file__))
 # Define data directory path
-data_dir = os.path.join(os.path.dirname(script_dir), 'data')
+data_dir = os.path.join(script_dir, 'data')
 # Define cache directory path
 cache_dir = os.path.join(data_dir, 'cache')
 
@@ -46,7 +46,7 @@ ITEMS_CACHE_FILE = os.path.join(cache_dir, 'items_cache.json')
 PROCESSED_CACHE_FILE = os.path.join(cache_dir, 'processed_cache.json')
 
 # Load environment variables from .env file in the root directory
-root_dir = os.path.dirname(os.path.dirname(script_dir))
+root_dir = os.path.dirname(script_dir)
 load_dotenv(os.path.join(root_dir, '.env'))
 
 # Omeka S API configuration
@@ -88,6 +88,30 @@ newline_re = re.compile(r'\n')
 apostrophe_re = re.compile(r"['']")  # Matches both curly and straight apostrophes
 whitespace_re = re.compile(r'\s+')
 oe_re = re.compile(r'œ')
+
+# Add these constants near the top of the file, after other constants
+MIN_FREQUENCY_THRESHOLD = 2  # Words must appear at least twice to be cached
+MAX_WORDS_PER_COUNTRY = 1000  # Maximum number of words to store per country
+
+def prune_counter(counter, max_words=MAX_WORDS_PER_COUNTRY, min_freq=MIN_FREQUENCY_THRESHOLD):
+    """
+    Prune a counter object to keep only significant words.
+    
+    Args:
+        counter (Counter): Counter object with word frequencies
+        max_words (int): Maximum number of words to keep
+        min_freq (int): Minimum frequency threshold
+    
+    Returns:
+        Counter: Pruned counter object
+    """
+    # First filter by minimum frequency
+    filtered = Counter({word: freq for word, freq in counter.items() if freq >= min_freq})
+    
+    # Then take top N words if still too many
+    if len(filtered) > max_words:
+        return Counter(dict(filtered.most_common(max_words)))
+    return filtered
 
 def load_cache():
     """
@@ -229,19 +253,17 @@ def preprocess_texts(texts):
         processed_texts.extend(tokens)
     return processed_texts
 
-def get_word_frequencies(texts, top_n=200):
+def get_word_frequencies(texts):
     """
     Calculate word frequencies from processed texts.
     
     Args:
         texts (list): List of processed tokens
-        top_n (int): Number of top frequent words to return
     
     Returns:
-        list: List of tuples (word, frequency) sorted by frequency
+        Counter: Counter object containing all word frequencies
     """
-    word_freq = Counter(texts)
-    return word_freq.most_common(top_n)
+    return Counter(texts)
 
 # Main execution block
 # Load existing cache
@@ -252,6 +274,11 @@ all_word_frequencies = {}
 for country, sets in ITEM_SETS.items():
     country_texts = []
     cache_updated = False
+    
+    # Get existing frequencies from cache if available
+    existing_frequencies = Counter()
+    if country in processed_cache:
+        existing_frequencies.update(processed_cache[country]['frequencies'])
     
     # Collect texts from all item sets for the current country
     for set_id in tqdm(sets, desc=f"Processing {country}"):
@@ -267,19 +294,25 @@ for country, sets in ITEM_SETS.items():
     if cache_updated:
         # Process texts and get word frequencies for new/modified content
         preprocessed_texts = preprocess_texts(country_texts)
-        current_frequencies = get_word_frequencies(preprocessed_texts, top_n=200)
+        new_frequencies = get_word_frequencies(preprocessed_texts)
         
-        # Update processed cache
+        # Combine with existing frequencies
+        combined_frequencies = existing_frequencies + new_frequencies
+        
+        # Prune the combined frequencies to keep cache size manageable
+        pruned_frequencies = prune_counter(combined_frequencies)
+        
+        # Update processed cache with pruned frequencies
         processed_cache[country] = {
-            'frequencies': current_frequencies,
+            'frequencies': dict(pruned_frequencies),
             'last_updated': datetime.now(pytz.UTC).isoformat()
         }
         
-        all_word_frequencies[country] = current_frequencies
+        all_word_frequencies[country] = pruned_frequencies
     else:
         # Use cached frequencies if available
         if country in processed_cache:
-            all_word_frequencies[country] = processed_cache[country]['frequencies']
+            all_word_frequencies[country] = Counter(processed_cache[country]['frequencies'])
             print(f"Using cached data for {country} from {processed_cache[country]['last_updated']}")
         else:
             print(f"No data available for {country}")
@@ -289,7 +322,9 @@ save_cache(items_cache, processed_cache)
 
 # Generate individual JSON files for each country
 for country, word_freq in all_word_frequencies.items():
-    json_data = [{"text": word, "size": freq} for word, freq in word_freq]
+    # Only take top 200 when generating output files
+    top_words = word_freq.most_common(200)
+    json_data = [{"text": word, "size": freq} for word, freq in top_words]
     
     filename = f"{country.lower().replace(' ', '_')}_word_frequencies.json"
     file_path = os.path.join(data_dir, filename)
@@ -298,7 +333,7 @@ for country, word_freq in all_word_frequencies.items():
     print(f"Word frequencies for {country} saved to {file_path}")
 
 # Generate combined JSON file containing data for all countries
-combined_json_data = {country: [{"text": word, "size": freq} for word, freq in word_freq] 
+combined_json_data = {country: [{"text": word, "size": freq} for word, freq in word_freq.most_common(200)] 
                       for country, word_freq in all_word_frequencies.items()}
 
 combined_file_path = os.path.join(data_dir, "combined_word_frequencies.json")
