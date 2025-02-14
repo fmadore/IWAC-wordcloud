@@ -86,24 +86,49 @@ export class ConfigManager {
                 minWords: 10,
                 maxWords: 200,
                 defaultWordCount: 150,
-                defaultCountry: 'combined'
+                defaultGroup: 'combined',
+                // New data configuration options
+                format: {
+                    type: 'json',  // 'json', 'csv', etc.
+                    fields: {
+                        text: 'text',      // Field name for word text
+                        value: 'size',     // Field name for word frequency/value
+                        group: 'country',  // Field name for grouping (optional)
+                        metadata: []       // Additional fields to preserve
+                    }
+                },
+                processing: {
+                    // Custom data processing options
+                    normalization: 'linear', // 'linear', 'log', 'sqrt'
+                    filters: [],            // Array of filter functions
+                    transformers: []        // Array of transform functions
+                }
             },
             paths: {
                 dataDir: '/data',
-                getDataPath: (country) => {
-                    // Check if we're on GitHub Pages
+                // More flexible path configuration
+                getDataPath: (group, format = 'json') => {
                     const isGitHubPages = window.location.hostname.includes('github.io');
                     const basePath = isGitHubPages ? '/IWAC-wordcloud' : '';
-                    return `${basePath}/data/${country === 'combined' ? 'combined' : country}_word_frequencies.json`;
+                    return `${basePath}/data/${group === 'combined' ? 'combined' : group}_word_frequencies.${format}`;
                 }
             },
-            countries: [
-                { value: 'combined', labelKey: 'allCountries' },
-                { value: 'bénin', label: 'Bénin' },
-                { value: 'burkina_faso', label: 'Burkina Faso' },
-                { value: 'côte_d\'ivoire', label: 'Côte d\'Ivoire' },
-                { value: 'togo', label: 'Togo' }
-            ]
+            // More generic groups configuration
+            groups: {
+                type: 'country',           // Type of grouping (e.g., 'country', 'category', 'year')
+                defaultCombined: true,     // Whether to show a combined option
+                combinedLabel: {           // Labels for combined option
+                    en: 'All Countries',
+                    fr: 'Tous les pays'
+                },
+                items: [
+                    { value: 'combined', labelKey: 'allCountries' },
+                    { value: 'bénin', label: 'Bénin' },
+                    { value: 'burkina_faso', label: 'Burkina Faso' },
+                    { value: 'côte_d\'ivoire', label: 'Côte d\'Ivoire' },
+                    { value: 'togo', label: 'Togo' }
+                ]
+            }
         };
 
         ConfigManager.instance = this;
@@ -136,7 +161,7 @@ export class ConfigManager {
     }
 
     getCountries() {
-        return [...this.config.countries];
+        return [...this.config.groups.items];
     }
 
     calculateMaxFontSize(height) {

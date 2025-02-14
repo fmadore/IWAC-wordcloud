@@ -67,7 +67,7 @@ export class WordCloudService {
     }
 
     getDefaultCountry() {
-        return this.config.get('data.defaultCountry');
+        return this.config.get('data.defaultGroup');
     }
 
     getAvailableCountries() {

@@ -40,7 +40,7 @@ export class CountrySelector {
         });
 
         // Set default value
-        select.value = this.config.get('data.defaultCountry');
+        select.value = this.config.get('data.defaultGroup');
 
         // Add event listener
         select.addEventListener('change', () => {
