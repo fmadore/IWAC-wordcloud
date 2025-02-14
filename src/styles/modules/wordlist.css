@@ -38,7 +38,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    overflow-y: auto;
 }
 
 .word-list-item {
@@ -49,7 +49,7 @@
     transition: all 0.2s ease;
     cursor: pointer;
     border-left: 3px solid transparent;
-    height: calc((100% - 16px) / 15); /* Evenly distribute height for 15 items */
+    min-height: 40px; /* Fixed height instead of calculated */
 }
 
 .word-list-item:hover,
