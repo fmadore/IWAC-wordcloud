@@ -1,11 +1,12 @@
-import { config } from '../config/settings.js';
+import { ConfigManager } from '../config/ConfigManager.js';
 
 export class DimensionManager {
     constructor(container) {
         this.container = container;
+        this.config = ConfigManager.getInstance();
         this.dimensions = {
-            width: config.wordcloud.width,
-            height: config.wordcloud.height
+            width: this.config.get('wordcloud.dimensions.width'),
+            height: this.config.get('wordcloud.dimensions.height')
         };
         this.observers = new Set();
         this.setupResizeObserver();
