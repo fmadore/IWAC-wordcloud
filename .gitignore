@@ -1,3 +1,4 @@
 .cursorrules
 .venv/
 .env
+.vscode/settings.json
