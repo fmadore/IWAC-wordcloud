@@ -1,5 +1,6 @@
 import { getTranslations } from '../utils/translations.js';
 import { ConfigManager } from '../config/ConfigManager.js';
+import { URLManager } from '../utils/URLManager.js';
 
 export class CountrySelector {
     constructor(container) {
@@ -8,8 +9,15 @@ export class CountrySelector {
             throw new Error('CountrySelector: container is required');
         }
         this.config = ConfigManager.getInstance();
+        this.urlManager = URLManager.getInstance();
         this.translations = getTranslations();
         this._onChange = null;
+
+        // Listen for URL changes
+        window.addEventListener('urlchange', (event) => {
+            this.setValue(event.detail.country, false);
+        });
+
         this.init();
     }
 
@@ -20,6 +28,7 @@ export class CountrySelector {
 
         // Create label
         const label = document.createElement('label');
+        label.className = 'select-label';
         label.textContent = this.translations.selectCountry;
         label.htmlFor = 'countrySelector';
         selectContainer.appendChild(label);
@@ -27,7 +36,8 @@ export class CountrySelector {
         // Create select element
         const select = document.createElement('select');
         select.id = 'countrySelector';
-        select.setAttribute('aria-label', 'Select a country');
+        select.className = 'select-input';
+        select.setAttribute('aria-label', this.translations.selectCountry);
 
         // Add options
         this.config.getCountries().forEach(country => {
@@ -39,11 +49,15 @@ export class CountrySelector {
             select.appendChild(option);
         });
 
-        // Set default value
-        select.value = this.config.get('data.defaultGroup');
+        // Get initial value from URL or config
+        const initialState = this.urlManager.getInitialState();
+        select.value = initialState.country;
 
         // Add event listener
-        select.addEventListener('change', () => {
+        select.addEventListener('change', (e) => {
+            // Update URL
+            this.urlManager.updateURL(e.target.value, null);
+            
             if (this._onChange) {
                 this._onChange();
             }
@@ -57,11 +71,22 @@ export class CountrySelector {
         return document.getElementById('countrySelector').value;
     }
 
-    setValue(value) {
+    setValue(value, updateURL = true) {
         const select = document.getElementById('countrySelector');
-        select.value = value;
-        if (this._onChange) {
-            this._onChange();
+        const oldValue = select.value;
+        
+        // Only proceed if value has changed
+        if (oldValue !== value) {
+            select.value = value;
+            
+            // Update URL if requested
+            if (updateURL) {
+                this.urlManager.updateURL(value, null);
+            }
+            
+            if (this._onChange) {
+                this._onChange();
+            }
         }
     }
 

@@ -3,7 +3,7 @@
     width: 100%;
     position: relative;
     z-index: 100;
-    background-color: #fff;
+    background-color: var(--color-white);
     padding: 0;
     margin: 0;
 }
@@ -14,12 +14,12 @@
     align-items: center;
     gap: 8px;
     padding: 6px;
-    background-color: #f8f9fa;
+    background-color: var(--color-background-light);
     border-radius: 8px;
     margin: 4px auto;
     width: 95%;
     max-width: 900px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px var(--color-shadow);
 }
 
 .input-container {
@@ -27,43 +27,86 @@
     min-width: 180px;
 }
 
-/* Select styles */
+/* Select Container */
 .select-container {
     position: relative;
     min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-#countrySelector {
+.select-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+}
+
+.select-input {
     width: 100%;
     padding: 8px 35px 8px 12px;
     font-size: var(--font-size-base);
     font-family: var(--font-base);
-    border: 2px solid #e0e0e0;
+    color: var(--color-text-primary);
+    background-color: var(--color-white);
+    border: 2px solid var(--color-gray-200);
     border-radius: 8px;
-    background-color: white;
     appearance: none;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-#countrySelector:hover {
-    border-color: #a0a0a0;
+.select-input:hover {
+    border-color: var(--color-gray-400);
 }
 
-#countrySelector:focus {
+.select-input:focus {
     outline: none;
-    border-color: #4a90e2;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-alpha);
 }
 
 .select-container::after {
     content: '';
     position: absolute;
     right: 15px;
-    top: 50%;
+    top: calc(50% + 8px);
     width: 0;
     height: 0;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-top: 6px solid #666;
+    border-top: 6px solid var(--color-gray-500);
     pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .menu-wrapper {
+        flex-direction: column;
+        gap: 12px;
+        padding: 8px;
+    }
+
+    .select-container,
+    .input-container {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .select-label {
+        font-size: var(--font-size-xs);
+    }
+
+    .select-input {
+        padding: 6px 30px 6px 10px;
+        font-size: var(--font-size-sm);
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+    .select-input {
+        font-size: var(--font-size-base);
+        padding: 10px 35px 10px 12px;
+    }
 } 
