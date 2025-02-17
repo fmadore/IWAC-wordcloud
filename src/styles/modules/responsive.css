@@ -61,16 +61,16 @@
         border-left: none;
         border-top: 1px solid #e0e0e0;
         position: relative;
-        flex: 0 0 200px; /* Fixed height, prevent flex growing/shrinking */
+        flex: 0 0 200px;
         overflow: hidden;
     }
 
     .word-list {
         flex: 1 1 auto;
-        overflow-y: scroll; /* Always show scrollbar to prevent layout shifts */
+        overflow-y: scroll;
         overflow-x: hidden;
-        height: 0; /* Let flex control the height */
-        min-height: 0; /* Allow container to shrink */
+        height: 0;
+        min-height: 0;
     }
 
     .word-list-header {
@@ -123,11 +123,31 @@
     .input-container {
         width: 100%;
     }
-    
+
+    /* Slider Adjustments */
     .slider-container {
-        margin: 0;
+        margin: 0 10px;
     }
 
+    .slider-text {
+        font-size: var(--font-size-xs);
+    }
+
+    .slider-value {
+        font-size: var(--font-size-xs);
+        padding: 1px 6px;
+    }
+
+    .slider-input::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+    }
+
+    .slider-input::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+    }
+    
     /* Content Layout */
     .content-container {
         height: calc(100vh - 90px);
@@ -143,7 +163,7 @@
 
     /* Word Cloud */
     .wordcloud-container {
-        height: 100%; /* Take full height */
+        height: 100%;
     }
 
     /* Word List */
@@ -183,14 +203,20 @@
         cursor: default;
     }
 
-    input[type="range"]::-webkit-slider-thumb {
+    /* Slider touch optimizations */
+    .slider-input::-webkit-slider-thumb {
         width: 24px;
         height: 24px;
     }
 
-    input[type="range"]::-moz-range-thumb {
+    .slider-input::-moz-range-thumb {
         width: 24px;
         height: 24px;
+    }
+
+    .slider-input::-webkit-slider-thumb:hover,
+    .slider-input::-moz-range-thumb:hover {
+        transform: none;
     }
 
     .save-button:hover {

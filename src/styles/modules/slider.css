@@ -102,48 +102,4 @@
 
 .slider-input:focus::-moz-range-thumb {
     box-shadow: 0 0 0 3px var(--color-primary-alpha);
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .slider-container {
-        margin: 0 10px;
-    }
-
-    .slider-text {
-        font-size: var(--font-size-xs);
-    }
-
-    .slider-value {
-        font-size: var(--font-size-xs);
-        padding: 1px 6px;
-    }
-
-    .slider-input::-webkit-slider-thumb {
-        width: 24px;
-        height: 24px;
-    }
-
-    .slider-input::-moz-range-thumb {
-        width: 24px;
-        height: 24px;
-    }
-}
-
-/* Touch device optimizations */
-@media (hover: none) {
-    .slider-input::-webkit-slider-thumb {
-        width: 24px;
-        height: 24px;
-    }
-
-    .slider-input::-moz-range-thumb {
-        width: 24px;
-        height: 24px;
-    }
-
-    .slider-input::-webkit-slider-thumb:hover,
-    .slider-input::-moz-range-thumb:hover {
-        transform: none;
-    }
 } 
