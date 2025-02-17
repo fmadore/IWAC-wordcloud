@@ -23,6 +23,7 @@ export class WordCountSlider {
         labelContainer.className = 'slider-label';
         
         const label = document.createElement('span');
+        label.className = 'slider-text';
         label.textContent = this.translations.numberOfWords;
         
         const valueDisplay = document.createElement('span');
@@ -30,20 +31,26 @@ export class WordCountSlider {
         valueDisplay.textContent = this.config.get('data.defaultWordCount');
         
         labelContainer.appendChild(label);
-        labelContainer.appendChild(document.createTextNode(': '));
         labelContainer.appendChild(valueDisplay);
 
-        // Create slider
+        // Create slider input
         const slider = document.createElement('input');
         slider.type = 'range';
+        slider.className = 'slider-input';
         slider.id = 'wordCountSlider';
         slider.min = this.config.get('data.minWords');
         slider.max = this.config.get('data.maxWords');
         slider.value = this.config.get('data.defaultWordCount');
+        slider.setAttribute('aria-label', this.translations.numberOfWords);
+        slider.setAttribute('aria-valuemin', slider.min);
+        slider.setAttribute('aria-valuemax', slider.max);
+        slider.setAttribute('aria-valuenow', slider.value);
 
         // Add event listener
         slider.addEventListener('input', (e) => {
-            valueDisplay.textContent = e.target.value;
+            const value = e.target.value;
+            valueDisplay.textContent = value;
+            slider.setAttribute('aria-valuenow', value);
             if (this._onChange) {
                 this._onChange();
             }
@@ -61,6 +68,7 @@ export class WordCountSlider {
     setValue(value) {
         const slider = document.getElementById('wordCountSlider');
         slider.value = value;
+        slider.setAttribute('aria-valuenow', value);
         const event = new Event('input');
         slider.dispatchEvent(event);
     }
