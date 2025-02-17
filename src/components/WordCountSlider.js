@@ -1,5 +1,6 @@
 import { getTranslations } from '../utils/translations.js';
 import { ConfigManager } from '../config/ConfigManager.js';
+import { URLManager } from '../utils/URLManager.js';
 
 export class WordCountSlider {
     constructor(container) {
@@ -8,8 +9,14 @@ export class WordCountSlider {
             throw new Error('WordCountSlider: container is required');
         }
         this.config = ConfigManager.getInstance();
+        this.urlManager = URLManager.getInstance();
         this.translations = getTranslations();
         this._onChange = null;
+        
+        // Listen for URL changes
+        window.addEventListener('urlchange', (event) => {
+            this.setValue(event.detail.wordCount, false);
+        });
         
         this.init();
     }
@@ -28,7 +35,6 @@ export class WordCountSlider {
         
         const valueDisplay = document.createElement('span');
         valueDisplay.className = 'slider-value';
-        valueDisplay.textContent = this.config.get('data.defaultWordCount');
         
         labelContainer.appendChild(label);
         labelContainer.appendChild(valueDisplay);
@@ -40,7 +46,12 @@ export class WordCountSlider {
         slider.id = 'wordCountSlider';
         slider.min = this.config.get('data.minWords');
         slider.max = this.config.get('data.maxWords');
-        slider.value = this.config.get('data.defaultWordCount');
+        
+        // Get initial value from URL or config
+        const initialState = this.urlManager.getInitialState();
+        slider.value = initialState.wordCount;
+        valueDisplay.textContent = initialState.wordCount;
+        
         slider.setAttribute('aria-label', this.translations.numberOfWords);
         slider.setAttribute('aria-valuemin', slider.min);
         slider.setAttribute('aria-valuemax', slider.max);
@@ -51,6 +62,10 @@ export class WordCountSlider {
             const value = e.target.value;
             valueDisplay.textContent = value;
             slider.setAttribute('aria-valuenow', value);
+            
+            // Update URL
+            this.urlManager.updateURL(null, value);
+            
             if (this._onChange) {
                 this._onChange();
             }
@@ -65,12 +80,24 @@ export class WordCountSlider {
         return parseInt(document.getElementById('wordCountSlider').value);
     }
 
-    setValue(value) {
+    setValue(value, updateURL = true) {
         const slider = document.getElementById('wordCountSlider');
-        slider.value = value;
-        slider.setAttribute('aria-valuenow', value);
-        const event = new Event('input');
-        slider.dispatchEvent(event);
+        const oldValue = slider.value;
+        
+        // Only proceed if value has changed
+        if (oldValue !== value.toString()) {
+            slider.value = value;
+            slider.setAttribute('aria-valuenow', value);
+            
+            // Update URL if requested
+            if (updateURL) {
+                this.urlManager.updateURL(null, value);
+            }
+            
+            // Trigger input event to update display
+            const event = new Event('input');
+            slider.dispatchEvent(event);
+        }
     }
 
     set onChange(handler) {
