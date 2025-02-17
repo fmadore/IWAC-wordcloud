@@ -158,6 +158,51 @@ The project follows a modular architecture with clear separation of concerns:
    - Font weights: 400 (normal), 500 (medium), 600 (semibold)
    - Fallback system fonts for optimal loading
 
+7. **CSS Architecture**
+   - Modular CSS organization with clear separation of concerns:
+     ```
+     styles/
+     ├── modules/
+     │   ├── variables.css   # Global variables and configuration
+     │   ├── reset.css      # CSS reset and normalization
+     │   ├── fonts.css      # Typography system
+     │   ├── colors.css     # Color scheme
+     │   ├── layout.css     # Core layout styles
+     │   ├── controls.css   # Control elements
+     │   ├── slider.css     # Slider component
+     │   ├── button.css     # Button styles
+     │   ├── responsive.css # Responsive design
+     │   ├── tooltip.css    # Tooltip component
+     │   └── wordlist.css   # Word list component
+     └── main.css           # Main entry point
+     ```
+   
+   - **Global Variables System**
+     - Centralized configuration in `variables.css`
+     - Layout dimensions and breakpoints
+     - Component-specific variables
+     - Z-index management
+     - Viewport-based calculations
+   
+   - **Responsive Design System**
+     - Mobile-first approach
+     - Breakpoint documentation
+     - Component-based media queries
+     - Touch device optimizations
+   
+   - **Component Isolation**
+     - Each component has its own CSS module
+     - Clear boundaries between components
+     - Reusable styles and patterns
+     - Consistent naming conventions
+   
+   - **Maintainability Features**
+     - CSS custom properties for easy theming
+     - Semantic variable names
+     - Documented breakpoints
+     - Consistent spacing and sizing
+     - Clear file organization
+
 ### Animation System
 
 The visualization features a sophisticated animation system that brings the word cloud to life:
