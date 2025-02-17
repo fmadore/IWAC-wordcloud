@@ -1,4 +1,6 @@
 /* WordCloud Module */
+
+/* Container for the word cloud visualization */
 .wordcloud-container {
     position: relative;
     flex: 1;
@@ -11,9 +13,10 @@
     min-height: 400px;
 }
 
+/* Main wordcloud canvas/svg container */
 #wordcloud {
     width: 100%;
-    height: calc(100vh - 70px);
+    height: var(--content-height-desktop);
     min-height: 400px;
     max-height: none;
     margin: 0 auto;
@@ -21,9 +24,10 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    max-width: min(100%, calc((100vh - 70px) * 1.5));
+    max-width: min(100%, calc(var(--content-height-desktop) * 1.5));
 }
 
+/* SVG element styling */
 #wordcloud svg {
     width: 100%;
     height: 100%;
