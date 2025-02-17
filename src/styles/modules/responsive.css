@@ -55,7 +55,7 @@
         min-height: 200px;
         max-height: 200px;
         border-left: none;
-        border-top: 1px solid #e0e0e0;
+        border-top: 1px solid var(--color-gray-200);
         position: relative;
         flex: 0 0 200px;
         overflow: hidden;
@@ -73,7 +73,7 @@
         padding: 8px 16px;
         position: sticky;
         top: 0;
-        background: #fff;
+        background: var(--color-white);
         z-index: 2;
     }
 
@@ -89,7 +89,7 @@
         padding: 8px;
         position: sticky;
         bottom: 0;
-        background: #fff;
+        background: var(--color-white);
         z-index: 2;
     }
 
@@ -217,10 +217,10 @@
 
     .save-button:hover {
         transform: none;
-        box-shadow: 0 2px 4px rgba(74, 144, 226, 0.2);
+        box-shadow: 0 2px 4px var(--color-primary-alpha);
     }
 
     .save-button:active {
-        background-color: #357abd;
+        background-color: var(--color-primary-dark);
     }
 } 
