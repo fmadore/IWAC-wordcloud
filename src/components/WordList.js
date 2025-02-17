@@ -22,14 +22,12 @@ export class WordList {
         // Create container div
         const listContainer = document.createElement('div');
         listContainer.className = 'word-list-container';
-        StyleManager.setupContainer(listContainer);
 
         // Create header
         const header = document.createElement('div');
         header.className = 'word-list-header';
         const title = document.createElement('h2');
         title.textContent = this.translations.wordList;
-        FontManager.applyFontStyles(d3.select(title), null, 'semibold');
         header.appendChild(title);
         listContainer.appendChild(header);
 
@@ -82,10 +80,6 @@ export class WordList {
                 <span class="word-text">${word.text}</span>
                 <span class="word-frequency">${frequency}</span>
             `;
-
-            // Apply font styles
-            const wordText = wordElement.querySelector('.word-text');
-            FontManager.applyFontStyles(d3.select(wordText), null, 'medium');
             
             // Add hover effect synchronization
             wordElement.addEventListener('mouseover', () => {
@@ -133,14 +127,12 @@ export class WordList {
         prevButton.innerHTML = '←';
         prevButton.disabled = this.currentPage === 1;
         prevButton.addEventListener('click', () => this.goToPage(this.currentPage - 1));
-        FontManager.applyFontStyles(d3.select(prevButton), null, 'medium');
         this.paginationElement.appendChild(prevButton);
 
         // Page numbers
         const pageInfo = document.createElement('span');
         pageInfo.className = 'page-info';
         pageInfo.textContent = `${this.currentPage} / ${totalPages}`;
-        FontManager.applyFontStyles(d3.select(pageInfo), null, 'medium');
         this.paginationElement.appendChild(pageInfo);
 
         // Next button
@@ -148,7 +140,6 @@ export class WordList {
         nextButton.innerHTML = '→';
         nextButton.disabled = this.currentPage === totalPages;
         nextButton.addEventListener('click', () => this.goToPage(this.currentPage + 1));
-        FontManager.applyFontStyles(d3.select(nextButton), null, 'medium');
         this.paginationElement.appendChild(nextButton);
     }
 
@@ -183,7 +174,6 @@ export class WordList {
         const wordElement = this.listElement.querySelector(`[data-word="${word}"]`);
         if (wordElement) {
             wordElement.classList.add('highlighted');
-            // Scroll the word into view with smooth behavior
             wordElement.scrollIntoView({ 
                 behavior: 'smooth', 
                 block: 'nearest',
