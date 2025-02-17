@@ -44,13 +44,22 @@ export class URLManager {
     }
 
     updateURL(country, wordCount) {
+        // Get current state
+        const currentState = this.getInitialState();
+        
         // Build new URL parameters
         const params = new URLSearchParams();
-        if (country && country !== this.config.get('data.defaultGroup')) {
-            params.set('country', country);
+        
+        // Update country if provided, otherwise keep current country if different from default
+        const newCountry = country || currentState.country;
+        if (newCountry !== this.config.get('data.defaultGroup')) {
+            params.set('country', newCountry);
         }
-        if (wordCount && wordCount !== this.config.get('data.defaultWordCount')) {
-            params.set('words', wordCount);
+        
+        // Update word count if provided, otherwise keep current word count if different from default
+        const newWordCount = wordCount || currentState.wordCount;
+        if (newWordCount !== this.config.get('data.defaultWordCount')) {
+            params.set('words', newWordCount);
         }
 
         // Update URL without reloading the page
