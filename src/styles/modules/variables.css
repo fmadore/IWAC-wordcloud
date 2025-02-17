@@ -1,0 +1,31 @@
+/* Global Variables Module */
+
+:root {
+    /* Core Layout Dimensions */
+    --word-list-width: 300px;
+    --word-list-mobile-height: 200px;
+    --word-list-small-mobile-height: 180px;
+    
+    /* Viewport Heights */
+    --content-height-desktop: calc(100vh - 70px);
+    --content-height-tablet: calc(100vh - 90px);
+    --content-height-mobile: calc(100vh - 80px);
+
+    /* Z-Index Layers */
+    --z-index-sticky: 2;
+    
+    /* Component Specific */
+    --word-list-border: 1px solid var(--color-gray-200);
+    
+    /* Breakpoints (for documentation) */
+    --breakpoint-large: 900px;
+    --breakpoint-medium: 600px;
+    --breakpoint-small: 480px;
+}
+
+/* Responsive Overrides */
+@media (max-width: 900px) {
+    :root {
+        --word-list-width: 100%;
+    }
+} 

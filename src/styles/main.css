@@ -1,4 +1,5 @@
 @import './modules/reset.css';
+@import './modules/variables.css';
 @import './modules/fonts.css';
 @import './modules/colors.css';
 @import './modules/layout.css';
