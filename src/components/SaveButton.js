@@ -25,7 +25,7 @@ export class SaveButton {
         button.className = 'save-button';
         button.setAttribute('aria-label', this.translations.saveAsPNG);
 
-        // Create icon element
+        // Create icon element with SVG
         const icon = document.createElement('span');
         icon.className = 'save-icon';
         icon.innerHTML = `
@@ -60,6 +60,7 @@ export class SaveButton {
             // Disable button while saving
             const button = document.getElementById('saveButton');
             button.disabled = true;
+            button.classList.add('saving');
             
             // Store original dimensions
             const originalWidth = svg.getAttribute('width');
@@ -88,11 +89,13 @@ export class SaveButton {
             
             // Re-enable button after save
             button.disabled = false;
+            button.classList.remove('saving');
         } catch (error) {
             console.error('Error saving word cloud:', error);
             // Re-enable button if there's an error
             const button = document.getElementById('saveButton');
             button.disabled = false;
+            button.classList.remove('saving');
             throw error;
         }
     }
