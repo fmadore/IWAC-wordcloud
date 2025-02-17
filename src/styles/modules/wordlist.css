@@ -7,8 +7,8 @@
     min-width: var(--word-list-width);
     max-width: var(--word-list-width);
     height: 100%;
-    background: #fff;
-    border-left: 1px solid #e0e0e0;
+    background: var(--color-white);
+    border-left: var(--word-list-border);
     display: flex;
     flex-direction: column;
     position: relative;

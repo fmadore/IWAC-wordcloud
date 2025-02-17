@@ -6,9 +6,10 @@
 @import './modules/controls.css';
 @import './modules/slider.css';
 @import './modules/button.css';
-@import './modules/responsive.css';
-@import './modules/tooltip.css';
+@import './modules/wordcloud.css';
 @import './modules/wordlist.css';
+@import './modules/tooltip.css';
+@import './modules/responsive.css';
 
 /* Content Layout */
 .content-container {

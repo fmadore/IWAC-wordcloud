@@ -1,23 +1,39 @@
 /* Global Variables Module */
 
 :root {
-    /* Core Layout Dimensions */
+    /* Layout Dimensions */
     --word-list-width: 300px;
     --word-list-mobile-height: 200px;
     --word-list-small-mobile-height: 180px;
-    
-    /* Viewport Heights */
     --content-height-desktop: calc(100vh - 70px);
     --content-height-tablet: calc(100vh - 90px);
     --content-height-mobile: calc(100vh - 80px);
 
-    /* Z-Index Layers */
-    --z-index-sticky: 2;
-    
     /* Component Specific */
     --word-list-border: 1px solid var(--color-gray-200);
     
-    /* Breakpoints (for documentation) */
+    /* Z-Index Layers */
+    --z-index-sticky: 2;
+    --z-index-tooltip: 9999;
+    
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 24px;
+
+    /* Border Radius */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-full: 9999px;
+
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    
+    /* Breakpoints */
     --breakpoint-large: 900px;
     --breakpoint-medium: 600px;
     --breakpoint-small: 480px;
