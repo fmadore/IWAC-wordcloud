@@ -10,7 +10,7 @@ An interactive word cloud visualization tool built with D3.js that displays word
 - 📋 Paginated word list with synchronized interactions
 - 🔍 Bi-directional highlighting between cloud and list
 - 💾 Export to PNG functionality
-- 🌐 URL-based language selection (English/French)
+- 🌐 URL-based configuration and sharing
 - 📱 Responsive design
 - 🎯 Word size normalization based on frequency
 - 🧩 Modular architecture with clear separation of concerns
@@ -18,12 +18,29 @@ An interactive word cloud visualization tool built with D3.js that displays word
 - 🎨 Sophisticated color scheme system with multiple assignment strategies
 - ✨ Advanced animations and transitions system
 
-## Language Selection
+## URL Configuration
 
-The application supports both English and French through URL-based language selection:
+The application supports URL-based configuration for easy sharing and bookmarking:
 
+### Language Selection
 - English version: `https://fmadore.github.io/IWAC-wordcloud/en/index.html`
 - French version: `https://fmadore.github.io/IWAC-wordcloud/fr/index.html`
+
+### URL Parameters
+You can configure the visualization using URL parameters:
+
+- `country`: Select a specific country
+  - Example: `?country=togo`
+  - Available values: `combined`, `bénin`, `burkina_faso`, `côte_d'ivoire`, `togo`
+
+- `words`: Set the number of words to display
+  - Example: `?words=50`
+  - Range: 10-200 words
+
+### Examples
+- Show Togo's word cloud: `index.html?country=togo`
+- Display 50 words: `index.html?words=50`
+- Combine parameters: `index.html?country=benin&words=100`
 
 The root URL (`https://fmadore.github.io/IWAC-wordcloud/`) automatically redirects to the English version.
 
@@ -225,6 +242,25 @@ menu.getWordCount(); // Get selected word count
 ```javascript
 const dataManager = new WordCloudDataManager();
 const words = await dataManager.loadData(country, wordCount);
+```
+
+### URLManager Component
+```javascript
+const urlManager = URLManager.getInstance();
+
+// Get initial state from URL
+const state = urlManager.getInitialState();
+// Returns: { country: string, wordCount: number }
+
+// Update URL parameters
+urlManager.updateURL('togo', 50);
+// Updates URL to: ?country=togo&words=50
+
+// Listen for URL changes
+window.addEventListener('urlchange', (event) => {
+    const { country, wordCount } = event.detail;
+    // Handle state change
+});
 ```
 
 ## Data Preparation
