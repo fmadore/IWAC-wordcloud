@@ -45,13 +45,9 @@
         overflow: hidden;
     }
 
-    /* Hide word list on mobile */
-    .word-list-container {
-        display: none !important;
-    }
-
     /* Word List */
     .word-list-container {
+        display: none !important; /* Hide on mobile by default */
         width: 100%;
         min-width: 100%;
         max-width: 100%;
