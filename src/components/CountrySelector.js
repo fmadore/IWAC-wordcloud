@@ -26,13 +26,6 @@ export class CountrySelector {
         const selectContainer = document.createElement('div');
         selectContainer.className = 'select-container';
 
-        // Create label
-        const label = document.createElement('label');
-        label.className = 'select-label';
-        label.textContent = this.translations.selectCountry;
-        label.htmlFor = 'countrySelector';
-        selectContainer.appendChild(label);
-
         // Create select element
         const select = document.createElement('select');
         select.id = 'countrySelector';
