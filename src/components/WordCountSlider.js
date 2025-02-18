@@ -52,6 +52,9 @@ export class WordCountSlider {
         slider.value = initialState.wordCount;
         valueDisplay.textContent = initialState.wordCount;
         
+        // Set initial progress
+        this.updateSliderProgress(slider);
+        
         slider.setAttribute('aria-label', this.translations.numberOfWords);
         slider.setAttribute('aria-valuemin', slider.min);
         slider.setAttribute('aria-valuemax', slider.max);
@@ -62,6 +65,9 @@ export class WordCountSlider {
             const value = e.target.value;
             valueDisplay.textContent = value;
             slider.setAttribute('aria-valuenow', value);
+            
+            // Update progress
+            this.updateSliderProgress(e.target);
             
             // Update URL
             this.urlManager.updateURL(null, value);
@@ -76,6 +82,14 @@ export class WordCountSlider {
         this.container.appendChild(sliderContainer);
     }
 
+    updateSliderProgress(slider) {
+        const min = parseInt(slider.min);
+        const max = parseInt(slider.max);
+        const val = parseInt(slider.value);
+        const percentage = ((val - min) * 100) / (max - min);
+        slider.style.setProperty('--slider-progress', `${percentage}%`);
+    }
+
     getValue() {
         return parseInt(document.getElementById('wordCountSlider').value);
     }
@@ -88,6 +102,9 @@ export class WordCountSlider {
         if (oldValue !== value.toString()) {
             slider.value = value;
             slider.setAttribute('aria-valuenow', value);
+            
+            // Update progress
+            this.updateSliderProgress(slider);
             
             // Update URL if requested
             if (updateURL) {
