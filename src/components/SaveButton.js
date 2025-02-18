@@ -25,13 +25,13 @@ export class SaveButton {
         button.className = 'save-button';
         button.setAttribute('aria-label', this.translations.saveAsPNG);
 
-        // Create icon element with SVG
+        // Create icon element with updated SVG
         const icon = document.createElement('span');
         icon.className = 'save-icon';
         icon.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M13.5 11V14.5H2.5V11H1V14.5C1 15.33 1.67 16 2.5 16H13.5C14.33 16 15 15.33 15 14.5V11H13.5Z" fill="currentColor"/>
-                <path d="M8.75 11.19L12.22 7.72L11.28 6.78L8.75 9.31V0H7.25V9.31L4.72 6.78L3.78 7.72L7.25 11.19C7.44 11.38 7.69 11.47 7.94 11.47C8.19 11.47 8.44 11.38 8.63 11.19H8.75Z" fill="currentColor"/>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 15V3M12 15L8 11M12 15L16 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 15V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         `;
 

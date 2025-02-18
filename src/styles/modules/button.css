@@ -6,12 +6,12 @@
 
 .save-button {
     width: 100%;
-    padding: 8px 16px;
+    padding: 10px 20px;
     background-color: var(--color-primary);
     color: var(--color-white);
     border: none;
-    border-radius: 8px;
-    font-size: var(--font-size-sm);
+    border-radius: 12px;
+    font-size: var(--font-size-base);
     font-weight: var(--font-weight-medium);
     font-family: var(--font-base);
     cursor: pointer;
@@ -19,13 +19,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
+    box-shadow: 0 2px 4px var(--color-primary-alpha);
 }
 
 .save-button:hover:not(:disabled) {
     background-color: var(--color-primary-dark);
     transform: translateY(-1px);
-    box-shadow: 0 4px 6px var(--color-primary-alpha);
+    box-shadow: 0 4px 8px var(--color-primary-alpha);
 }
 
 .save-button:active:not(:disabled) {
@@ -48,21 +49,26 @@
 .save-button.saving::after {
     content: '';
     position: absolute;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border: 2px solid var(--color-white);
     border-radius: 50%;
     border-top-color: transparent;
     animation: button-loading 0.6s linear infinite;
-    right: 12px;
+    right: 16px;
 }
 
 .save-button .save-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
+    transition: transform 0.2s ease;
+}
+
+.save-button:hover:not(:disabled) .save-icon {
+    transform: translateY(-1px);
 }
 
 .save-button .button-text {
@@ -78,10 +84,16 @@
 /* Responsive adjustments */
 @media (max-width: 600px) {
     .save-button {
-        padding: 6px 12px;
+        padding: 8px 16px;
+        border-radius: 10px;
     }
     
     .save-button .button-text {
-        font-size: var(--font-size-xs);
+        font-size: var(--font-size-sm);
+    }
+
+    .save-button .save-icon {
+        width: 16px;
+        height: 16px;
     }
 } 
