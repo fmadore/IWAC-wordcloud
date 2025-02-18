@@ -69,8 +69,11 @@ export class WordCountSlider {
             // Update progress
             this.updateSliderProgress(e.target);
             
-            // Update URL
-            this.urlManager.updateURL(null, value);
+            // Get current country value before updating URL
+            const currentState = this.urlManager.getInitialState();
+            
+            // Update URL while preserving country
+            this.urlManager.updateURL(currentState.country, value);
             
             if (this._onChange) {
                 this._onChange();
@@ -108,7 +111,8 @@ export class WordCountSlider {
             
             // Update URL if requested
             if (updateURL) {
-                this.urlManager.updateURL(null, value);
+                const currentState = this.urlManager.getInitialState();
+                this.urlManager.updateURL(currentState.country, value);
             }
             
             // Trigger input event to update display
