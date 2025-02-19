@@ -13,15 +13,23 @@ export class FontManager {
     }
 
     static applyFontStyles(element, size, weight = 'normal') {
-        const { family } = this.config;
         element
-            .style("font-family", family)
+            .style("font-family", "var(--font-base)")
             .style("font-size", `${size}px`)
-            .style("font-weight", weight);
+            .style("font-weight", this._getWeightValue(weight));
     }
 
     static getFontFamily() {
-        return this.config.family;
+        return "var(--font-base)";
+    }
+
+    static _getWeightValue(weight) {
+        const weightMap = {
+            'normal': 'var(--font-weight-normal)',
+            'medium': 'var(--font-weight-medium)',
+            'semibold': 'var(--font-weight-semibold)'
+        };
+        return weightMap[weight] || weightMap.normal;
     }
 
     static getFontSizeLimits() {
