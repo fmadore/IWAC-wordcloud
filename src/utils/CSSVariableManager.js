@@ -85,8 +85,8 @@ export class CSSVariableManager {
         // Ensure minimum of two colors
         if (scheme.length < 2) {
             return [
-                this.getColor('--color-primary', '#4a90e2'),
-                this.getColor('--color-primary-dark', '#357abd')
+                this.getColor('--color-primary', ''),
+                this.getColor('--color-primary-dark', '')
             ];
         }
 
