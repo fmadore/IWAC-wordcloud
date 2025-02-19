@@ -20,6 +20,12 @@
     --color-gray-600: #333333;
     --color-gray-700: #1a1a1a;
 
+    /* Contrast and Fallback Colors */
+    --color-contrast-dark: #333333;
+    --color-contrast-light: #ffffff;
+    --color-fallback-default: #000000;
+    --color-luminance-threshold: 0.5;
+
     /* Semantic Colors */
     --color-text-primary: var(--color-gray-600);
     --color-text-secondary: var(--color-gray-500);
