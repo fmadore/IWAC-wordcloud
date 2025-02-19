@@ -60,7 +60,7 @@ export class ConfigManager {
                     particles: {
                         count: 10,
                         duration: 600,
-                        colors: ['#ffb703', '#fb8500', '#e76f51', '#2a9d8f']
+                        colors: [] // Will be populated from CSS variables
                     },
                     physics: {
                         gravity: 0.8,
@@ -168,6 +168,14 @@ export class ConfigManager {
             scaleOnHover: parseFloat(style.getPropertyValue('--wordcloud-hover-scale')) || 1.2,
             duration: parseInt(style.getPropertyValue('--transition-normal')) || 200
         };
+
+        // Update particle colors from wordcloud scheme
+        this.config.wordcloud.animation.particles.colors = [
+            style.getPropertyValue('--wordcloud-scheme-9').trim(),
+            style.getPropertyValue('--wordcloud-scheme-10').trim(),
+            style.getPropertyValue('--wordcloud-scheme-5').trim(),
+            style.getPropertyValue('--wordcloud-scheme-2').trim()
+        ].filter(color => color); // Remove any empty values
 
         // Update layout
         this.config.wordcloud.layout.padding = parseInt(style.getPropertyValue('--wordcloud-padding'));
