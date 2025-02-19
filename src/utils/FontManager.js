@@ -15,23 +15,19 @@ export class FontManager {
     }
 
     static applyFontStyles(element, size, weight = 'normal') {
-        element
-            .style("font-family", CSSVariableManager.get('--font-base'))
-            .style("font-size", `${size}px`)
-            .style("font-weight", this._getWeightValue(weight));
+        // Remove any existing font weight classes
+        element.classed('font-normal', false)
+              .classed('font-medium', false)
+              .classed('font-semibold', false);
+        
+        // Add the appropriate font weight class
+        element.classed(`font-${weight}`, true)
+              .style("font-family", CSSVariableManager.get('--font-base'))
+              .style("font-size", `${size}px`);
     }
 
     static getFontFamily() {
         return CSSVariableManager.get('--font-base');
-    }
-
-    static _getWeightValue(weight) {
-        const weightMap = {
-            'normal': CSSVariableManager.get('--font-weight-normal', '400'),
-            'medium': CSSVariableManager.get('--font-weight-medium', '500'),
-            'semibold': CSSVariableManager.get('--font-weight-semibold', '600')
-        };
-        return weightMap[weight] || weightMap.normal;
     }
 
     static getFontSizeLimits() {
