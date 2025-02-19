@@ -1,3 +1,6 @@
+import { ErrorManager } from './ErrorManager.js';
+import { CSSVariableManager } from './CSSVariableManager.js';
+
 export class CanvasManager {
     constructor() {
         this.originalCreateElement = null;
@@ -18,7 +21,10 @@ export class CanvasManager {
                 return element;
             };
         } catch (error) {
-            console.error('Failed to setup CanvasManager:', error);
+            ErrorManager.getInstance().handleError(error, {
+                component: 'CanvasManager',
+                method: 'setup'
+            });
             this.restore();
         }
     }
@@ -39,6 +45,9 @@ export class CanvasManager {
                 container.appendChild(canvasElement);
             }
 
+            // Apply base styles
+            this.applyBaseStyles(canvasElement);
+
             // Optimize context
             this.optimizeCanvasContext(canvasElement);
 
@@ -46,8 +55,30 @@ export class CanvasManager {
             this.setupHighDPI(canvasElement);
 
         } catch (error) {
-            console.error('Failed to setup canvas element:', error);
+            ErrorManager.getInstance().handleError(error, {
+                component: 'CanvasManager',
+                method: 'setupCanvas'
+            });
             canvasElement.classList.add('canvas-container--error');
+        }
+    }
+
+    applyBaseStyles(canvasElement) {
+        try {
+            const backgroundColor = CSSVariableManager.getColor('--color-background', '#ffffff');
+            const borderColor = CSSVariableManager.getColor('--color-border', '#e0e0e0');
+            const borderRadius = CSSVariableManager.get('--border-radius-md', '8px');
+            const shadow = CSSVariableManager.get('--color-shadow', 'rgba(0, 0, 0, 0.05)');
+
+            canvasElement.style.backgroundColor = backgroundColor;
+            canvasElement.style.border = `1px solid ${borderColor}`;
+            canvasElement.style.borderRadius = borderRadius;
+            canvasElement.style.boxShadow = `0 2px 4px ${shadow}`;
+        } catch (error) {
+            ErrorManager.getInstance().handleError(error, {
+                component: 'CanvasManager',
+                method: 'applyBaseStyles'
+            });
         }
     }
 
@@ -70,7 +101,10 @@ export class CanvasManager {
                 }
                 return originalGetContext(contextType, attributes);
             } catch (error) {
-                console.error('Failed to get canvas context:', error);
+                ErrorManager.getInstance().handleError(error, {
+                    component: 'CanvasManager',
+                    method: 'optimizeCanvasContext'
+                });
                 canvasElement.classList.add('canvas-container--error');
                 return null;
             }

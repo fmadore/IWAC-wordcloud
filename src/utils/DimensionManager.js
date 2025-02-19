@@ -1,5 +1,6 @@
 import { ConfigManager } from '../config/ConfigManager.js';
-import { ErrorManager } from '../utils/ErrorManager.js';
+import { ErrorManager } from './ErrorManager.js';
+import { CSSVariableManager } from './CSSVariableManager.js';
 
 export class DimensionManager {
     static instance = null;
@@ -28,13 +29,7 @@ export class DimensionManager {
     }
 
     getInitialDimensions() {
-        const style = getComputedStyle(document.documentElement);
-        return {
-            width: parseInt(style.getPropertyValue('--wordcloud-width')) || 800,
-            height: parseInt(style.getPropertyValue('--wordcloud-height')) || 600,
-            minHeight: parseInt(style.getPropertyValue('--wordcloud-min-height')) || 400,
-            maxWidth: parseInt(style.getPropertyValue('--wordcloud-max-width')) || 1200
-        };
+        return CSSVariableManager.getDimensions();
     }
 
     validateDimensions(width, height) {

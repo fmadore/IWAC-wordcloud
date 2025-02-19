@@ -1,4 +1,5 @@
 import { ErrorManager } from './ErrorManager.js';
+import { CSSVariableManager } from './CSSVariableManager.js';
 
 export class ElementClassManager {
     static setupContainer(container) {
@@ -44,10 +45,9 @@ export class ElementClassManager {
 
     static setupBaseStyles(element) {
         try {
-            const style = getComputedStyle(document.documentElement);
-            element.style.backgroundColor = style.getPropertyValue('--color-background').trim();
-            element.style.color = style.getPropertyValue('--color-text-primary').trim();
-            element.style.fontFamily = style.getPropertyValue('--font-base').trim();
+            element.style.backgroundColor = CSSVariableManager.getColor('--color-background');
+            element.style.color = CSSVariableManager.getColor('--color-text-primary');
+            element.style.fontFamily = CSSVariableManager.get('--font-base');
         } catch (error) {
             ErrorManager.getInstance().handleError(error, {
                 component: 'ElementClassManager',
@@ -58,8 +58,7 @@ export class ElementClassManager {
 
     static setupSVGStyles(svg) {
         try {
-            const style = getComputedStyle(document.documentElement);
-            svg.style("font-family", style.getPropertyValue('--font-base').trim());
+            svg.style("font-family", CSSVariableManager.get('--font-base'));
         } catch (error) {
             ErrorManager.getInstance().handleError(error, {
                 component: 'ElementClassManager',

@@ -1,4 +1,6 @@
 import { ConfigManager } from '../config/ConfigManager.js';
+import { CSSVariableManager } from './CSSVariableManager.js';
+import { ErrorManager } from './ErrorManager.js';
 
 export class FontManager {
     static get config() {
@@ -6,43 +8,46 @@ export class FontManager {
     }
 
     static calculateFontSize(word, words, area) {
-        const { minSize, maxSize, scaleFactor } = this.config;
-        const baseSize = Math.sqrt(area / (words.length * scaleFactor));
+        const fontConfig = CSSVariableManager.getFontConfig();
+        const baseSize = Math.sqrt(area / (words.length * fontConfig.scaleFactor));
         const scaledSize = baseSize * (word.size / Math.max(...words.map(w => w.size)));
-        return Math.min(Math.max(scaledSize, minSize), maxSize);
+        return Math.min(Math.max(scaledSize, fontConfig.minSize), this.calculateMaxFontSize(area));
     }
 
     static applyFontStyles(element, size, weight = 'normal') {
         element
-            .style("font-family", "var(--font-base)")
+            .style("font-family", CSSVariableManager.get('--font-base'))
             .style("font-size", `${size}px`)
             .style("font-weight", this._getWeightValue(weight));
     }
 
     static getFontFamily() {
-        return "var(--font-base)";
+        return CSSVariableManager.get('--font-base');
     }
 
     static _getWeightValue(weight) {
         const weightMap = {
-            'normal': 'var(--font-weight-normal)',
-            'medium': 'var(--font-weight-medium)',
-            'semibold': 'var(--font-weight-semibold)'
+            'normal': CSSVariableManager.get('--font-weight-normal', '400'),
+            'medium': CSSVariableManager.get('--font-weight-medium', '500'),
+            'semibold': CSSVariableManager.get('--font-weight-semibold', '600')
         };
         return weightMap[weight] || weightMap.normal;
     }
 
     static getFontSizeLimits() {
-        const { minSize, maxSize } = this.config;
-        return { minSize, maxSize };
+        const fontConfig = CSSVariableManager.getFontConfig();
+        return {
+            minSize: fontConfig.minSize,
+            maxSize: fontConfig.maxSize
+        };
     }
 
     static calculateMaxFontSize(containerHeight) {
-        return containerHeight / 8; // This ratio can be adjusted based on needs
+        return containerHeight / CSSVariableManager.getNumber('--wordcloud-font-scale-factor', 8);
     }
 
     static scaleFont(size, factor) {
-        const { minSize, maxSize } = this.config;
+        const { minSize, maxSize } = this.getFontSizeLimits();
         const newSize = size * factor;
         return Math.min(Math.max(newSize, minSize), maxSize);
     }
