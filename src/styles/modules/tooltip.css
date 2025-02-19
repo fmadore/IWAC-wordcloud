@@ -35,18 +35,18 @@
 }
 
 .tooltip-row span {
-    color: #666;
+    color: var(--color-gray-500);
     font-size: var(--font-size-xs);
 }
 
 /* Style for the rank number */
 .tooltip-row:first-child span {
-    color: #4a90e2;
+    color: var(--color-primary);
     font-weight: var(--font-weight-semibold);
     font-size: var(--font-size-sm);
 }
 
 .tooltip-row strong {
-    color: #333;
+    color: var(--color-gray-600);
     font-weight: var(--font-weight-medium);
 } 

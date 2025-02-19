@@ -41,11 +41,17 @@ export class ErrorManager {
     }
 
     createErrorInfo(error, context) {
+        // Handle cases where error is null/undefined
+        const errorObj = error || {};
+        const errorMessage = 
+            (typeof errorObj === 'string') ? errorObj :
+            errorObj.message || 'An unknown error occurred';
+            
         return {
             timestamp: new Date(),
-            message: error.message || 'An unknown error occurred',
-            stack: error.stack,
-            type: error.name || error.constructor.name,
+            message: errorMessage,
+            stack: errorObj.stack || '',
+            type: errorObj.name || (errorObj.constructor && errorObj.constructor.name) || 'Error',
             context: {
                 ...context,
                 url: window.location.href,
