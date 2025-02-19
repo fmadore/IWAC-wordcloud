@@ -11,6 +11,18 @@
     padding: var(--spacing-xs);
     box-sizing: border-box;
     min-height: 400px;
+    background-color: var(--color-white);
+}
+
+/* Wrapper for the wordcloud */
+.wordcloud-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 
 /* Main wordcloud canvas/svg container */
@@ -35,4 +47,7 @@
     margin: 0;
     display: block;
     aspect-ratio: 1.5;
+    position: relative;
+    background: transparent;
+    overflow: visible;
 } 

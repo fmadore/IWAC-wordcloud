@@ -1,42 +1,18 @@
 export class StyleManager {
     static setupContainer(container) {
-        const styles = {
-            width: '100%',
-            height: '100%',
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '400px',
-            overflow: 'hidden',
-            backgroundColor: '#ffffff'
-        };
-        
-        Object.assign(container.style, styles);
+        container.classList.add('wordcloud-container');
     }
 
     static setupWrapper(wrapper) {
-        const styles = {
-            width: '100%',
-            height: '100%',
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'hidden'
-        };
-        
-        Object.assign(wrapper.style, styles);
+        wrapper.classList.add('wordcloud-wrapper');
+        wrapper.id = 'wordcloud';
     }
 
     static setupSVG(svg) {
+        // Only set attributes that are SVG-specific and not easily handled by CSS
         svg
-            .style("width", "100%")
-            .style("height", "100%")
-            .style("position", "relative")
-            .style("display", "block")
-            .style("background", "transparent")
-            .style("overflow", "visible")
-            .attr("preserveAspectRatio", "xMidYMid meet");
+            .attr("preserveAspectRatio", "xMidYMid meet")
+            .attr("xmlns", "http://www.w3.org/2000/svg")
+            .attr("version", "1.1");
     }
 } 
