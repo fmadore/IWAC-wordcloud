@@ -38,20 +38,20 @@ export class CSSVariableManager {
 
     static getDimensions() {
         return {
-            width: this.getNumber('--wordcloud-width', 800),
-            height: this.getNumber('--wordcloud-height', 600),
-            minHeight: this.getNumber('--wordcloud-min-height', 400),
-            maxWidth: this.getNumber('--wordcloud-max-width', 1200),
-            padding: this.getNumber('--wordcloud-padding', 5)
+            width: this.getNumber('--wordcloud-width'),
+            height: this.getNumber('--wordcloud-height'),
+            minHeight: this.getNumber('--wordcloud-min-height'),
+            maxWidth: this.getNumber('--wordcloud-max-width'),
+            padding: this.getNumber('--wordcloud-padding')
         };
     }
 
     static getFontConfig() {
         return {
-            minSize: this.getNumber('--wordcloud-font-min-size', 10),
-            scaleFactor: this.getNumber('--wordcloud-font-scale-factor', 5),
-            scaleMin: this.getNumber('--wordcloud-font-scale-min', 0.8),
-            scaleMax: this.getNumber('--wordcloud-font-scale-max', 1.2),
+            minSize: this.getNumber('--wordcloud-font-min-size'),
+            scaleFactor: this.getNumber('--wordcloud-font-scale-factor'),
+            scaleMin: this.getNumber('--wordcloud-font-scale-min'),
+            scaleMax: this.getNumber('--wordcloud-font-scale-max'),
             family: this.get('--font-base', 'system-ui, sans-serif')
         };
     }
