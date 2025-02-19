@@ -62,17 +62,15 @@ export class WordCountSlider {
 
         // Add event listener
         slider.addEventListener('input', (e) => {
-            const value = e.target.value;
+            const value = parseInt(e.target.value);
             valueDisplay.textContent = value;
             slider.setAttribute('aria-valuenow', value);
             
             // Update progress
             this.updateSliderProgress(e.target);
             
-            // Get current country value before updating URL
+            // Update URL with new word count while preserving current country
             const currentState = this.urlManager.getInitialState();
-            
-            // Update URL while preserving country
             this.urlManager.updateURL(currentState.country, value);
             
             if (this._onChange) {

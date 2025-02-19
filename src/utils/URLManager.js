@@ -25,8 +25,10 @@ export class URLManager {
     }
 
     getInitialState() {
-        const country = this.params.get('country') || this.config.get('data.defaultGroup');
-        const wordCount = parseInt(this.params.get('words')) || this.config.get('data.defaultWordCount');
+        // Always get fresh params
+        const params = new URLSearchParams(window.location.search);
+        const country = params.get('country') || this.config.get('data.defaultGroup');
+        const wordCount = parseInt(params.get('words')) || this.config.get('data.defaultWordCount');
         
         // Validate country
         const validCountries = this.config.getCountries().map(c => c.value);
@@ -44,22 +46,21 @@ export class URLManager {
     }
 
     updateURL(country, wordCount) {
-        // Get current state
-        const currentState = this.getInitialState();
+        // Always work with fresh params
+        const params = new URLSearchParams(window.location.search);
         
-        // Build new URL parameters
-        const params = new URLSearchParams();
-        
-        // Update country if provided, otherwise keep current country if different from default
-        const newCountry = country || currentState.country;
-        if (newCountry !== this.config.get('data.defaultGroup')) {
-            params.set('country', newCountry);
+        // Update country if provided and different from default
+        if (country !== undefined && country !== this.config.get('data.defaultGroup')) {
+            params.set('country', country);
+        } else if (country === this.config.get('data.defaultGroup')) {
+            params.delete('country');
         }
         
-        // Update word count if provided, otherwise keep current word count if different from default
-        const newWordCount = wordCount || currentState.wordCount;
-        if (newWordCount !== this.config.get('data.defaultWordCount')) {
-            params.set('words', newWordCount);
+        // Update word count if provided and different from default
+        if (wordCount !== undefined && wordCount !== this.config.get('data.defaultWordCount')) {
+            params.set('words', wordCount);
+        } else if (wordCount === this.config.get('data.defaultWordCount')) {
+            params.delete('words');
         }
 
         // Update URL without reloading the page
@@ -68,10 +69,13 @@ export class URLManager {
             : window.location.pathname;
         
         window.history.pushState({}, '', newURL);
+        
+        // Update internal params reference
+        this.params = params;
     }
 
     handleURLChange() {
-        // Re-parse URL parameters
+        // Update internal params reference
         this.params = new URLSearchParams(window.location.search);
         const newState = this.getInitialState();
         

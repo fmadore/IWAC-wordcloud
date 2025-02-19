@@ -48,8 +48,11 @@ export class CountrySelector {
 
         // Add event listener
         select.addEventListener('change', (e) => {
-            // Update URL
-            this.urlManager.updateURL(e.target.value, null);
+            const value = e.target.value;
+            
+            // Update URL with new country while preserving current word count
+            const currentState = this.urlManager.getInitialState();
+            this.urlManager.updateURL(value, currentState.wordCount);
             
             if (this._onChange) {
                 this._onChange();
