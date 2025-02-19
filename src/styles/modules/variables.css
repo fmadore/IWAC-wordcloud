@@ -50,10 +50,10 @@
     --particle-color-4: var(--wordcloud-scheme-2);  /* Teal */
 
     /* Particle Animation Configuration */
-    --particle-count: 10;
-    --particle-duration: 600ms;
-    --particle-size: 4px;
-    --particle-distance: 50px;
+    --wordcloud-particle-count: 10;
+    --wordcloud-particle-duration: 600ms;
+    --wordcloud-particle-size: 4px;
+    --wordcloud-particle-distance: 50px;
 
     /* Typography
     -------------------------------------------- */
