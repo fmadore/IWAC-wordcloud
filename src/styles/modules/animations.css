@@ -37,8 +37,8 @@
 /* Particle effect */
 .particle {
     position: absolute;
-    width: 4px;
-    height: 4px;
+    width: var(--particle-size);
+    height: var(--particle-size);
     border-radius: 50%;
     pointer-events: none;
 }

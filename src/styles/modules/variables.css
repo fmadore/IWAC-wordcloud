@@ -43,6 +43,18 @@
     --wordcloud-scheme-9: #ffb703;
     --wordcloud-scheme-10: #fb8500;
 
+    /* Particle Animation Colors */
+    --particle-color-1: var(--wordcloud-scheme-9);  /* Bright yellow */
+    --particle-color-2: var(--wordcloud-scheme-10); /* Orange */
+    --particle-color-3: var(--wordcloud-scheme-5);  /* Coral */
+    --particle-color-4: var(--wordcloud-scheme-2);  /* Teal */
+
+    /* Particle Animation Configuration */
+    --particle-count: 10;
+    --particle-duration: 600ms;
+    --particle-size: 4px;
+    --particle-distance: 50px;
+
     /* Typography
     -------------------------------------------- */
     /* Font Families */

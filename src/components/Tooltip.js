@@ -9,24 +9,53 @@ export class Tooltip {
     }
 
     init() {
-        // Remove any existing tooltip
-        const existingTooltip = document.getElementById('tooltip');
-        if (existingTooltip) {
-            existingTooltip.remove();
+        try {
+            // Remove any existing tooltip
+            const existingTooltip = document.getElementById('tooltip');
+            if (existingTooltip) {
+                existingTooltip.remove();
+            }
+
+            // Create new tooltip
+            this.tooltip = this.createTooltipElement();
+
+            // Verify creation was successful
+            if (!this.tooltip) {
+                console.warn('Failed to create tooltip element');
+                return;
+            }
+
+            // Add to DOM
+            document.body.appendChild(this.tooltip);
+        } catch (error) {
+            console.error('Error initializing tooltip:', error);
+            this.tooltip = null;
         }
-        this.tooltip = this.createTooltipElement();
     }
 
     createTooltipElement() {
-        const tooltip = document.createElement('div');
-        tooltip.id = 'tooltip';
-        document.body.appendChild(tooltip);
-        return tooltip;
+        try {
+            const tooltip = document.createElement('div');
+            tooltip.id = 'tooltip';
+            tooltip.setAttribute('role', 'tooltip');
+            tooltip.setAttribute('aria-hidden', 'true');
+            return tooltip;
+        } catch (error) {
+            console.error('Error creating tooltip element:', error);
+            return null;
+        }
     }
 
     show(event, data) {
-        if (!this.tooltip) {
+        // Ensure tooltip exists
+        if (!this.tooltip || !document.getElementById('tooltip')) {
             this.init();
+        }
+
+        // Safety check
+        if (!this.tooltip) {
+            console.warn('Tooltip initialization failed');
+            return;
         }
 
         const content = this.formatContent(data);
@@ -51,9 +80,11 @@ export class Tooltip {
         this.tooltip.style.left = `${left}px`;
         this.tooltip.style.top = `${top}px`;
         
-        // Make tooltip visible
+        // Make tooltip visible using RAF for better performance
         requestAnimationFrame(() => {
-            this.tooltip.classList.add('visible');
+            if (this.tooltip) {
+                this.tooltip.classList.add('visible');
+            }
         });
     }
 
