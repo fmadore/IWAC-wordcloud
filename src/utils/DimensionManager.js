@@ -48,9 +48,12 @@ export class DimensionManager {
         });
         this.resizeObserver.observe(this.container);
         
+        // Get debounce timing from CSS variables
+        const debounceTime = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--resize-debounce')) || 250;
+        
         // Backup resize handler for older browsers
-        window.addEventListener('resize', this.debounce(this.handleResize.bind(this), 250));
-        window.addEventListener('orientationchange', this.debounce(this.handleResize.bind(this), 250));
+        window.addEventListener('resize', this.debounce(this.handleResize.bind(this), debounceTime));
+        window.addEventListener('orientationchange', this.debounce(this.handleResize.bind(this), debounceTime));
     }
 
     handleResize() {

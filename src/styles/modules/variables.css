@@ -109,6 +109,7 @@
     /* Transitions */
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
+    --resize-debounce: 250ms;
 
     /* Breakpoints */
     --breakpoint-large: 900px;
