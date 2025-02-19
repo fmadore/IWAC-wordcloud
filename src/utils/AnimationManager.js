@@ -82,18 +82,21 @@ export class AnimationManager {
 
     static morphTransition(wordElements, oldData, newData) {
         try {
-            const duration = CSSVariableManager.getNumber('--animation-word-enter', 300);
-            
             // Exit animation
             wordElements.exit()
-                .style("animation", `wordExit ${duration}ms forwards`)
-                .remove();
+                .classed('word--exit', true)
+                .on('animationend', function() {
+                    d3.select(this).remove();
+                });
 
             // Enter animation
             const enterElements = wordElements.enter()
                 .append("text")
                 .classed('word', true)
-                .style("animation", `wordEnter ${duration}ms forwards`);
+                .classed('word--enter', true)
+                .on('animationend', function() {
+                    d3.select(this).classed('word--enter', false);
+                });
 
             // Update positions
             wordElements.merge(enterElements)
@@ -109,7 +112,6 @@ export class AnimationManager {
     static particleEffect(container, word, type = 'exit') {
         try {
             const numParticles = CSSVariableManager.getNumber('--wordcloud-particle-count', 10);
-            const duration = CSSVariableManager.getNumber('--animation-particle', 600);
             const colors = CSSVariableManager.getColorScheme().slice(0, 4);
             
             const rect = word.getBoundingClientRect();
@@ -118,7 +120,7 @@ export class AnimationManager {
 
             for (let i = 0; i < numParticles; i++) {
                 const particle = document.createElement('div');
-                particle.className = 'particle';
+                particle.className = 'particle particle--expand';
                 particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 
                 const angle = (i / numParticles) * Math.PI * 2;
@@ -132,9 +134,7 @@ export class AnimationManager {
                 particle.style.top = `${centerY}px`;
                 
                 container.appendChild(particle);
-                
                 particle.addEventListener('animationend', () => particle.remove());
-                particle.style.animation = `particleExpand ${duration}ms cubic-bezier(0.4, 0, 0.2, 1) forwards`;
             }
         } catch (error) {
             ErrorManager.getInstance().handleError(error, {

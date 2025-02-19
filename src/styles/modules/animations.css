@@ -12,6 +12,14 @@
 }
 
 /* Word enter/exit animations */
+.word--enter {
+    animation: wordEnter var(--animation-word-enter) var(--animation-timing-function) forwards;
+}
+
+.word--exit {
+    animation: wordExit var(--animation-word-exit) var(--animation-timing-function) forwards;
+}
+
 @keyframes wordEnter {
     from {
         opacity: 0;
@@ -41,6 +49,10 @@
     height: var(--particle-size);
     border-radius: 50%;
     pointer-events: none;
+}
+
+.particle--expand {
+    animation: particleExpand var(--animation-particle) var(--animation-timing-function) forwards;
 }
 
 @keyframes particleExpand {
