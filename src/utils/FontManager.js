@@ -10,7 +10,14 @@ export class FontManager {
     static calculateFontSize(word, words, area) {
         const fontConfig = CSSVariableManager.getFontConfig();
         const baseSize = Math.sqrt(area / (words.length * fontConfig.scaleFactor));
-        const scaledSize = baseSize * (word.size / Math.max(...words.map(w => w.size)));
+        
+        // Calculate normalized scale factor between min and max bounds
+        const maxWordSize = Math.max(...words.map(w => w.size));
+        const normalizedScale = word.size / maxWordSize;
+        const boundedScale = fontConfig.scaleMin + 
+            (normalizedScale * (fontConfig.scaleMax - fontConfig.scaleMin));
+        
+        const scaledSize = baseSize * boundedScale;
         return Math.min(Math.max(scaledSize, fontConfig.minSize), this.calculateMaxFontSize(area));
     }
 
