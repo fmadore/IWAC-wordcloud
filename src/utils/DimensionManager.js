@@ -1,27 +1,48 @@
 import { ConfigManager } from '../config/ConfigManager.js';
+import { ErrorManager } from '../utils/ErrorManager.js';
 
 export class DimensionManager {
+    static instance = null;
+
     constructor(container) {
+        if (DimensionManager.instance) {
+            return DimensionManager.instance;
+        }
+        
         this.container = container;
         this.config = ConfigManager.getInstance();
         this.observers = new Set();
+        this.dimensions = this.getInitialDimensions();
         
-        // Get CSS variables for dimensions
-        const style = getComputedStyle(document.documentElement);
-        const defaultWidth = parseInt(style.getPropertyValue('--wordcloud-width')) || 800;
-        const defaultHeight = parseInt(style.getPropertyValue('--wordcloud-height')) || 600;
-        const minHeight = parseInt(style.getPropertyValue('--wordcloud-min-height')) || 400;
-        
-        // Initialize dimensions with CSS defaults
-        this.dimensions = {
-            width: defaultWidth,
-            height: Math.max(defaultHeight, minHeight)
-        };
-        
-        // Setup resize observer and get initial dimensions
         this.setupResizeObserver();
-        // Force initial dimension calculation
         this.handleResize();
+        
+        DimensionManager.instance = this;
+    }
+
+    static getInstance(container = null) {
+        if (!DimensionManager.instance && container) {
+            DimensionManager.instance = new DimensionManager(container);
+        }
+        return DimensionManager.instance;
+    }
+
+    getInitialDimensions() {
+        const style = getComputedStyle(document.documentElement);
+        return {
+            width: parseInt(style.getPropertyValue('--wordcloud-width')) || 800,
+            height: parseInt(style.getPropertyValue('--wordcloud-height')) || 600,
+            minHeight: parseInt(style.getPropertyValue('--wordcloud-min-height')) || 400,
+            maxWidth: parseInt(style.getPropertyValue('--wordcloud-max-width')) || 1200
+        };
+    }
+
+    validateDimensions(width, height) {
+        const { minHeight, maxWidth } = this.dimensions;
+        return {
+            width: Math.min(maxWidth, Math.max(100, width)),
+            height: Math.max(minHeight, height)
+        };
     }
 
     setupResizeObserver() {
@@ -38,26 +59,28 @@ export class DimensionManager {
     }
 
     handleResize() {
-        const style = getComputedStyle(document.documentElement);
-        const minHeight = parseInt(style.getPropertyValue('--wordcloud-min-height')) || 400;
-        const maxWidth = parseInt(style.getPropertyValue('--wordcloud-max-width')) || 1200;
-        
-        const rect = this.container.getBoundingClientRect();
-        const computedStyle = window.getComputedStyle(this.container);
-        
-        const paddingX = parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight);
-        const paddingY = parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom);
-        
-        // Ensure dimensions respect CSS constraints
-        const width = Math.min(maxWidth, Math.max(100, rect.width - paddingX));
-        const height = Math.max(minHeight, rect.height - paddingY);
-        
-        const newDimensions = { width, height };
+        try {
+            const rect = this.container.getBoundingClientRect();
+            const computedStyle = window.getComputedStyle(this.container);
+            
+            const paddingX = parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight);
+            const paddingY = parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom);
+            
+            const newDimensions = this.validateDimensions(
+                rect.width - paddingX,
+                rect.height - paddingY
+            );
 
-        if (this.dimensions.width !== newDimensions.width || 
-            this.dimensions.height !== newDimensions.height) {
-            this.dimensions = newDimensions;
-            this.notifyObservers();
+            if (this.dimensions.width !== newDimensions.width || 
+                this.dimensions.height !== newDimensions.height) {
+                this.dimensions = { ...this.dimensions, ...newDimensions };
+                this.notifyObservers();
+            }
+        } catch (error) {
+            ErrorManager.getInstance().handleError(error, {
+                component: 'DimensionManager',
+                method: 'handleResize'
+            });
         }
     }
 

@@ -1,4 +1,5 @@
 import { ConfigManager } from '../config/ConfigManager.js';
+import { ErrorManager } from './ErrorManager.js';
 
 export class ColorManager {
     static get config() {
@@ -14,7 +15,6 @@ export class ColorManager {
             for (let i = 1; i <= 10; i++) {
                 const color = style.getPropertyValue(`--wordcloud-scheme-${i}`).trim();
                 if (!color) {
-                    console.warn(`Missing wordcloud scheme color: --wordcloud-scheme-${i}`);
                     continue;
                 }
                 scheme.push(color);
@@ -46,8 +46,13 @@ export class ColorManager {
 
             return scheme;
         } catch (error) {
-            console.error('Failed to load color scheme:', error);
-            // Fallback to a basic color scheme
+            ErrorManager.getInstance().handleError(error, {
+                component: 'ColorManager',
+                method: 'getWordCloudScheme'
+            });
+            
+            // Return fallback colors from CSS variables
+            const style = getComputedStyle(document.documentElement);
             return [
                 style.getPropertyValue('--color-primary').trim() || '#4a90e2',
                 style.getPropertyValue('--color-primary-dark').trim() || '#357abd'
@@ -56,10 +61,10 @@ export class ColorManager {
     }
 
     static getColorForWord(word, index, totalWords) {
-        const scheme = this.getWordCloudScheme();
-        const { colorAssignment } = this.config;
-
         try {
+            const scheme = this.getWordCloudScheme();
+            const { colorAssignment } = this.config;
+
             switch (colorAssignment) {
                 case 'frequency':
                     return this.getFrequencyBasedColor(index, totalWords, scheme);
@@ -71,9 +76,17 @@ export class ColorManager {
                     return scheme[0];
             }
         } catch (error) {
-            console.error('Error assigning color:', error);
-            return scheme[0];
+            ErrorManager.getInstance().handleError(error, {
+                component: 'ColorManager',
+                method: 'getColorForWord'
+            });
+            return this.getFallbackColor();
         }
+    }
+
+    static getFallbackColor() {
+        const style = getComputedStyle(document.documentElement);
+        return style.getPropertyValue('--color-primary').trim() || '#4a90e2';
     }
 
     static getColorForRank(rank, totalWords) {
