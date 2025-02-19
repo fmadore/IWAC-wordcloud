@@ -33,8 +33,8 @@ export class ConfigManager {
                     },
                     // Font weight options
                     weight: {
-                        normal: 400,
-                        bold: 600,
+                        normal: null, // Will be set from CSS
+                        bold: null,   // Will be set from CSS
                         range: [300, 400, 500, 600]
                     },
                     // Font style options
@@ -153,6 +153,13 @@ export class ConfigManager {
                 min: parseFloat(style.getPropertyValue('--wordcloud-font-scale-min')),
                 max: parseFloat(style.getPropertyValue('--wordcloud-font-scale-max'))
             }
+        };
+
+        // Update font weights
+        this.config.wordcloud.font.weight = {
+            ...this.config.wordcloud.font.weight,
+            normal: parseInt(style.getPropertyValue('--font-weight-normal')),
+            bold: parseInt(style.getPropertyValue('--font-weight-semibold'))
         };
 
         // Update animation configuration
