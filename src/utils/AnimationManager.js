@@ -146,8 +146,6 @@ export class AnimationManager {
 
     static physicsAnimation(wordElements, type = 'enter') {
         try {
-            const duration = CSSVariableManager.getNumber('--transition-normal', 300);
-            
             wordElements
                 .classed(`word--physics-${type}`, true)
                 .on('animationend', function() {
