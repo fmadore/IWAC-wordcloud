@@ -1,7 +1,75 @@
 /* Global Variables Module */
 
 :root {
-    /* Layout Dimensions */
+    /* Color System
+    -------------------------------------------- */
+    /* Base Colors */
+    --color-primary: #4a90e2;
+    --color-primary-dark: #357abd;
+    --color-primary-light: #6ba7e8;
+    --color-primary-alpha: rgba(74, 144, 226, 0.1);
+
+    /* Neutral Colors */
+    --color-white: #ffffff;
+    --color-gray-50: #f8f9fa;
+    --color-gray-100: #f5f5f5;
+    --color-gray-200: #e0e0e0;
+    --color-gray-300: #d0d0d0;
+    --color-gray-400: #a0a0a0;
+    --color-gray-500: #666666;
+    --color-gray-600: #333333;
+    --color-gray-700: #1a1a1a;
+
+    /* Semantic Colors */
+    --color-text-primary: var(--color-gray-600);
+    --color-text-secondary: var(--color-gray-500);
+    --color-text-light: var(--color-gray-400);
+    --color-border: var(--color-gray-200);
+    --color-border-hover: var(--color-gray-300);
+    --color-background: var(--color-white);
+    --color-background-light: var(--color-gray-50);
+    --color-shadow: rgba(0, 0, 0, 0.05);
+    --color-shadow-hover: rgba(0, 0, 0, 0.1);
+
+    /* Word Cloud Color Schemes */
+    --wordcloud-scheme-1: #264653;
+    --wordcloud-scheme-2: #2a9d8f;
+    --wordcloud-scheme-3: #e9c46a;
+    --wordcloud-scheme-4: #f4a261;
+    --wordcloud-scheme-5: #e76f51;
+    --wordcloud-scheme-6: #8ecae6;
+    --wordcloud-scheme-7: #219ebc;
+    --wordcloud-scheme-8: #023047;
+    --wordcloud-scheme-9: #ffb703;
+    --wordcloud-scheme-10: #fb8500;
+
+    /* Typography
+    -------------------------------------------- */
+    /* Font Families */
+    --font-primary: 'Inter';
+    --font-fallback: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-base: var(--font-primary), var(--font-fallback);
+    
+    /* Font Weights */
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    
+    /* Font Sizes */
+    --font-size-xs: 0.75rem;   /* 12px */
+    --font-size-sm: 0.875rem;  /* 14px */
+    --font-size-base: 1rem;    /* 16px */
+    --font-size-lg: 1.125rem;  /* 18px */
+    --font-size-xl: 1.25rem;   /* 20px */
+    
+    /* Line Heights */
+    --line-height-tight: 1.25;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+
+    /* Layout
+    -------------------------------------------- */
+    /* Component Dimensions */
     --word-list-width: 300px;
     --word-list-mobile-height: 200px;
     --word-list-small-mobile-height: 180px;
@@ -9,7 +77,34 @@
     --content-height-tablet: calc(100vh - 90px);
     --content-height-mobile: calc(100vh - 80px);
 
-    /* Wordcloud Configuration */
+    /* Spacing Scale */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 24px;
+
+    /* Border Radius */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-full: 9999px;
+
+    /* Z-Index Scale */
+    --z-index-sticky: 2;
+    --z-index-tooltip: 9999;
+
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+
+    /* Breakpoints */
+    --breakpoint-large: 900px;
+    --breakpoint-medium: 600px;
+    --breakpoint-small: 480px;
+
+    /* Word Cloud Configuration
+    -------------------------------------------- */
     --wordcloud-width: 800px;
     --wordcloud-height: 600px;
     --wordcloud-min-height: 400px;
@@ -23,34 +118,9 @@
     --wordcloud-opacity-normal: 1;
     --wordcloud-opacity-hover: 0.8;
 
-    /* Component Specific */
+    /* Component Specific
+    -------------------------------------------- */
     --word-list-border: 1px solid var(--color-gray-200);
-    
-    /* Z-Index Layers */
-    --z-index-sticky: 2;
-    --z-index-tooltip: 9999;
-    
-    /* Spacing */
-    --spacing-xs: 4px;
-    --spacing-sm: 8px;
-    --spacing-md: 12px;
-    --spacing-lg: 16px;
-    --spacing-xl: 24px;
-
-    /* Border Radius */
-    --border-radius-sm: 4px;
-    --border-radius-md: 8px;
-    --border-radius-lg: 12px;
-    --border-radius-full: 9999px;
-
-    /* Transitions */
-    --transition-fast: 0.2s ease;
-    --transition-normal: 0.3s ease;
-    
-    /* Breakpoints */
-    --breakpoint-large: 900px;
-    --breakpoint-medium: 600px;
-    --breakpoint-small: 480px;
 }
 
 /* Responsive Overrides */
