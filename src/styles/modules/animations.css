@@ -2,7 +2,7 @@
 
 /* Word transitions */
 .word {
-    transition: all var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--transition-normal) var(--animation-timing-function);
     transform-origin: center;
 }
 
@@ -56,11 +56,11 @@
 
 /* Physics animation states */
 .word--physics-enter {
-    animation: physicsEnter var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+    animation: physicsEnter var(--animation-physics-enter) var(--animation-timing-function);
 }
 
 .word--physics-exit {
-    animation: physicsExit var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+    animation: physicsExit var(--animation-physics-exit) var(--animation-timing-function);
 }
 
 @keyframes physicsEnter {

@@ -110,6 +110,14 @@
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
     --resize-debounce: 250ms;
+    
+    /* Animation Timings */
+    --animation-word-enter: 300ms;
+    --animation-word-exit: 300ms;
+    --animation-physics-enter: 600ms;
+    --animation-physics-exit: 400ms;
+    --animation-particle: 600ms;
+    --animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
     /* Breakpoints */
     --breakpoint-large: 900px;

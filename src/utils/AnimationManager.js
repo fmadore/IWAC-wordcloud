@@ -82,7 +82,7 @@ export class AnimationManager {
 
     static morphTransition(wordElements, oldData, newData) {
         try {
-            const duration = CSSVariableManager.getNumber('--transition-normal', 300);
+            const duration = CSSVariableManager.getNumber('--animation-word-enter', 300);
             
             // Exit animation
             wordElements.exit()
@@ -109,7 +109,7 @@ export class AnimationManager {
     static particleEffect(container, word, type = 'exit') {
         try {
             const numParticles = CSSVariableManager.getNumber('--wordcloud-particle-count', 10);
-            const duration = CSSVariableManager.getNumber('--wordcloud-particle-duration', 600);
+            const duration = CSSVariableManager.getNumber('--animation-particle', 600);
             const colors = CSSVariableManager.getColorScheme().slice(0, 4);
             
             const rect = word.getBoundingClientRect();
