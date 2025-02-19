@@ -2,19 +2,25 @@ import { WordCloudRenderer } from './Renderer.js';
 import { WordCloudLayoutManager } from './LayoutManager.js';
 import { DimensionManager } from '../../utils/DimensionManager.js';
 import { CanvasManager } from '../../utils/CanvasManager.js';
-import { StyleManager } from '../../utils/StyleManager.js';
+import { ElementClassManager } from '../../utils/ElementClassManager.js';
 import { WordCloudController } from './WordCloudController.js';
 import { LAYOUT_EVENTS, WORDCLOUD_EVENTS } from '../../events/EventTypes.js';
 
 export class WordCloud {
     constructor(containerId, { config, store, eventBus, options = {} } = {}) {
-        this.container = typeof containerId === 'string' ? 
+        // Create container first
+        this.container = document.createElement('div');
+        ElementClassManager.setupContainer(this.container);
+        
+        // Add it to the parent container
+        const parentContainer = typeof containerId === 'string' ? 
             document.getElementById(containerId.replace('#', '')) : 
             containerId;
 
-        if (!this.container) {
-            throw new Error('Container element not found');
+        if (!parentContainer) {
+            throw new Error('Parent container element not found');
         }
+        parentContainer.appendChild(this.container);
 
         // Initialize dependencies
         this.config = config;
@@ -29,7 +35,6 @@ export class WordCloud {
         this.applyConfiguration(options);
         
         // Setup the view
-        StyleManager.setupContainer(this.container);
         this.setupView();
     }
 

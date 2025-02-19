@@ -1,4 +1,4 @@
-export class StyleManager {
+export class ElementClassManager {
     static setupContainer(container) {
         container.classList.add('wordcloud-container');
     }

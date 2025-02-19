@@ -72,7 +72,7 @@ project/
 │   │   ├── translations.js    # Language translations
 │   │   ├── saveUtils.js      # PNG export functionality
 │   │   ├── FontManager.js    # Font management and styling
-│   │   ├── StyleManager.js   # Global style management
+│   │   ├── ElementClassManager.js   # DOM element class management
 │   │   ├── ColorManager.js   # Color scheme management
 │   │   ├── AnimationManager.js # Animation system
 │   │   └── WordStyleManager.js # Word-specific styling
@@ -92,6 +92,7 @@ project/
 │   │   │   ├── wordlist.css # Word list styles
 │   │   │   └── tooltip.css
 │   │   └── main.css         # Main stylesheet
+│   ├── ElementClassManager.js   # DOM element class management
 │   └── main.js              # Application entry point
 ├── scripts/
 │   └── download-fonts.ps1   # Font download utility
@@ -133,7 +134,7 @@ The project follows a modular architecture with clear separation of concerns:
 4. **Style Management**
    - `ColorManager.js`: Sophisticated color scheme management
    - `FontManager.js`: Centralized font management
-   - `StyleManager.js`: Global style utilities
+   - `ElementClassManager.js`: DOM element class management
    - CSS modules for component-specific styles
    - CSS variables for consistent theming
    - Responsive design support
@@ -636,3 +637,13 @@ cache/
     }
 }
 ```
+
+### ElementClassManager
+
+Handles DOM element class management:
+- Container setup and positioning
+- SVG element class management
+- Element class consistency enforcement
+- DOM structure management
+
+### WordStyleManager

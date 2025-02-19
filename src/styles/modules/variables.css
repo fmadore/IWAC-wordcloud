@@ -9,6 +9,17 @@
     --content-height-tablet: calc(100vh - 90px);
     --content-height-mobile: calc(100vh - 80px);
 
+    /* Wordcloud Configuration */
+    --wordcloud-width: 800px;
+    --wordcloud-height: 600px;
+    --wordcloud-min-height: 400px;
+    --wordcloud-max-width: 1200px;
+    --wordcloud-padding: 5px;
+    --wordcloud-font-min-size: 10px;
+    --wordcloud-font-scale-factor: 5;
+    --wordcloud-font-scale-min: 0.8;
+    --wordcloud-font-scale-max: 1.2;
+
     /* Component Specific */
     --word-list-border: 1px solid var(--color-gray-200);
     
@@ -43,5 +54,7 @@
 @media (max-width: 900px) {
     :root {
         --word-list-width: 100%;
+        --wordcloud-width: 100%;
+        --wordcloud-height: calc(100vh - 90px);
     }
 } 

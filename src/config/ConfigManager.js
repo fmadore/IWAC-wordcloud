@@ -9,25 +9,26 @@ export class ConfigManager {
         this.config = {
             wordcloud: {
                 dimensions: {
-                    width: 800,
-                    height: 600,
-                    minHeight: 400,
-                    maxWidth: 1200
+                    // These will be updated dynamically based on CSS variables
+                    width: null,
+                    height: null,
+                    minHeight: null,
+                    maxWidth: null
                 },
                 font: {
-                    // Primary and fallback fonts
+                    // Primary and fallback fonts from CSS
                     family: {
                         primary: 'Inter',
                         fallback: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif'
                     },
-                    // Font size configuration
+                    // Font size configuration from CSS
                     size: {
-                        min: 10,
+                        min: null, // Will be set from CSS
                         max: null, // Will be calculated based on height
                         scale: {
-                            factor: 5, // Base scaling factor
-                            min: 0.8,  // Minimum scale multiplier
-                            max: 1.2   // Maximum scale multiplier
+                            factor: null, // From CSS
+                            min: null,    // From CSS
+                            max: null     // From CSS
                         }
                     },
                     // Font weight options
@@ -43,7 +44,7 @@ export class ConfigManager {
                     }
                 },
                 layout: {
-                    padding: 5,
+                    padding: null, // From CSS
                     rotations: [0, 90],
                     rotationProbability: 0.5
                 },
@@ -87,37 +88,33 @@ export class ConfigManager {
                 maxWords: 200,
                 defaultWordCount: 150,
                 defaultGroup: 'combined',
-                // New data configuration options
                 format: {
-                    type: 'json',  // 'json', 'csv', etc.
+                    type: 'json',
                     fields: {
-                        text: 'text',      // Field name for word text
-                        value: 'size',     // Field name for word frequency/value
-                        group: 'country',  // Field name for grouping (optional)
-                        metadata: []       // Additional fields to preserve
+                        text: 'text',
+                        value: 'size',
+                        group: 'country',
+                        metadata: []
                     }
                 },
                 processing: {
-                    // Custom data processing options
-                    normalization: 'linear', // 'linear', 'log', 'sqrt'
-                    filters: [],            // Array of filter functions
-                    transformers: []        // Array of transform functions
+                    normalization: 'linear',
+                    filters: [],
+                    transformers: []
                 }
             },
             paths: {
                 dataDir: '/data',
-                // More flexible path configuration
                 getDataPath: (group, format = 'json') => {
                     const isGitHubPages = window.location.hostname.includes('github.io');
                     const basePath = isGitHubPages ? '/IWAC-wordcloud' : '';
                     return `${basePath}/data/${group === 'combined' ? 'combined' : group}_word_frequencies.${format}`;
                 }
             },
-            // More generic groups configuration
             groups: {
-                type: 'country',           // Type of grouping (e.g., 'country', 'category', 'year')
-                defaultCombined: true,     // Whether to show a combined option
-                combinedLabel: {           // Labels for combined option
+                type: 'country',
+                defaultCombined: true,
+                combinedLabel: {
                     en: 'All Countries',
                     fr: 'Tous les pays'
                 },
@@ -131,7 +128,35 @@ export class ConfigManager {
             }
         };
 
+        this.initializeFromCSS();
         ConfigManager.instance = this;
+    }
+
+    initializeFromCSS() {
+        // Get CSS variables
+        const style = getComputedStyle(document.documentElement);
+        
+        // Update dimensions
+        this.config.wordcloud.dimensions = {
+            width: parseInt(style.getPropertyValue('--wordcloud-width')),
+            height: parseInt(style.getPropertyValue('--wordcloud-height')),
+            minHeight: parseInt(style.getPropertyValue('--wordcloud-min-height')),
+            maxWidth: parseInt(style.getPropertyValue('--wordcloud-max-width'))
+        };
+
+        // Update font configuration
+        this.config.wordcloud.font.size = {
+            min: parseInt(style.getPropertyValue('--wordcloud-font-min-size')),
+            max: null, // Still calculated based on height
+            scale: {
+                factor: parseFloat(style.getPropertyValue('--wordcloud-font-scale-factor')),
+                min: parseFloat(style.getPropertyValue('--wordcloud-font-scale-min')),
+                max: parseFloat(style.getPropertyValue('--wordcloud-font-scale-max'))
+            }
+        };
+
+        // Update layout
+        this.config.wordcloud.layout.padding = parseInt(style.getPropertyValue('--wordcloud-padding'));
     }
 
     static getInstance() {

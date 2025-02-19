@@ -1,5 +1,5 @@
 import { Tooltip } from '../Tooltip.js';
-import { StyleManager } from '../../utils/StyleManager.js';
+import { ElementClassManager } from '../../utils/ElementClassManager.js';
 import { AnimationManager } from '../../utils/AnimationManager.js';
 import { WordStyleManager } from '../../utils/WordStyleManager.js';
 import { WORDCLOUD_EVENTS, ANIMATION_EVENTS } from '../../events/EventTypes.js';
@@ -39,7 +39,7 @@ export class WordCloudRenderer {
         const wrapper = document.createElement('div');
         wrapper.style.width = '100%';
         wrapper.style.height = '100%';
-        StyleManager.setupWrapper(wrapper);
+        ElementClassManager.setupWrapper(wrapper);
         this.container.appendChild(wrapper);
         
         this.svg = d3.select(wrapper)
@@ -47,23 +47,54 @@ export class WordCloudRenderer {
             .attr("width", "100%")
             .attr("height", "100%");
             
-        StyleManager.setupSVG(this.svg);
+        ElementClassManager.setupSVG(this.svg);
         
+        // Get dimensions from CSS variables
+        const style = getComputedStyle(document.documentElement);
+        const minHeight = parseInt(style.getPropertyValue('--wordcloud-min-height')) || 400;
+        const maxWidth = parseInt(style.getPropertyValue('--wordcloud-max-width')) || 1200;
+        
+        // Get current dimensions and ensure they are valid
         const dimensions = this.config.get('wordcloud.dimensions');
-        this.svg.attr("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`);
+        const width = Math.min(maxWidth, Math.max(100, dimensions.width || 800));
+        const height = Math.max(minHeight, dimensions.height || 600);
+        
+        this.svg.attr("viewBox", `0 0 ${width} ${height}`);
 
         return this.svg;
     }
 
     createWordGroup(svg) {
+        // Get dimensions from CSS variables
+        const style = getComputedStyle(document.documentElement);
+        const minHeight = parseInt(style.getPropertyValue('--wordcloud-min-height')) || 400;
+        const maxWidth = parseInt(style.getPropertyValue('--wordcloud-max-width')) || 1200;
+        
+        // Get current dimensions and ensure they are valid
         const dimensions = this.config.get('wordcloud.dimensions');
+        const width = Math.min(maxWidth, Math.max(100, dimensions.width || 800));
+        const height = Math.max(minHeight, dimensions.height || 600);
+        
         this.wordGroup = svg.append("g")
-            .attr("transform", `translate(${dimensions.width / 2},${dimensions.height / 2})`);
+            .attr("transform", `translate(${width / 2},${height / 2})`);
         return this.wordGroup;
     }
 
     updateDimensions(width, height) {
-        if (!width || !height) return;
+        // Get dimensions from CSS variables
+        const style = getComputedStyle(document.documentElement);
+        const minHeight = parseInt(style.getPropertyValue('--wordcloud-min-height')) || 400;
+        const maxWidth = parseInt(style.getPropertyValue('--wordcloud-max-width')) || 1200;
+        
+        // Ensure dimensions respect CSS constraints
+        if (!width || !height) {
+            const dimensions = this.config.get('wordcloud.dimensions');
+            width = Math.min(maxWidth, Math.max(100, dimensions.width || 800));
+            height = Math.max(minHeight, dimensions.height || 600);
+        } else {
+            width = Math.min(maxWidth, Math.max(100, width));
+            height = Math.max(minHeight, height);
+        }
         
         this.config.updateDimensions(width, height);
 

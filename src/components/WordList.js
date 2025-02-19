@@ -1,8 +1,8 @@
 import { getTranslations } from '../utils/translations.js';
 import { ConfigManager } from '../config/ConfigManager.js';
-import { StyleManager } from '../utils/StyleManager.js';
 import { FontManager } from '../utils/FontManager.js';
 import { AnimationManager } from '../utils/AnimationManager.js';
+import { ElementClassManager } from '../utils/ElementClassManager.js';
 
 export class WordList {
     constructor(container) {
