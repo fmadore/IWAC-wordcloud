@@ -84,11 +84,11 @@ project/
 │   │   │   ├── button.css
 │   │   │   ├── controls.css
 │   │   │   ├── fonts.css    # Font declarations and variables
-│   │   │   ├── colors.css   # Color scheme definitions
 │   │   │   ├── layout.css
 │   │   │   ├── reset.css
 │   │   │   ├── responsive.css
 │   │   │   ├── slider.css
+│   │   │   ├── variables.css # Global variables (colors, typography, layout)
 │   │   │   ├── wordlist.css # Word list styles
 │   │   │   └── tooltip.css
 │   │   └── main.css         # Main stylesheet
@@ -164,10 +164,9 @@ The project follows a modular architecture with clear separation of concerns:
      ```
      styles/
      ├── modules/
-     │   ├── variables.css   # Global variables and configuration
+     │   ├── variables.css   # Global variables and configuration (colors, typography, layout, etc.)
      │   ├── reset.css       # CSS reset and normalization
      │   ├── fonts.css       # Typography system and font declarations
-     │   ├── colors.css      # Color scheme and semantic color variables
      │   ├── layout.css      # Core layout and structure
      │   ├── controls.css    # Form controls and input elements
      │   ├── slider.css      # Range slider component
@@ -181,28 +180,30 @@ The project follows a modular architecture with clear separation of concerns:
    
    - **Global Variables System**
      - Centralized configuration in `variables.css`:
+       - Color System
+         - Base colors (--color-primary, --color-white)
+         - Neutral palette (--color-gray-50 to --color-gray-700)
+         - Word cloud specific colors (--wordcloud-scheme-1 to --wordcloud-scheme-10)
+         - Semantic mappings (--color-text-primary, --color-border)
+         - Alpha variations for shadows and overlays
+       - Typography
+         - Font families and fallbacks
+         - Font size scale (--font-size-xs to --font-size-xl)
+         - Line heights and weights
        - Layout dimensions (--word-list-width, --content-height-*)
        - Component spacing (--spacing-*)
        - Border radius values (--border-radius-*)
        - Z-index layers (--z-index-*)
        - Transition timings (--transition-*)
        - Breakpoint definitions (--breakpoint-*)
-   
-   - **Color System**
-     - Semantic color variables in `colors.css`:
-       - Base colors (--color-primary, --color-white)
-       - Neutral palette (--color-gray-50 to --color-gray-700)
-       - Word cloud specific colors (--wordcloud-scheme-1 to --wordcloud-scheme-10)
-       - Semantic mappings (--color-text-primary, --color-border)
-       - Alpha variations for shadows and overlays
+       - Word cloud specific configuration
    
    - **Typography System**
      - Comprehensive typography in `fonts.css`:
        - Inter font with multiple weights (400, 500, 600)
-       - Font size scale (--font-size-xs to --font-size-xl)
-       - Line height utilities (--line-height-*)
-       - Font family fallbacks
        - Font loading optimizations
+       - Font utility classes
+       - Font-face declarations
    
    - **Component Architecture**
      - Each component has its own dedicated CSS module
@@ -210,7 +211,7 @@ The project follows a modular architecture with clear separation of concerns:
      - Scoped styles to prevent conflicts
      - Consistent component structure:
        - Container/wrapper styles
-       - Component-specific variables
+       - Component-specific styles
        - State modifiers (.hover, .active, .disabled)
        - Interactive states (:hover, :focus, :active)
        - Animation definitions
@@ -234,7 +235,7 @@ The project follows a modular architecture with clear separation of concerns:
      - Clear import order in main.css
      - Consistent naming patterns
      - Documented media query breakpoints
-     - Single source of truth for variables
+     - Single source of truth for variables in variables.css
      - Modular file organization
 
 ### Animation System
