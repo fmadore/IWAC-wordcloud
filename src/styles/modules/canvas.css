@@ -1,0 +1,56 @@
+/* Canvas Module */
+
+/* Base canvas container */
+.canvas-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Canvas element */
+.canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    image-rendering: -webkit-optimize-contrast; /* Chrome/Safari */
+    image-rendering: crisp-edges; /* Firefox */
+    backface-visibility: hidden; /* Prevent flickering in some browsers */
+}
+
+/* High-DPI canvas */
+.canvas--hidpi {
+    transform: scale(0.5);
+    transform-origin: 0 0;
+}
+
+/* Canvas loading state */
+.canvas-container--loading {
+    background: var(--color-background-light);
+}
+
+/* Canvas error state */
+.canvas-container--error {
+    background: var(--color-background-light);
+}
+
+/* Canvas overlay for interactions */
+.canvas-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .canvas-container {
+        margin: 0 -10px; /* Negative margin to allow full-width on mobile */
+    }
+} 

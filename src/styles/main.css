@@ -11,6 +11,7 @@
 @import './modules/tooltip.css';
 @import './modules/responsive.css';
 @import './modules/animations.css';
+@import './modules/canvas.css';
 
 /* Content Layout */
 .content-container {
