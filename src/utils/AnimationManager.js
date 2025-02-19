@@ -10,12 +10,14 @@ export class AnimationManager {
 
     static wordEnter(element, size) {
         try {
-            const { scaleOnHover } = this.config;
-            const scaledSize = FontManager.scaleFont(size, scaleOnHover);
-            
             const el = d3.select(element);
-            el.classed('word--hover', true);
-            FontManager.applyFontStyles(el, scaledSize, 'bold');
+            const currentTransform = el.attr("transform");
+            const [x, y, rotate] = this._parseTransform(currentTransform);
+            const scale = CSSVariableManager.getNumber('--wordcloud-hover-scale', 1.2);
+            
+            el.classed('word--hover', true)
+              .style("font-weight", "bold")
+              .attr("transform", `translate(${x},${y})scale(${scale})rotate(${rotate})`);
         } catch (error) {
             ErrorManager.getInstance().handleError(error, {
                 component: 'AnimationManager',
@@ -27,14 +29,31 @@ export class AnimationManager {
     static wordExit(element, size) {
         try {
             const el = d3.select(element);
-            el.classed('word--hover', false);
-            FontManager.applyFontStyles(el, size, 'normal');
+            const currentTransform = el.attr("transform");
+            const [x, y, rotate] = this._parseTransform(currentTransform);
+            
+            el.classed('word--hover', false)
+              .style("font-weight", "normal")
+              .attr("transform", `translate(${x},${y})scale(1)rotate(${rotate})`);
         } catch (error) {
             ErrorManager.getInstance().handleError(error, {
                 component: 'AnimationManager',
                 method: 'wordExit'
             });
         }
+    }
+
+    static _parseTransform(transform) {
+        if (!transform) return [0, 0, 0];
+        
+        const translateMatch = transform.match(/translate\(([-\d.]+),([-\d.]+)\)/);
+        const rotateMatch = transform.match(/rotate\(([-\d.]+)\)/);
+        
+        const x = translateMatch ? parseFloat(translateMatch[1]) : 0;
+        const y = translateMatch ? parseFloat(translateMatch[2]) : 0;
+        const rotate = rotateMatch ? parseFloat(rotateMatch[1]) : 0;
+        
+        return [x, y, rotate];
     }
 
     static setupWordInteractions(wordElements, tooltip) {

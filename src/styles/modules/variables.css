@@ -19,6 +19,9 @@
     --wordcloud-font-scale-factor: 5;
     --wordcloud-font-scale-min: 0.8;
     --wordcloud-font-scale-max: 1.2;
+    --wordcloud-hover-scale: 1.2;
+    --wordcloud-opacity-normal: 1;
+    --wordcloud-opacity-hover: 0.8;
 
     /* Component Specific */
     --word-list-border: 1px solid var(--color-gray-200);

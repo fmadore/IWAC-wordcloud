@@ -155,6 +155,13 @@ export class ConfigManager {
             }
         };
 
+        // Update animation configuration
+        this.config.wordcloud.animation = {
+            ...this.config.wordcloud.animation,
+            scaleOnHover: parseFloat(style.getPropertyValue('--wordcloud-hover-scale')) || 1.2,
+            duration: parseInt(style.getPropertyValue('--transition-normal')) || 200
+        };
+
         // Update layout
         this.config.wordcloud.layout.padding = parseInt(style.getPropertyValue('--wordcloud-padding'));
     }
