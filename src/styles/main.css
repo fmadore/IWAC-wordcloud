@@ -10,6 +10,7 @@
 @import './modules/wordlist.css';
 @import './modules/tooltip.css';
 @import './modules/responsive.css';
+@import './modules/animations.css';
 
 /* Content Layout */
 .content-container {

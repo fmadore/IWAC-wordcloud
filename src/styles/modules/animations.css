@@ -1,0 +1,88 @@
+/* Animations Module */
+
+/* Word transitions */
+.word {
+    transition: all var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+/* Word hover effect */
+.word--hover {
+    font-weight: bold;
+}
+
+/* Word enter/exit animations */
+@keyframes wordEnter {
+    from {
+        opacity: 0;
+        transform: scale(0.3) rotate(-15deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+}
+
+@keyframes wordExit {
+    from {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.8) rotate(15deg);
+    }
+}
+
+/* Particle effect */
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+@keyframes particleExpand {
+    from {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: translate(var(--particle-x), var(--particle-y)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Physics animation states */
+.word--physics-enter {
+    animation: physicsEnter var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.word--physics-exit {
+    animation: physicsExit var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes physicsEnter {
+    0% {
+        transform: translateY(-100px);
+    }
+    60% {
+        transform: translateY(20px);
+    }
+    80% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes physicsExit {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(100px);
+    }
+} 
