@@ -58,7 +58,8 @@ export class SaveManager {
                         const canvas = document.createElement('canvas');
                         
                         // Get the computed styles
-                        const backgroundColor = styles.getPropertyValue('--color-background').trim() || '#ffffff';
+                        const backgroundColor = styles.getPropertyValue('--color-background').trim() || 
+                            styles.getPropertyValue('--color-white').trim() || '#ffffff';
                         
                         // Calculate optimal scale based on SVG size
                         const maxDimension = 4096; // Maximum safe canvas dimension
