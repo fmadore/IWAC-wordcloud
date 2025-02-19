@@ -164,44 +164,77 @@ The project follows a modular architecture with clear separation of concerns:
      styles/
      ├── modules/
      │   ├── variables.css   # Global variables and configuration
-     │   ├── reset.css      # CSS reset and normalization
-     │   ├── fonts.css      # Typography system
-     │   ├── colors.css     # Color scheme
-     │   ├── layout.css     # Core layout styles
-     │   ├── controls.css   # Control elements
-     │   ├── slider.css     # Slider component
-     │   ├── button.css     # Button styles
-     │   ├── responsive.css # Responsive design
-     │   ├── tooltip.css    # Tooltip component
-     │   └── wordlist.css   # Word list component
-     └── main.css           # Main entry point
+     │   ├── reset.css       # CSS reset and normalization
+     │   ├── fonts.css       # Typography system and font declarations
+     │   ├── colors.css      # Color scheme and semantic color variables
+     │   ├── layout.css      # Core layout and structure
+     │   ├── controls.css    # Form controls and input elements
+     │   ├── slider.css      # Range slider component
+     │   ├── button.css      # Button styles and states
+     │   ├── wordcloud.css   # Word cloud visualization styles
+     │   ├── wordlist.css    # Word list component and interactions
+     │   ├── tooltip.css     # Tooltip component
+     │   └── responsive.css  # Media queries and breakpoints
+     └── main.css           # Main stylesheet with module imports
      ```
    
    - **Global Variables System**
-     - Centralized configuration in `variables.css`
-     - Layout dimensions and breakpoints
-     - Component-specific variables
-     - Z-index management
-     - Viewport-based calculations
+     - Centralized configuration in `variables.css`:
+       - Layout dimensions (--word-list-width, --content-height-*)
+       - Component spacing (--spacing-*)
+       - Border radius values (--border-radius-*)
+       - Z-index layers (--z-index-*)
+       - Transition timings (--transition-*)
+       - Breakpoint definitions (--breakpoint-*)
    
-   - **Responsive Design System**
-     - Mobile-first approach
-     - Breakpoint documentation
-     - Component-based media queries
-     - Touch device optimizations
+   - **Color System**
+     - Semantic color variables in `colors.css`:
+       - Base colors (--color-primary, --color-white)
+       - Neutral palette (--color-gray-50 to --color-gray-700)
+       - Word cloud specific colors (--wordcloud-scheme-1 to --wordcloud-scheme-10)
+       - Semantic mappings (--color-text-primary, --color-border)
+       - Alpha variations for shadows and overlays
    
-   - **Component Isolation**
-     - Each component has its own CSS module
-     - Clear boundaries between components
-     - Reusable styles and patterns
-     - Consistent naming conventions
+   - **Typography System**
+     - Comprehensive typography in `fonts.css`:
+       - Inter font with multiple weights (400, 500, 600)
+       - Font size scale (--font-size-xs to --font-size-xl)
+       - Line height utilities (--line-height-*)
+       - Font family fallbacks
+       - Font loading optimizations
+   
+   - **Component Architecture**
+     - Each component has its own dedicated CSS module
+     - BEM-like naming convention for clarity
+     - Scoped styles to prevent conflicts
+     - Consistent component structure:
+       - Container/wrapper styles
+       - Component-specific variables
+       - State modifiers (.hover, .active, .disabled)
+       - Interactive states (:hover, :focus, :active)
+       - Animation definitions
+   
+   - **Responsive Design**
+     - Mobile-first approach in `responsive.css`:
+       - Progressive enhancement
+       - Breakpoint-based adaptations
+       - Touch-optimized interactions
+       - Flexible layouts using CSS Grid and Flexbox
+       - Container queries for component-level responsiveness
+   
+   - **Performance Optimizations**
+     - Hardware-accelerated animations (transform, opacity)
+     - Will-change hints for smooth transitions
+     - Efficient selectors for better rendering
+     - Minimal CSS specificity conflicts
+     - Reduced paint operations
    
    - **Maintainability Features**
-     - CSS custom properties for easy theming
-     - Semantic variable names
-     - Documented breakpoints
-     - Consistent spacing and sizing
-     - Clear file organization
+     - Clear import order in main.css
+     - Consistent naming patterns
+     - Documented media query breakpoints
+     - Single source of truth for variables
+     - Modular file organization
 
 ### Animation System
 
