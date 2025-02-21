@@ -57,7 +57,7 @@ export class SaveManager {
                     try {
                         const canvas = document.createElement('canvas');
                         
-                        // Get the computed styles
+                        // Get the computed styles - we'll keep this for potential future use
                         const backgroundColor = styles.getPropertyValue('--color-background').trim() || 
                             styles.getPropertyValue('--color-white').trim() || '#ffffff';
                         
@@ -75,16 +75,15 @@ export class SaveManager {
                         canvas.width = svgWidth * scale;
                         canvas.height = svgHeight * scale;
                         
-                        // Get the context and configure it
-                        const ctx = canvas.getContext('2d');
+                        // Get the context and configure it with alpha support
+                        const ctx = canvas.getContext('2d', { alpha: true });
                         
                         // Set font smoothing
                         ctx.imageSmoothingEnabled = true;
                         ctx.imageSmoothingQuality = 'high';
                         
-                        // Apply background
-                        ctx.fillStyle = backgroundColor;
-                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        // Clear the canvas to ensure transparency
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
                         
                         // Apply scaling
                         ctx.scale(scale, scale);
