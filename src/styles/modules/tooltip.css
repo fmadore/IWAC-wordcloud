@@ -10,7 +10,7 @@
     opacity: 0;
     z-index: 9999;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transition: opacity 0.2s ease;
+    transition: opacity var(--transition-fast);
     max-width: 350px;
     transform: translate3d(0, 0, 0);
     will-change: opacity, transform;

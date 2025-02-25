@@ -124,6 +124,7 @@
     --animation-physics-exit: 400ms;
     --animation-particle: 600ms;
     --animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    --animation-button-loading: 0.6s;
 
     /* Breakpoints */
     --breakpoint-large: 900px;

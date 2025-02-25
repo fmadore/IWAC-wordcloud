@@ -53,7 +53,7 @@
     border-radius: 8px;
     appearance: none;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
 }
 
 .select-input:hover {
@@ -78,7 +78,7 @@
     border-top: 0;
     transform: translateY(-70%) rotate(45deg);
     pointer-events: none;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
 }
 
 .select-container:hover::after {

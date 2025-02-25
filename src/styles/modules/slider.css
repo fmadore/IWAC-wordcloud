@@ -52,7 +52,7 @@
     border: 2px solid var(--color-primary);
     border-radius: 50%;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
     box-shadow: 0 2px 4px var(--color-shadow);
     margin-top: -7px;
 }
@@ -75,7 +75,7 @@
     border: 2px solid var(--color-primary);
     border-radius: 50%;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
     box-shadow: 0 2px 4px var(--color-shadow);
 }
 
