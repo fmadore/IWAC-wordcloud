@@ -33,6 +33,30 @@ export class WordCloudRenderer {
         this.wordList = wordList;
     }
 
+    // New centralized method for CSS variable dimensions
+    getCSSVariableDimensions(providedWidth, providedHeight) {
+        // Get dimensions from CSS variables
+        const style = getComputedStyle(document.documentElement);
+        const minHeight = parseInt(style.getPropertyValue('--wordcloud-min-height')) || 400;
+        const maxWidth = parseInt(style.getPropertyValue('--wordcloud-max-width')) || 1200;
+        
+        // Get current dimensions from config
+        const dimensions = this.config.get('wordcloud.dimensions');
+        
+        // Calculate appropriate dimensions based on provided values or defaults
+        let width, height;
+        
+        if (!providedWidth || !providedHeight) {
+            width = Math.min(maxWidth, Math.max(100, dimensions.width || 800));
+            height = Math.max(minHeight, dimensions.height || 600);
+        } else {
+            width = Math.min(maxWidth, Math.max(100, providedWidth));
+            height = Math.max(minHeight, providedHeight);
+        }
+        
+        return { width, height, minHeight, maxWidth };
+    }
+
     createSVG() {
         this.clear();
         
@@ -49,15 +73,8 @@ export class WordCloudRenderer {
             
         ElementClassManager.setupSVG(this.svg);
         
-        // Get dimensions from CSS variables
-        const style = getComputedStyle(document.documentElement);
-        const minHeight = parseInt(style.getPropertyValue('--wordcloud-min-height')) || 400;
-        const maxWidth = parseInt(style.getPropertyValue('--wordcloud-max-width')) || 1200;
-        
-        // Get current dimensions and ensure they are valid
-        const dimensions = this.config.get('wordcloud.dimensions');
-        const width = Math.min(maxWidth, Math.max(100, dimensions.width || 800));
-        const height = Math.max(minHeight, dimensions.height || 600);
+        // Use centralized method for dimensions
+        const { width, height } = this.getCSSVariableDimensions();
         
         this.svg.attr("viewBox", `0 0 ${width} ${height}`);
 
@@ -65,15 +82,8 @@ export class WordCloudRenderer {
     }
 
     createWordGroup(svg) {
-        // Get dimensions from CSS variables
-        const style = getComputedStyle(document.documentElement);
-        const minHeight = parseInt(style.getPropertyValue('--wordcloud-min-height')) || 400;
-        const maxWidth = parseInt(style.getPropertyValue('--wordcloud-max-width')) || 1200;
-        
-        // Get current dimensions and ensure they are valid
-        const dimensions = this.config.get('wordcloud.dimensions');
-        const width = Math.min(maxWidth, Math.max(100, dimensions.width || 800));
-        const height = Math.max(minHeight, dimensions.height || 600);
+        // Use centralized method for dimensions
+        const { width, height } = this.getCSSVariableDimensions();
         
         this.wordGroup = svg.append("g")
             .attr("transform", `translate(${width / 2},${height / 2})`);
@@ -81,30 +91,31 @@ export class WordCloudRenderer {
     }
 
     updateDimensions(width, height) {
-        // Get dimensions from CSS variables
-        const style = getComputedStyle(document.documentElement);
-        const minHeight = parseInt(style.getPropertyValue('--wordcloud-min-height')) || 400;
-        const maxWidth = parseInt(style.getPropertyValue('--wordcloud-max-width')) || 1200;
+        // Use centralized method for dimensions
+        const dimensions = this.getCSSVariableDimensions(width, height);
         
-        // Ensure dimensions respect CSS constraints
-        if (!width || !height) {
-            const dimensions = this.config.get('wordcloud.dimensions');
-            width = Math.min(maxWidth, Math.max(100, dimensions.width || 800));
-            height = Math.max(minHeight, dimensions.height || 600);
-        } else {
-            width = Math.min(maxWidth, Math.max(100, width));
-            height = Math.max(minHeight, height);
-        }
-        
-        this.config.updateDimensions(width, height);
+        this.config.updateDimensions(dimensions.width, dimensions.height);
 
         if (this.svg) {
-            this.svg.attr("viewBox", `0 0 ${width} ${height}`);
+            this.svg.attr("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`);
         }
         
         if (this.wordGroup) {
-            this.wordGroup.attr("transform", `translate(${width / 2},${height / 2})`);
+            this.wordGroup.attr("transform", `translate(${dimensions.width / 2},${dimensions.height / 2})`);
         }
+    }
+
+    calculateDimensions(container) {
+        const rect = container.getBoundingClientRect();
+        const computedStyle = window.getComputedStyle(container);
+        
+        const paddingX = parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight);
+        const paddingY = parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom);
+        
+        return {
+            width: rect.width - paddingX,
+            height: rect.height - paddingY
+        };
     }
 
     renderWords(wordGroup, words) {
