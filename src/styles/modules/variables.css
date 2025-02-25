@@ -37,17 +37,39 @@
     --color-shadow: rgba(0, 0, 0, 0.05);
     --color-shadow-hover: rgba(0, 0, 0, 0.1);
 
-    /* Word Cloud Color Schemes */
-    --wordcloud-scheme-1: #264653;
-    --wordcloud-scheme-2: #2a9d8f;
-    --wordcloud-scheme-3: #e9c46a;
-    --wordcloud-scheme-4: #f4a261;
-    --wordcloud-scheme-5: #e76f51;
-    --wordcloud-scheme-6: #8ecae6;
-    --wordcloud-scheme-7: #219ebc;
-    --wordcloud-scheme-8: #023047;
-    --wordcloud-scheme-9: #ffb703;
-    --wordcloud-scheme-10: #fb8500;
+    /* Enhanced Word Cloud Color Schemes */
+    /* Primary Palette - Vibrant */
+    --wordcloud-scheme-1: #264653;  /* Deep blue */
+    --wordcloud-scheme-2: #2a9d8f;  /* Teal */
+    --wordcloud-scheme-3: #e9c46a;  /* Gold */
+    --wordcloud-scheme-4: #f4a261;  /* Peach */
+    --wordcloud-scheme-5: #e76f51;  /* Coral */
+    
+    /* Secondary Palette - Ocean */
+    --wordcloud-scheme-6: #8ecae6;  /* Light blue */
+    --wordcloud-scheme-7: #219ebc;  /* Medium blue */
+    --wordcloud-scheme-8: #023047;  /* Dark blue */
+    --wordcloud-scheme-9: #ffb703;  /* Yellow */
+    --wordcloud-scheme-10: #fb8500; /* Orange */
+    
+    /* Tertiary Palette - Muted */
+    --wordcloud-scheme-11: #606c38; /* Olive */
+    --wordcloud-scheme-12: #283618; /* Forest */
+    --wordcloud-scheme-13: #dda15e; /* Tan */
+    --wordcloud-scheme-14: #bc6c25; /* Brown */
+    --wordcloud-scheme-15: #588157; /* Sage */
+    
+    /* Semantic Word Cloud Colors */
+    --wordcloud-color-highest: var(--wordcloud-scheme-9);  /* Highest frequency */
+    --wordcloud-color-high: var(--wordcloud-scheme-10);    /* High frequency */
+    --wordcloud-color-medium: var(--wordcloud-scheme-5);   /* Medium frequency */
+    --wordcloud-color-low: var(--wordcloud-scheme-7);      /* Low frequency */
+    --wordcloud-color-lowest: var(--wordcloud-scheme-8);   /* Lowest frequency */
+    
+    /* Gradient Colors for Frequency-Based Coloring */
+    --wordcloud-gradient-start: var(--wordcloud-scheme-9);  /* Start color (highest frequency) */
+    --wordcloud-gradient-mid: var(--wordcloud-scheme-5);    /* Middle color */
+    --wordcloud-gradient-end: var(--wordcloud-scheme-8);    /* End color (lowest frequency) */
 
     /* Particle Animation Colors */
     --particle-color-1: var(--wordcloud-scheme-9);  /* Bright yellow */
@@ -69,6 +91,7 @@
     --font-base: var(--font-primary), var(--font-fallback);
     
     /* Font Weights */
+    --font-weight-light: 300;
     --font-weight-normal: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
@@ -145,6 +168,14 @@
     --wordcloud-hover-scale: 1.2;
     --wordcloud-opacity-normal: 1;
     --wordcloud-opacity-hover: 0.8;
+    
+    /* Enhanced Word Cloud Typography */
+    --wordcloud-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    --wordcloud-text-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.15);
+    --wordcloud-font-weight-highest: var(--font-weight-semibold);
+    --wordcloud-font-weight-high: var(--font-weight-medium);
+    --wordcloud-font-weight-medium: var(--font-weight-normal);
+    --wordcloud-font-weight-low: var(--font-weight-light);
 
     /* Component Specific
     -------------------------------------------- */

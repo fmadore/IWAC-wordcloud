@@ -11,6 +11,13 @@
     font-weight: bold;
 }
 
+/* Enhanced word hover effect with text shadow */
+.word--hover-enhanced {
+    font-weight: var(--wordcloud-font-weight-high);
+    text-shadow: var(--wordcloud-text-shadow-hover);
+    transform: scale(var(--wordcloud-hover-scale));
+}
+
 /* Word enter/exit animations */
 .word--enter {
     animation: wordEnter var(--animation-word-enter) var(--animation-timing-function) forwards;
@@ -18,6 +25,15 @@
 
 .word--exit {
     animation: wordExit var(--animation-word-exit) var(--animation-timing-function) forwards;
+}
+
+/* Enhanced word enter/exit animations with more sophisticated motion */
+.word--enter-enhanced {
+    animation: wordEnterEnhanced var(--animation-word-enter) var(--animation-timing-function) forwards;
+}
+
+.word--exit-enhanced {
+    animation: wordExitEnhanced var(--animation-word-exit) var(--animation-timing-function) forwards;
 }
 
 @keyframes wordEnter {
@@ -42,6 +58,45 @@
     }
 }
 
+/* Enhanced enter animation with more natural motion */
+@keyframes wordEnterEnhanced {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(-20px) rotate(-10deg);
+        filter: blur(2px);
+    }
+    60% {
+        opacity: 0.8;
+        transform: scale(1.05) translateY(5px) rotate(2deg);
+        filter: blur(0);
+    }
+    80% {
+        transform: scale(0.98) translateY(-2px) rotate(-1deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0) rotate(0);
+    }
+}
+
+/* Enhanced exit animation with more natural motion */
+@keyframes wordExitEnhanced {
+    0% {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+        filter: blur(0);
+    }
+    30% {
+        opacity: 0.9;
+        transform: scale(1.05) rotate(-2deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.7) translateY(15px) rotate(10deg);
+        filter: blur(3px);
+    }
+}
+
 /* Particle effect */
 .particle {
     position: absolute;
@@ -55,6 +110,21 @@
     animation: particleExpand var(--animation-particle) var(--animation-timing-function) forwards;
 }
 
+/* Enhanced particle effects with more variety */
+.particle--enhanced {
+    position: absolute;
+    width: var(--particle-size);
+    height: var(--particle-size);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.8;
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.particle--expand-enhanced {
+    animation: particleExpandEnhanced var(--animation-particle) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 @keyframes particleExpand {
     from {
         transform: translate(-50%, -50%) scale(1);
@@ -66,6 +136,21 @@
     }
 }
 
+/* Enhanced particle animation with more natural physics */
+@keyframes particleExpandEnhanced {
+    0% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 1;
+    }
+    40% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(var(--particle-x), var(--particle-y)) scale(0) rotate(var(--particle-rotation, 180deg));
+        opacity: 0;
+    }
+}
+
 /* Physics animation states */
 .word--physics-enter {
     animation: physicsEnter var(--animation-physics-enter) var(--animation-timing-function);
@@ -73,6 +158,15 @@
 
 .word--physics-exit {
     animation: physicsExit var(--animation-physics-exit) var(--animation-timing-function);
+}
+
+/* Enhanced physics animations with more realistic motion */
+.word--physics-enter-enhanced {
+    animation: physicsEnterEnhanced var(--animation-physics-enter) cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.word--physics-exit-enhanced {
+    animation: physicsExitEnhanced var(--animation-physics-exit) cubic-bezier(0.4, 0, 1, 0.4);
 }
 
 @keyframes physicsEnter {
@@ -96,5 +190,44 @@
     }
     100% {
         transform: translateY(100px);
+    }
+}
+
+/* Enhanced physics enter animation with more realistic bounce */
+@keyframes physicsEnterEnhanced {
+    0% {
+        transform: translateY(-100px) scale(0.8);
+        opacity: 0;
+    }
+    30% {
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(15px) scale(1.05);
+    }
+    70% {
+        transform: translateY(-7px) scale(0.98);
+    }
+    85% {
+        transform: translateY(3px) scale(1.01);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Enhanced physics exit animation with gravity effect */
+@keyframes physicsExitEnhanced {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    20% {
+        transform: translateY(-15px) scale(1.05);
+        opacity: 0.9;
+    }
+    100% {
+        transform: translateY(100px) scale(0.7);
+        opacity: 0;
     }
 } 
