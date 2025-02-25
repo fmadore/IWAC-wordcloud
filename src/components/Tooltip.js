@@ -62,23 +62,7 @@ export class Tooltip {
         this.tooltip.innerHTML = content;
         
         // Position the tooltip
-        const tooltipWidth = this.tooltip.offsetWidth;
-        const tooltipHeight = this.tooltip.offsetHeight;
-        
-        let left = event.pageX + 10;
-        let top = event.pageY - tooltipHeight - 10;
-
-        // Adjust position if tooltip would go off screen
-        if (left + tooltipWidth > window.innerWidth) {
-            left = event.pageX - tooltipWidth - 10;
-        }
-        if (top < 0) {
-            top = event.pageY + 10;
-        }
-
-        // Set position before making visible
-        this.tooltip.style.left = `${left}px`;
-        this.tooltip.style.top = `${top}px`;
+        this.positionTooltip(event);
         
         // Make tooltip visible using RAF for better performance
         requestAnimationFrame(() => {
@@ -86,6 +70,63 @@ export class Tooltip {
                 this.tooltip.classList.add('visible');
             }
         });
+    }
+
+    positionTooltip(event) {
+        const tooltipWidth = this.tooltip.offsetWidth;
+        const tooltipHeight = this.tooltip.offsetHeight;
+        
+        // Determine best position for tooltip
+        const position = this.calculateBestPosition(event, tooltipWidth, tooltipHeight);
+        
+        // Set position via CSS custom properties
+        this.tooltip.style.setProperty('--tooltip-x', `${position.left}px`);
+        this.tooltip.style.setProperty('--tooltip-y', `${position.top}px`);
+        
+        // Add position class
+        this.setPositionClass(position.placement);
+    }
+
+    calculateBestPosition(event, tooltipWidth, tooltipHeight) {
+        const margin = 10; // Space between cursor and tooltip
+        
+        // Try to position above cursor
+        let placement = 'top';
+        let left = event.pageX - (tooltipWidth / 2);
+        let top = event.pageY - tooltipHeight - margin;
+        
+        // Check if tooltip would go off-screen at top
+        if (top < 0) {
+            // Position below cursor instead
+            top = event.pageY + margin;
+            placement = 'bottom';
+        }
+        
+        // Check horizontal boundaries
+        if (left < margin) {
+            left = margin;
+            placement += '-left';
+        } else if (left + tooltipWidth > window.innerWidth - margin) {
+            left = window.innerWidth - tooltipWidth - margin;
+            placement += '-right';
+        }
+        
+        return { left, top, placement };
+    }
+
+    setPositionClass(placement) {
+        // Remove any existing position classes
+        this.tooltip.classList.remove(
+            'tooltip--top', 
+            'tooltip--bottom', 
+            'tooltip--top-left', 
+            'tooltip--top-right', 
+            'tooltip--bottom-left', 
+            'tooltip--bottom-right'
+        );
+        
+        // Add the appropriate position class
+        this.tooltip.classList.add(`tooltip--${placement}`);
     }
 
     hide() {

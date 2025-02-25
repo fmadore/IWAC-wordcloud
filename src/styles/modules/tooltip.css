@@ -15,12 +15,67 @@
     transform: translate3d(0, 0, 0);
     will-change: opacity, transform;
     word-wrap: break-word;
+    
+    /* Positioning with CSS variables */
+    --tooltip-x: 0px;
+    --tooltip-y: 0px;
+    --tooltip-arrow-size: 6px;
+    left: var(--tooltip-x);
+    top: var(--tooltip-y);
 }
 
+/* Visibility state */
 #tooltip.visible {
     opacity: 1;
 }
 
+/* Position-specific styling */
+#tooltip.tooltip--top {
+    margin-top: calc(var(--tooltip-arrow-size) * -1);
+}
+
+#tooltip.tooltip--bottom {
+    margin-top: var(--tooltip-arrow-size);
+}
+
+#tooltip.tooltip--top-left,
+#tooltip.tooltip--bottom-left {
+    margin-left: var(--tooltip-arrow-size);
+}
+
+#tooltip.tooltip--top-right,
+#tooltip.tooltip--bottom-right {
+    margin-right: var(--tooltip-arrow-size);
+}
+
+/* Optional: Add pseudo-elements for tooltip arrows */
+#tooltip.tooltip--top::after,
+#tooltip.tooltip--top-left::after,
+#tooltip.tooltip--top-right::after {
+    content: '';
+    position: absolute;
+    bottom: calc(var(--tooltip-arrow-size) * -1);
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: var(--tooltip-arrow-size) var(--tooltip-arrow-size) 0;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.98) transparent transparent;
+}
+
+#tooltip.tooltip--bottom::after,
+#tooltip.tooltip--bottom-left::after,
+#tooltip.tooltip--bottom-right::after {
+    content: '';
+    position: absolute;
+    top: calc(var(--tooltip-arrow-size) * -1);
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 var(--tooltip-arrow-size) var(--tooltip-arrow-size);
+    border-style: solid;
+    border-color: transparent transparent rgba(255, 255, 255, 0.98);
+}
+
+/* Content styling */
 .tooltip-content {
     display: flex;
     flex-direction: column;
