@@ -89,34 +89,4 @@
     border-color: var(--color-primary);
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .menu-wrapper {
-        flex-direction: column;
-        gap: 12px;
-        padding: 8px;
-    }
-
-    .select-container,
-    .input-container {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .select-label {
-        font-size: var(--font-size-xs);
-    }
-
-    .select-input {
-        padding: 6px 30px 6px 10px;
-        font-size: var(--font-size-sm);
-    }
-}
-
-/* Touch device optimizations */
-@media (hover: none) {
-    .select-input {
-        font-size: var(--font-size-base);
-        padding: 10px 35px 10px 12px;
-    }
-} 
+/* All responsive and touch device optimizations have been moved to responsive.css */ 

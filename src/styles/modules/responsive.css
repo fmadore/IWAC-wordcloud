@@ -1,5 +1,20 @@
 /* Responsive Module */
+
+/*
+ * BREAKPOINT SYSTEM
+ * --breakpoint-large: 900px
+ * --breakpoint-medium: 600px
+ * --breakpoint-small: 480px
+ *
+ * This file centralizes all responsive styles for better maintainability.
+ * Styles are organized by breakpoint first, then by component.
+ */
+
+/* ===============================================
+   LARGE SCREENS (max-width: 900px)
+   =============================================== */
 @media (max-width: 900px) {
+    /* --------- Layout & Content --------- */
     /* Menu Layout */
     .menu-wrapper {
         flex-wrap: wrap;
@@ -19,7 +34,7 @@
         overflow: hidden;
     }
 
-    /* Word Cloud */
+    /* --------- Word Cloud Component --------- */
     .wordcloud-container {
         flex: 1;
         min-height: 0;
@@ -41,7 +56,7 @@
         overflow: hidden;
     }
 
-    /* Word List */
+    /* --------- Word List Component --------- */
     .word-list-container {
         display: none !important; /* Hide on mobile by default */
         width: 100%;
@@ -103,8 +118,11 @@
     }
 }
 
+/* ===============================================
+   MEDIUM SCREENS (max-width: 600px)
+   =============================================== */
 @media (max-width: 600px) {
-    /* Menu Layout */
+    /* --------- Layout & Menu Components --------- */
     .menu-wrapper {
         flex-direction: column;
         gap: 6px;
@@ -116,7 +134,43 @@
         width: 100%;
     }
 
-    /* Slider Adjustments */
+    /* Content Layout */
+    .content-container {
+        height: var(--content-height-tablet);
+    }
+
+    /* --------- Controls Component --------- */
+    .select-container,
+    .input-container {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .select-label {
+        font-size: var(--font-size-xs);
+    }
+
+    .select-input {
+        padding: 6px 30px 6px 10px;
+        font-size: var(--font-size-sm);
+    }
+
+    /* --------- Button Component --------- */
+    .save-button {
+        padding: 8px 16px;
+        border-radius: 10px;
+    }
+    
+    .save-button .button-text {
+        font-size: var(--font-size-sm);
+    }
+
+    .save-button .save-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* --------- Slider Component --------- */
     .slider-container {
         margin: 0 10px;
     }
@@ -127,7 +181,8 @@
 
     .slider-value {
         font-size: var(--font-size-xs);
-        padding: 1px 6px;
+        padding: 3px 10px;
+        min-width: 40px;
     }
 
     .slider-input::-webkit-slider-thumb {
@@ -139,14 +194,16 @@
         width: 24px;
         height: 24px;
     }
-    
-    /* Content Layout */
-    .content-container {
-        height: var(--content-height-tablet);
+
+    /* --------- Canvas Component --------- */
+    .canvas-container {
+        margin: 0 -10px; /* Negative margin to allow full-width on mobile */
     }
 }
 
-/* Small mobile devices */
+/* ===============================================
+   SMALL SCREENS (max-width: 480px)
+   =============================================== */
 @media (max-width: 480px) {
     /* Content Layout */
     .content-container {
@@ -187,6 +244,9 @@
     }
 }
 
+/* ===============================================
+   FEATURE QUERIES AND SPECIAL CASES
+   =============================================== */
 /* Touch-friendly improvements */
 @media (hover: none) {
     #countrySelector,
@@ -218,5 +278,11 @@
 
     .save-button:active {
         background-color: var(--color-primary-dark);
+    }
+    
+    /* Select input touch optimizations */
+    .select-input {
+        font-size: var(--font-size-base);
+        padding: 10px 35px 10px 12px;
     }
 } 

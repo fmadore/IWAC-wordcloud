@@ -81,19 +81,4 @@
     }
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .save-button {
-        padding: 8px 16px;
-        border-radius: 10px;
-    }
-    
-    .save-button .button-text {
-        font-size: var(--font-size-sm);
-    }
-
-    .save-button .save-icon {
-        width: 16px;
-        height: 16px;
-    }
-} 
+/* Responsive adjustments have been moved to responsive.css */ 

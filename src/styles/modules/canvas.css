@@ -49,9 +49,4 @@
     z-index: 1;
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .canvas-container {
-        margin: 0 -10px; /* Negative margin to allow full-width on mobile */
-    }
-} 
+/* Responsive adjustments have been moved to responsive.css */ 
