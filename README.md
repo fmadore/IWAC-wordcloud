@@ -31,7 +31,7 @@ You can configure the visualization using URL parameters:
 
 - `country`: Select a specific country
   - Example: `?country=togo`
-  - Available values: `combined`, `bénin`, `burkina_faso`, `côte_d'ivoire`, `togo`
+  - Available values: `combined`, `bénin`, `burkina_faso`, `côte_d'ivoire`, `niger`, `togo`
 
 - `words`: Set the number of words to display
   - Example: `?words=50`
