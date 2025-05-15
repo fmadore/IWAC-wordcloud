@@ -123,6 +123,7 @@ export class ConfigManager {
                     { value: 'bénin', label: 'Bénin' },
                     { value: 'burkina_faso', label: 'Burkina Faso' },
                     { value: 'côte_d\'ivoire', label: 'Côte d\'Ivoire' },
+                    { value: 'niger', label: 'Niger' },
                     { value: 'togo', label: 'Togo' }
                 ]
             }
