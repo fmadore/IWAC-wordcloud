@@ -345,51 +345,31 @@ window.addEventListener('urlchange', (event) => {
 
 ## Data Preparation
 
-The project includes a Python script (`word_cloud.py`) that processes text content from an Omeka S database to generate the word frequency data used by the visualization.
+The project now includes a simplified Python script (`word_cloud.py`) that sources preprocessed text directly from the public Hugging Face dataset:
+
+https://huggingface.co/datasets/fmadore/islam-west-africa-collection (subset: `articles`).
+
+### Dataset Columns Used
+- `lemma_nostop`: spaCy‑lemmatized French text with stopwords removed (whitespace‑separated tokens)
+- `country`: Country of publication
+
+Because the dataset already supplies cleaned, lemmatized, and stopword‑filtered text, the script only needs to:
+1. Load the dataset (`datasets` library)
+2. Split `lemma_nostop` strings into tokens
+3. Count token frequencies per country (normalizing country names)
+4. Export per‑country top 200 words and a combined JSON file
 
 ### Script Features
-
-- 🔄 Fetches content from Omeka S API with caching support
-- 🧹 Advanced text preprocessing using spaCy and NLTK
-- 🔤 Handles French language text processing
-- 📊 Generates word frequencies for individual countries and combined view
-- 💾 Caches processed data for improved performance
+- ⚡ No external API credentials required
+- 📦 Leverages preprocessed data (no spaCy / NLTK pipeline locally)
+- 📊 Generates word frequencies for each supported country
+- 🗂 Produces `*_word_frequencies.json` and `combined_word_frequencies.json`
 
 ### Requirements
 
 ```bash
-pip install spacy nltk requests python-dotenv tqdm
-python -m spacy download fr_dep_news_trf
+pip install datasets tqdm
 ```
-
-### Environment Setup
-
-Create a `.env` file in the root directory with your Omeka S credentials:
-
-```env
-OMEKA_BASE_URL=your_omeka_url
-OMEKA_KEY_IDENTITY=your_key_identity
-OMEKA_KEY_CREDENTIAL=your_key_credential
-```
-
-### Processing Pipeline
-
-1. **Data Fetching**
-   - Connects to Omeka S API
-   - Retrieves items from specified item sets
-   - Implements caching to avoid redundant processing
-
-2. **Text Processing**
-   - Cleans and normalizes text
-   - Removes stopwords and unwanted tokens
-   - Performs lemmatization
-   - Handles French-specific text features
-
-3. **Output Generation**
-   - Calculates word frequencies
-   - Generates individual country JSON files
-   - Creates combined frequency data
-   - Stores results in the `data/` directory
 
 ### Running the Script
 
@@ -397,11 +377,21 @@ OMEKA_KEY_CREDENTIAL=your_key_credential
 python word_cloud.py
 ```
 
-The script will generate the following files in the `data/` directory:
+The script will generate (if data exists for each country) in `data/`:
 - `bénin_word_frequencies.json`
 - `burkina_faso_word_frequencies.json`
+- `côte_d'ivoire_word_frequencies.json`
+- `niger_word_frequencies.json`
 - `togo_word_frequencies.json`
 - `combined_word_frequencies.json`
+
+Each file contains entries of the form:
+
+```json
+[{ "text": "mot", "size": 123 }, ... ]
+```
+
+The combined file maps country names to their respective arrays.
 
 ## Acknowledgments
 
