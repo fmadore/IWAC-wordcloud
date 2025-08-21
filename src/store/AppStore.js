@@ -67,6 +67,37 @@ export class AppStore {
         this.listeners.forEach(listener => listener(this.state, oldState));
     }
 
+    // Data management methods (consolidated from WordCloudDataManager)
+    async loadData(country, wordCount) {
+        const words = await this.wordCloudService.loadData(country, wordCount);
+        this.setCurrentWords(words);
+        return words;
+    }
+
+    setCurrentWords(words) {
+        this.setState({ currentWords: words });
+    }
+
+    getCurrentWords() {
+        return this.state.currentWords;
+    }
+
+    getDefaultWordCount() {
+        return this.wordCloudService.getDefaultWordCount();
+    }
+
+    getWordCountLimits() {
+        return this.wordCloudService.getWordCountLimits();
+    }
+
+    getDefaultCountry() {
+        return this.wordCloudService.getDefaultCountry();
+    }
+
+    getAvailableCountries() {
+        return this.wordCloudService.getAvailableCountries();
+    }
+
     // Action creators
     async updateWordCloud(country, wordCount) {
         try {
@@ -81,14 +112,11 @@ export class AppStore {
             // Emit loading event
             await this.eventBus.emit(WORDCLOUD_EVENTS.LOADING, { isLoading: true });
             
-            // Load and process data using the service
-            const words = await this.wordCloudService.loadData(country, wordCount);
+            // Load and process data using the consolidated data management
+            const words = await this.loadData(country, wordCount);
             
-            // Update state with new data
-            this.setState({
-                currentWords: words,
-                isLoading: false
-            });
+            // State is already updated by loadData, just update loading status
+            this.setState({ isLoading: false });
 
             // Emit success event
             await this.eventBus.emit(WORDCLOUD_EVENTS.UPDATE, { words });

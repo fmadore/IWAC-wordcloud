@@ -317,11 +317,13 @@ menu.getCountry();  // Get selected country
 menu.getWordCount(); // Get selected word count
 ```
 
-### DataManager Component
+### Data Management (Centralized in AppStore)
 
 ```javascript
-const dataManager = new WordCloudDataManager();
-const words = await dataManager.loadData(country, wordCount);
+const store = AppStore.getInstance();
+const words = await store.loadData(country, wordCount);
+// or through the unified API:
+await store.updateWordCloud(country, wordCount);
 ```
 
 ### URLManager Component
