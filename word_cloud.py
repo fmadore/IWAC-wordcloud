@@ -52,7 +52,7 @@ EXPORT_TOP_N = 200
 # Internal pruning (keep more if you wish); set None for unlimited
 MAX_WORDS_PER_COUNTRY = 1000
 
-# Canonical country values (exact set provided by user)
+# Exact country names (no variants)
 VALID_COUNTRIES = {
     "Benin",
     "Burkina Faso",
@@ -74,10 +74,7 @@ def normalize_country(raw: str) -> str | None:
     if not raw:
         return None
     candidate = raw.strip().replace("\u00a0", " ")
-    for valid in VALID_COUNTRIES:
-        if candidate.lower() == valid.lower():
-            return valid
-    return None
+    return candidate if candidate in VALID_COUNTRIES else None
 
 
 def country_slug(name: str) -> str:
@@ -151,17 +148,31 @@ def main():
     print(f"Total rows loaded: {len(rows):,}")
 
     country_counters: dict[str, Counter] = defaultdict(Counter)
+    article_counts: dict[str, int] = defaultdict(int)
+    skipped_countries: dict[str, int] = defaultdict(int)
 
     for row in tqdm(rows, desc="Processing rows"):
         lemma_text = row.get('lemma_nostop')
         country_raw = row.get('country')
         country = normalize_country(country_raw)
         if not country:
+            if country_raw:
+                skipped_countries[country_raw] += 1
             continue  # Skip unrecognized countries
         tokens = tokenize(lemma_text)
         if not tokens:
             continue
-    country_counters[country].update(tokens)
+        country_counters[country].update(tokens)
+        article_counts[country] += 1
+
+    # Debug summary
+    print("\nArticle counts by country (accepted):")
+    for c, cnt in sorted(article_counts.items()):
+        print(f"  {c}: {cnt}")
+    if skipped_countries:
+        print("\nSkipped (country not in VALID_COUNTRIES):")
+        for c, cnt in sorted(skipped_countries.items(), key=lambda x: -x[1]):
+            print(f"  {c}: {cnt}")
 
     # Prune & export per country
     timestamp = datetime.now(timezone.utc).isoformat()
@@ -172,6 +183,15 @@ def main():
         pruned = prune_counter(counter, MAX_WORDS_PER_COUNTRY)
         pruned_country_counters[country] = pruned
         export_country_json(country, pruned)
+
+    # Cleanup: remove legacy accented file if present
+    legacy_accented = os.path.join(data_dir, "bénin_word_frequencies.json")
+    if os.path.exists(legacy_accented):
+        try:
+            os.remove(legacy_accented)
+            print("Removed legacy accented file: bénin_word_frequencies.json")
+        except OSError as e:
+            print(f"Could not remove legacy accented file: {e}")
 
     # Add combined as synthetic 'Combined' or keep same logic? Existing UI expects separate combined JSON file.
     export_combined_json(pruned_country_counters)
