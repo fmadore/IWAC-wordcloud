@@ -1,23 +1,35 @@
 [
   {
     "text": "musulman",
-    "size": 12667
+    "size": 12660
+  },
+  {
+    "text": "faire",
+    "size": 11315
+  },
+  {
+    "text": "pouvoir",
+    "size": 8886
   },
   {
     "text": "burkina",
-    "size": 8724
+    "size": 8703
+  },
+  {
+    "text": "devoir",
+    "size": 6175
   },
   {
     "text": "pays",
-    "size": 5547
+    "size": 5531
   },
   {
     "text": "dieu",
-    "size": 5232
+    "size": 5231
   },
   {
     "text": "faso",
-    "size": 5130
+    "size": 5123
   },
   {
     "text": "hadj",
@@ -29,55 +41,71 @@
   },
   {
     "text": "communauté",
-    "size": 4874
+    "size": 4860
   },
   {
     "text": "islamique",
-    "size": 4648
+    "size": 4641
   },
   {
     "text": "jour",
-    "size": 4599
+    "size": 4594
   },
   {
     "text": "président",
-    "size": 4337
+    "size": 4311
   },
   {
     "text": "grand",
-    "size": 4259
+    "size": 4252
   },
   {
     "text": "prière",
-    "size": 4220
+    "size": 4214
+  },
+  {
+    "text": "entrer",
+    "size": 4161
   },
   {
     "text": "paix",
-    "size": 4105
+    "size": 4099
+  },
+  {
+    "text": "luire",
+    "size": 4022
   },
   {
     "text": "mois",
-    "size": 3974
+    "size": 3971
   },
   {
     "text": "religieux",
-    "size": 3883
+    "size": 3875
+  },
+  {
+    "text": "aller",
+    "size": 3840
+  },
+  {
+    "text": "el",
+    "size": 3835
   },
   {
     "text": "burkinabè",
-    "size": 3698
+    "size": 3693
   },
   {
     "text": "national",
-    "size": 3684
+    "size": 3679
   },
   {
     "text": "bien",
-    "size": 3549
+    "size": 3547
   },
   {
     "text": "fidèle",
-    "size": 3548
+    "size": 3543
   },
   {
     "text": "ouagadougou",
@@ -85,67 +113,79 @@
   },
   {
     "text": "prendre",
-    "size": 3454
+    "size": 3432
   },
   {
     "text": "venir",
-    "size": 3349
+    "size": 3332
   },
   {
     "text": "mosquée",
-    "size": 3302
+    "size": 3299
+  },
+  {
+    "text": "falloir",
+    "size": 3290
   },
   {
     "text": "jeûne",
-    "size": 3271
+    "size": 3272
   },
   {
     "text": "homme",
-    "size": 3246
+    "size": 3231
   },
   {
     "text": "année",
     "size": 3185
   },
   {
+    "text": "celer",
+    "size": 3102
+  },
+  {
     "text": "bon",
-    "size": 3093
+    "size": 3096
   },
   {
     "text": "imam",
-    "size": 3071
+    "size": 3064
   },
   {
     "text": "association",
-    "size": 3069
+    "size": 3062
   },
   {
     "text": "prophète",
-    "size": 2977
+    "size": 2976
   },
   {
     "text": "etat",
-    "size": 2974
+    "size": 2960
   },
   {
     "text": "pèlerin",
-    "size": 2952
+    "size": 2953
   },
   {
     "text": "femme",
-    "size": 2945
+    "size": 2942
+  },
+  {
+    "text": "savoir",
+    "size": 2880
   },
   {
     "text": "ministre",
-    "size": 2859
+    "size": 2853
   },
   {
     "text": "organisation",
-    "size": 2851
+    "size": 2850
   },
   {
     "text": "dernier",
-    "size": 2840
+    "size": 2825
   },
   {
     "text": "religion",
@@ -156,12 +196,16 @@
     "size": 2742
   },
   {
+    "text": "vouloir",
+    "size": 2671
+  },
+  {
     "text": "ramadan",
-    "size": 2650
+    "size": 2652
   },
   {
     "text": "lieu",
-    "size": 2581
+    "size": 2577
   },
   {
     "text": "social",
@@ -169,111 +213,119 @@
   },
   {
     "text": "monde",
-    "size": 2431
+    "size": 2426
   },
   {
     "text": "allah",
-    "size": 2422
+    "size": 2424
   },
   {
     "text": "coran",
-    "size": 2381
-  },
-  {
-    "text": "devoir",
-    "size": 2371
-  },
-  {
-    "text": "mettre",
-    "size": 2287
-  },
-  {
-    "text": "donner",
-    "size": 2231
-  },
-  {
-    "text": "place",
-    "size": 2175
-  },
-  {
-    "text": "politique",
-    "size": 2134
-  },
-  {
-    "text": "général",
-    "size": 2067
-  },
-  {
-    "text": "vie",
-    "size": 2051
-  },
-  {
-    "text": "membre",
-    "size": 2020
-  },
-  {
-    "text": "nuit",
-    "size": 1951
+    "size": 2383
   },
   {
     "text": "permettre",
-    "size": 1946
+    "size": 2346
   },
   {
-    "text": "population",
-    "size": 1913
+    "text": "mettre",
+    "size": 2278
+  },
+  {
+    "text": "voir",
+    "size": 2271
+  },
+  {
+    "text": "donner",
+    "size": 2230
+  },
+  {
+    "text": "place",
+    "size": 2172
+  },
+  {
+    "text": "contre",
+    "size": 2143
+  },
+  {
+    "text": "politique",
+    "size": 2116
+  },
+  {
+    "text": "général",
+    "size": 2059
+  },
+  {
+    "text": "vie",
+    "size": 2024
+  },
+  {
+    "text": "membre",
+    "size": 2016
+  },
+  {
+    "text": "nuit",
+    "size": 1950
   },
   {
     "text": "question",
-    "size": 1912
+    "size": 1910
+  },
+  {
+    "text": "population",
+    "size": 1906
   },
   {
     "text": "autorité",
-    "size": 1900
-  },
-  {
-    "text": "enfant",
     "size": 1899
   },
   {
-    "text": "chef",
-    "size": 1889
+    "text": "enfant",
+    "size": 1892
   },
   {
     "text": "an",
-    "size": 1882
+    "size": 1891
+  },
+  {
+    "text": "chef",
+    "size": 1876
   },
   {
     "text": "vivre",
-    "size": 1880
+    "size": 1867
   },
   {
     "text": "ouédraogo",
-    "size": 1871
+    "size": 1863
   },
   {
     "text": "ensemble",
-    "size": 1848
+    "size": 1852
   },
   {
     "text": "non",
-    "size": 1844
+    "size": 1838
   },
   {
     "text": "pèlerinage",
-    "size": 1791
+    "size": 1793
+  },
+  {
+    "text": "sou",
+    "size": 1786
   },
   {
     "text": "sécurité",
-    "size": 1757
+    "size": 1752
   },
   {
     "text": "passer",
-    "size": 1748
+    "size": 1740
   },
   {
     "text": "famille",
-    "size": 1716
+    "size": 1711
   },
   {
     "text": "temps",
@@ -281,27 +333,27 @@
   },
   {
     "text": "gouvernement",
-    "size": 1665
+    "size": 1655
   },
   {
     "text": "action",
-    "size": 1628
+    "size": 1622
   },
   {
     "text": "jeune",
-    "size": 1626
+    "size": 1616
   },
   {
     "text": "acte",
-    "size": 1610
+    "size": 1609
   },
   {
     "text": "occasion",
-    "size": 1602
+    "size": 1597
   },
   {
     "text": "développement",
-    "size": 1575
+    "size": 1573
   },
   {
     "text": "formation",
@@ -309,11 +361,11 @@
   },
   {
     "text": "connaître",
-    "size": 1547
+    "size": 1543
   },
   {
     "text": "fin",
-    "size": 1536
+    "size": 1532
   },
   {
     "text": "saint",
@@ -321,23 +373,23 @@
   },
   {
     "text": "responsable",
-    "size": 1522
+    "size": 1515
   },
   {
     "text": "demander",
-    "size": 1516
+    "size": 1510
   },
   {
     "text": "situation",
-    "size": 1510
+    "size": 1508
   },
   {
     "text": "école",
     "size": 1502
   },
   {
-    "text": "société",
-    "size": 1487
+    "text": "beaucoup",
+    "size": 1491
   },
   {
     "text": "moment",
@@ -345,87 +397,87 @@
   },
   {
     "text": "mecque",
-    "size": 1481
+    "size": 1483
+  },
+  {
+    "text": "société",
+    "size": 1482
   },
   {
     "text": "trouver",
-    "size": 1475
+    "size": 1469
   },
   {
     "text": "chose",
     "size": 1451
   },
   {
-    "text": "travers",
-    "size": 1451
+    "text": "foi",
+    "size": 1448
   },
   {
-    "text": "foi",
-    "size": 1449
+    "text": "travers",
+    "size": 1447
   },
   {
     "text": "problème",
-    "size": 1438
-  },
-  {
-    "text": "fois",
-    "size": 1436
-  },
-  {
-    "text": "groupe",
-    "size": 1434
+    "size": 1437
   },
   {
     "text": "travail",
     "size": 1433
   },
   {
-    "text": "heure",
-    "size": 1426
+    "text": "groupe",
+    "size": 1433
   },
   {
-    "text": "organiser",
-    "size": 1418
+    "text": "fois",
+    "size": 1431
+  },
+  {
+    "text": "heure",
+    "size": 1417
   },
   {
     "text": "droit",
-    "size": 1414
+    "size": 1413
   },
   {
-    "text": "beaucoup",
-    "size": 1377
+    "text": "organiser",
+    "size": 1411
   },
   {
     "text": "cours",
-    "size": 1370
+    "size": 1366
   },
   {
     "text": "cas",
-    "size": 1361
+    "size": 1359
   },
   {
     "text": "force",
-    "size": 1357
+    "size": 1351
   },
   {
     "text": "appeler",
-    "size": 1356
+    "size": 1351
   },
   {
     "text": "activité",
-    "size": 1352
+    "size": 1350
   },
   {
     "text": "agir",
-    "size": 1342
+    "size": 1341
   },
   {
     "text": "point",
-    "size": 1325
+    "size": 1323
   },
   {
     "text": "prier",
-    "size": 1309
+    "size": 1308
   },
   {
     "text": "région",
@@ -433,47 +485,47 @@
   },
   {
     "text": "souhaiter",
-    "size": 1292
-  },
-  {
-    "text": "affaire",
-    "size": 1282
+    "size": 1291
   },
   {
     "text": "nom",
-    "size": 1282
-  },
-  {
-    "text": "frère",
     "size": 1278
   },
   {
-    "text": "conférence",
-    "size": 1269
+    "text": "affaire",
+    "size": 1277
   },
   {
-    "text": "compte",
-    "size": 1265
-  },
-  {
-    "text": "peuple",
-    "size": 1256
+    "text": "frère",
+    "size": 1275
   },
   {
     "text": "part",
-    "size": 1254
+    "size": 1265
+  },
+  {
+    "text": "conférence",
+    "size": 1265
+  },
+  {
+    "text": "compte",
+    "size": 1261
   },
   {
     "text": "solidarité",
-    "size": 1247
+    "size": 1248
   },
   {
     "text": "comité",
-    "size": 1242
+    "size": 1243
   },
   {
     "text": "terroriste",
     "size": 1239
+  },
+  {
+    "text": "peuple",
+    "size": 1234
   },
   {
     "text": "centre",
@@ -481,59 +533,59 @@
   },
   {
     "text": "conseil",
-    "size": 1192
+    "size": 1188
   },
   {
     "text": "cheick",
-    "size": 1177
+    "size": 1178
   },
   {
     "text": "ailleurs",
-    "size": 1176
+    "size": 1171
   },
   {
     "text": "public",
-    "size": 1170
-  },
-  {
-    "text": "monsieur",
-    "size": 1162
-  },
-  {
-    "text": "pratique",
-    "size": 1159
+    "size": 1169
   },
   {
     "text": "entendre",
-    "size": 1159
+    "size": 1160
+  },
+  {
+    "text": "pratique",
+    "size": 1156
   },
   {
     "text": "vendredi",
-    "size": 1150
+    "size": 1148
   },
   {
     "text": "niveau",
-    "size": 1150
+    "size": 1148
+  },
+  {
+    "text": "monsieur",
+    "size": 1144
   },
   {
     "text": "santé",
-    "size": 1142
+    "size": 1133
   },
   {
     "text": "projet",
-    "size": 1129
-  },
-  {
-    "text": "cadre",
-    "size": 1123
-  },
-  {
-    "text": "moyen",
     "size": 1122
   },
   {
-    "text": "recevoir",
+    "text": "moyen",
     "size": 1121
+  },
+  {
+    "text": "cadre",
+    "size": 1120
+  },
+  {
+    "text": "recevoir",
+    "size": 1119
   },
   {
     "text": "bureau",
@@ -541,7 +593,11 @@
   },
   {
     "text": "enseignement",
-    "size": 1099
+    "size": 1097
+  },
+  {
+    "text": "aucun",
+    "size": 1095
   },
   {
     "text": "mouton",
@@ -549,7 +605,7 @@
   },
   {
     "text": "cerfi",
-    "size": 1090
+    "size": 1091
   },
   {
     "text": "rencontre",
@@ -557,74 +613,86 @@
   },
   {
     "text": "bobo",
-    "size": 1087
+    "size": 1084
+  },
+  {
+    "text": "penser",
+    "size": 1081
   },
   {
     "text": "rappeler",
-    "size": 1079
-  },
-  {
-    "text": "cfa",
     "size": 1077
   },
   {
-    "text": "raison",
-    "size": 1064
-  },
-  {
-    "text": "mouvement",
-    "size": 1063
+    "text": "cfa",
+    "size": 1075
   },
   {
     "text": "porter",
-    "size": 1062
+    "size": 1061
+  },
+  {
+    "text": "mouvement",
+    "size": 1061
+  },
+  {
+    "text": "raison",
+    "size": 1061
   },
   {
     "text": "arabe",
-    "size": 1057
+    "size": 1054
   },
   {
     "text": "sens",
-    "size": 1055
-  },
-  {
-    "text": "valeur",
     "size": 1050
   },
   {
+    "text": "valeur",
+    "size": 1048
+  },
+  {
+    "text": "attendre",
+    "size": 1039
+  },
+  {
     "text": "cérémonie",
-    "size": 1037
+    "size": 1036
   },
   {
     "text": "mieux",
-    "size": 1035
+    "size": 1032
   },
   {
     "text": "nombre",
-    "size": 1035
-  },
-  {
-    "text": "expliquer",
-    "size": 1025
+    "size": 1030
   },
   {
     "text": "arriver",
-    "size": 1023
+    "size": 1024
+  },
+  {
+    "text": "expliquer",
+    "size": 1020
   },
   {
     "text": "célébrer",
-    "size": 1016
-  },
-  {
-    "text": "nation",
-    "size": 1007
+    "size": 1014
   },
   {
     "text": "ville",
-    "size": 1000
+    "size": 1002
+  },
+  {
+    "text": "meilleur",
+    "size": 1001
   },
   {
     "text": "charge",
+    "size": 998
+  },
+  {
+    "text": "comprendre",
     "size": 998
   },
   {
@@ -633,15 +701,11 @@
   },
   {
     "text": "accomplir",
-    "size": 993
-  },
-  {
-    "text": "voyage",
-    "size": 989
+    "size": 992
   },
   {
     "text": "thème",
-    "size": 987
+    "size": 986
   },
   {
     "text": "afrique",
@@ -652,39 +716,35 @@
     "size": 982
   },
   {
-    "text": "éducation",
-    "size": 981
+    "text": "agence",
+    "size": 982
   },
   {
-    "text": "agence",
+    "text": "éducation",
     "size": 980
   },
   {
-    "text": "meilleur",
-    "size": 978
-  },
-  {
     "text": "commission",
-    "size": 977
-  },
-  {
-    "text": "rapport",
-    "size": 976
+    "size": 975
   },
   {
     "text": "croyant",
     "size": 973
   },
   {
-    "text": "mission",
-    "size": 971
+    "text": "rapport",
+    "size": 973
   },
   {
     "text": "mesure",
-    "size": 971
+    "size": 970
   },
   {
-    "text": "humain",
+    "text": "mission",
+    "size": 970
+  },
+  {
+    "text": "voyage",
     "size": 967
   },
   {
@@ -692,111 +752,51 @@
     "size": 966
   },
   {
-    "text": "oeuvre",
-    "size": 959
+    "text": "humain",
+    "size": 964
   },
   {
-    "text": "attendre",
-    "size": 954
+    "text": "oeuvre",
+    "size": 962
   },
   {
     "text": "message",
     "size": 953
   },
   {
-    "text": "objectif",
-    "size": 947
+    "text": "nation",
+    "size": 950
   },
   {
     "text": "tabaski",
-    "size": 947
+    "size": 946
+  },
+  {
+    "text": "objectif",
+    "size": 945
+  },
+  {
+    "text": "attaque",
+    "size": 944
   },
   {
     "text": "recherche",
     "size": 943
   },
   {
-    "text": "attaque",
-    "size": 942
+    "text": "al",
+    "size": 940
   },
   {
     "text": "condition",
     "size": 939
   },
   {
-    "text": "al",
-    "size": 939
-  },
-  {
-    "text": "cause",
+    "text": "province",
     "size": 937
   },
   {
-    "text": "province",
-    "size": 936
-  },
-  {
-    "text": "saoudite",
+    "text": "partir",
     "size": 935
-  },
-  {
-    "text": "cohésion",
-    "size": 925
-  },
-  {
-    "text": "présence",
-    "size": 922
-  },
-  {
-    "text": "grâce",
-    "size": 915
-  },
-  {
-    "text": "exemple",
-    "size": 914
-  },
-  {
-    "text": "dialogue",
-    "size": 912
-  },
-  {
-    "text": "inviter",
-    "size": 905
-  },
-  {
-    "text": "spirituel",
-    "size": 905
-  },
-  {
-    "text": "croire",
-    "size": 904
-  },
-  {
-    "text": "suite",
-    "size": 902
-  },
-  {
-    "text": "international",
-    "size": 900
-  },
-  {
-    "text": "prix",
-    "size": 898
-  },
-  {
-    "text": "face",
-    "size": 895
-  },
-  {
-    "text": "lutte",
-    "size": 892
-  },
-  {
-    "text": "fédération",
-    "size": 889
-  },
-  {
-    "text": "ministère",
-    "size": 883
   }
 ]
